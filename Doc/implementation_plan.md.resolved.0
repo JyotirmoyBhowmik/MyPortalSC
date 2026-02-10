@@ -1,0 +1,226 @@
+# Dynamic Web Portfolio — Implementation Plan
+
+> **Goal:** Build a production-grade personal portfolio for **Jyotirmoy Bhowmik** using Next.js 14 (App Router), Tailwind CSS, TypeScript, and Supabase (Free Tier) — with a public site and a secure admin dashboard.
+
+---
+
+## User Review Required
+
+> [!IMPORTANT]
+> **Supabase credentials** — The plan uses the provided `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY`. The **service role key** is needed for seeding admin data and server-side operations. Please confirm:
+> 1. Do you have the **Service Role Key** available? (It's required for admin seed and server-side RLS bypass.)
+> 2. Should we execute the SQL migrations against your live Supabase project now, or generate `.sql` files only?
+
+> [!WARNING]
+> The existing [package.json](file:///c:/Users/TEST/MyPortalSC/package.json) will be replaced during `npx create-next-app` scaffolding. The Supabase deps will be re-added automatically.
+
+---
+
+## Proposed Changes
+
+### Phase 1 — Project Scaffolding & Supabase Client
+
+#### [NEW] Next.js 14 Project (root)
+- Scaffold via `npx create-next-app@latest ./ --typescript --tailwind --eslint --app --src-dir --import-alias "@/*" --use-npm`
+- This creates `src/app/`, `tailwind.config.ts`, `tsconfig.json`, `next.config.js`, etc.
+- Re-install: `npm install @supabase/supabase-js @supabase/ssr`
+
+---
+
+#### [NEW] `.env.local`
+```env
+NEXT_PUBLIC_SUPABASE_URL=https://gflvvfvlbldxbsalndio.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=sb_publishable_94cf64jbe508dk9uZqs18A_xxbA_i31
+SUPABASE_SERVICE_ROLE_KEY=<to-be-provided>
+NEXT_PUBLIC_SITE_URL=http://localhost:3000
+```
+
+#### [NEW] `.env.example`
+Template with placeholder values for documentation.
+
+---
+
+#### [NEW] `src/lib/supabase/client.ts`
+Browser-side Supabase client using `createBrowserClient` from `@supabase/ssr`.
+
+#### [NEW] `src/lib/supabase/server.ts`
+Server-side Supabase client using `createServerClient` with cookie handling for Next.js App Router (Server Components, Route Handlers, Server Actions).
+
+#### [NEW] `src/lib/supabase/middleware.ts`
+Helper to create Supabase client inside Next.js middleware for automatic JWT refresh.
+
+#### [NEW] `src/middleware.ts`
+Root middleware — refreshes Supabase auth tokens on every request and protects `/admin/*` routes (redirect to `/admin/login` if unauthenticated).
+
+#### [NEW] `src/lib/database.types.ts`
+Auto-generated TypeScript types from Supabase schema (generated via `supabase gen types typescript`).
+
+---
+
+### Phase 2 — Database Migrations
+
+All SQL files go into `supabase/migrations/` for version control.
+
+#### [NEW] `supabase/migrations/001_schema.sql`
+Creates all 8 tables: `admin_users`, `projects`, `skills`, `certifications`, `achievements`, `content_pages`, `page_analytics`, `audit_log` — with all constraints and indexes per the SOW.
+
+#### [NEW] `supabase/migrations/002_rls_policies.sql`
+Enables RLS on every table and creates all policies (public read for published content, admin-only write, etc.) per Section 2.4 of the SOW.
+
+#### [NEW] `supabase/migrations/003_functions_triggers.sql`
+- `update_updated_at_column()` trigger function + triggers on 5 tables
+- `log_audit_event()` trigger function + triggers on 4 core tables
+
+#### [NEW] `supabase/migrations/004_seed_data.sql`
+Seed data for testing: sample projects, skills, certifications, achievements, and content pages. Admin user created via Supabase Auth, then linked in `admin_users`.
+
+---
+
+### Phase 3 — Design System & Layout
+
+#### [MODIFY] `src/app/globals.css`
+Custom CSS variables for the design system: color palette (dark, modern, premium feel), typography tokens (Inter font from Google Fonts), spacing scale, animations, glassmorphism utilities.
+
+#### [MODIFY] `tailwind.config.ts`
+Extend theme with custom colors, fonts, animation keyframes.
+
+#### [NEW] `src/components/ui/` (shared UI components)
+| Component | Purpose |
+|-----------|---------|
+| `Button.tsx` | Styled button with variants (primary, secondary, ghost, danger) |
+| `Card.tsx` | Glassmorphic card with hover animations |
+| `Badge.tsx` | Status/technology badge |
+| `Input.tsx` | Styled form input |
+| `Textarea.tsx` | Styled textarea |
+| `Select.tsx` | Styled select dropdown |
+| `Modal.tsx` | Dialog overlay |
+| `Skeleton.tsx` | Loading skeleton |
+| `Toast.tsx` | Notification toast |
+
+#### [NEW] `src/components/layout/Navbar.tsx`
+Public navigation: Home, About, Projects, Contact — responsive hamburger on mobile, animated highlight for active route.
+
+#### [NEW] `src/components/layout/Footer.tsx`
+Social links, copyright, quick links.
+
+#### [NEW] `src/app/layout.tsx` (modify)
+Root layout with Inter font, Navbar, Footer, metadata.
+
+---
+
+### Phase 4 — Public Pages
+
+#### [NEW] `src/app/page.tsx` — Home Page
+- **Hero section**: Name, tagline, animated gradient background, CTA buttons
+- **Featured Projects**: Top 3 published projects in cards (fetched SSR)
+- **Skills Overview**: Category-grouped skill badges with proficiency indicators
+- **Certifications Ticker**: Horizontal scroll of certification badges
+- **Stats Counter**: Animated counters (projects completed, technologies, certifications)
+
+#### [NEW] `src/app/about/page.tsx` — About Page
+- Full biography from `content_pages` table (page_key = 'about')
+- Professional timeline
+- Skills breakdown by category with visual proficiency bars
+- Achievements section
+
+#### [NEW] `src/app/projects/page.tsx` — Projects Listing
+- Server-fetched published projects
+- Client-side filtering by domain, technology, status
+- Search bar
+- Grid layout with animated cards
+
+#### [NEW] `src/app/projects/[slug]/page.tsx` — Project Detail
+- Dynamic route using slug
+- Rich project description, image gallery, tech stack badges
+- Links to GitHub/live demo
+- Related projects
+
+#### [NEW] `src/app/contact/page.tsx` — Contact Page
+- Contact information display
+- Optional contact form (stores in Supabase or uses Edge Function for email)
+- Social links with icons
+
+#### [NEW] `src/lib/data/` — Data fetching functions
+| File | Purpose |
+|------|---------|
+| `projects.ts` | `getPublishedProjects()`, `getProjectBySlug()`, `getFeaturedProjects()` |
+| `skills.ts` | `getAllSkills()`, `getSkillsByCategory()` |
+| `certifications.ts` | `getActiveCertifications()` |
+| `achievements.ts` | `getAllAchievements()` |
+| `content.ts` | `getPageContent(pageKey)` |
+
+---
+
+### Phase 5 — Admin Dashboard
+
+#### [NEW] `src/app/admin/login/page.tsx`
+Supabase Auth login form (email/password). Redirects to `/admin` on success.
+
+#### [NEW] `src/app/admin/layout.tsx`
+Admin layout with sidebar navigation, header with user info/logout, protected by middleware.
+
+#### [NEW] `src/app/admin/page.tsx` — Dashboard Home
+- Stats cards: total projects, skills, certifications, page views
+- Recent audit log entries
+- Quick action buttons
+
+#### [NEW] `src/app/admin/projects/page.tsx` — Projects Manager
+- Table listing all projects (draft + published + archived)
+- Status badge, created date, actions (edit, delete, toggle publish)
+- "Add new" button
+
+#### [NEW] `src/app/admin/projects/new/page.tsx` — Create Project Form
+#### [NEW] `src/app/admin/projects/[id]/edit/page.tsx` — Edit Project Form
+
+#### [NEW] `src/app/admin/skills/page.tsx` — Skills Manager
+- Table with inline editing for proficiency level
+- Add/Edit/Delete
+
+#### [NEW] `src/app/admin/certifications/page.tsx` — Certifications Manager
+#### [NEW] `src/app/admin/achievements/page.tsx` — Achievements Manager
+#### [NEW] `src/app/admin/analytics/page.tsx` — Analytics View
+- Page view charts (simple bar/line chart using CSS or a lightweight lib)
+- Top pages, recent visitors
+
+#### [NEW] `src/app/admin/actions/` — Server Actions
+| File | Purpose |
+|------|---------|
+| `projects.ts` | `createProject()`, `updateProject()`, `deleteProject()` |
+| `skills.ts` | `createSkill()`, `updateSkill()`, `deleteSkill()` |
+| `certifications.ts` | `createCertification()`, `updateCertification()`, `deleteCertification()` |
+| `achievements.ts` | `createAchievement()`, `updateAchievement()`, `deleteAchievement()` |
+| `content.ts` | `updatePageContent()` |
+
+---
+
+### Phase 6 — Polish, SEO & Documentation
+
+#### [MODIFY] All public pages
+- `generateMetadata()` for dynamic meta tags and Open Graph
+- Structured data (JSON-LD) for projects
+- Semantic HTML, heading hierarchy
+
+#### [NEW] `src/app/not-found.tsx` — Custom 404
+#### [NEW] `src/app/error.tsx` — Global error boundary
+#### [NEW] `src/app/loading.tsx` — Global loading state
+
+#### [NEW] `.github/workflows/deploy.yml` — CI/CD for Vercel
+#### [NEW] `README.md` — Project overview and quick start
+#### [NEW] `DEPLOYMENT.md` — Step-by-step deployment guide
+#### [NEW] `DATABASE.md` — Schema documentation
+
+---
+
+## Verification Plan
+
+### Automated Tests
+1. `npm run build` — Ensure zero TypeScript errors and successful production build
+2. `npm run lint` — ESLint passes with zero warnings
+3. Browser verification of all public pages at `http://localhost:3000`
+4. Browser verification of admin login and dashboard CRUD operations
+5. Verify RLS policies: anonymous user cannot see draft projects, cannot access admin endpoints
+
+### Manual Verification
+- Responsive design check at 375px (mobile), 768px (tablet), 1440px (desktop)
+- Lighthouse audit targeting 90+ on all categories
+- Admin CRUD workflow: create → edit → publish → delete for each entity
