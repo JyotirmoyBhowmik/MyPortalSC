@@ -14,7 +14,7 @@ export default async function DebugPage() {
 
     // Test DB Connection
     const projectsQuery = await supabase.from("projects").select("count");
-    const testInsert = await supabase.from("debug_log").insert({ message: "Test write" }).select(); // This will fail if RLS prevents inserts or table doesn't exist, which is fine, just testing connection.
+
 
     return (
         <div className="p-10 font-mono text-sm space-y-4">
