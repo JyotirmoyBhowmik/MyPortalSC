@@ -2,18 +2,24 @@ import Link from "next/link";
 import { getFeaturedProjects } from "@/lib/data/projects";
 import { getSkillsByCategory } from "@/lib/data/skills";
 import { getActiveCertifications } from "@/lib/data/certifications";
+import { getPageContent, getContentField } from "@/lib/data/content";
 import Badge from "@/components/ui/Badge";
 
 export const dynamic = "force-dynamic";
 
 export default async function HomePage() {
-  const [projects, skillsByCategory, certifications] = await Promise.all([
+  const [projects, skillsByCategory, certifications, pageContent] = await Promise.all([
     getFeaturedProjects(3),
     getSkillsByCategory(),
     getActiveCertifications(),
+    getPageContent("home"),
   ]);
 
   const totalSkills = Object.values(skillsByCategory).flat().length;
+
+  const heroTitle = getContentField(pageContent?.content, "hero_title");
+  const heroSubtitle = getContentField(pageContent?.content, "hero_subtitle");
+  const heroDescription = getContentField(pageContent?.content, "hero_description");
 
   return (
     <>
@@ -41,17 +47,24 @@ export default async function HomePage() {
           {/* Name */}
           <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black tracking-tight mb-6 animate-slide-up">
             Hi, I&apos;m{" "}
-            <span className="gradient-text">Jyotirmoy Bhowmik</span>
+            <span className="gradient-text">{heroTitle || "Jyotirmoy Bhowmik"}</span>
           </h1>
 
-          {/* Tagline */}
-          <p className="text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto mb-10 animate-slide-up stagger-1 leading-relaxed">
-            Full-Stack Developer & Tech Enthusiast crafting modern, scalable
-            web applications with cutting-edge technologies.
+          {/* Tagline / Subtitle */}
+          {heroSubtitle && (
+            <h2 className="text-xl sm:text-2xl font-bold text-foreground mb-4 animate-slide-up stagger-1">
+              {heroSubtitle}
+            </h2>
+          )}
+
+          {/* Description */}
+          <p className="text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto mb-10 animate-slide-up stagger-2 leading-relaxed">
+            {heroDescription ||
+              "IT Infrastructure & Project Management leader delivering secure, resilient enterprise infrastructure."}
           </p>
 
           {/* CTAs */}
-          <div className="flex flex-wrap items-center justify-center gap-4 animate-slide-up stagger-2">
+          <div className="flex flex-wrap items-center justify-center gap-4 animate-slide-up stagger-3">
             <Link
               href="/projects"
               className="inline-flex items-center gap-2 px-6 py-3 rounded-lg gradient-bg text-white font-medium shadow-lg shadow-primary/25 hover:shadow-primary/40 transition-shadow"
@@ -70,17 +83,17 @@ export default async function HomePage() {
           </div>
 
           {/* Stats row */}
-          <div className="flex items-center justify-center gap-8 sm:gap-12 mt-16 animate-fade-in stagger-3">
+          <div className="flex items-center justify-center gap-8 sm:gap-12 mt-16 animate-fade-in stagger-4">
             <div className="text-center">
               <div className="text-2xl sm:text-3xl font-bold gradient-text">
-                {projects.length}+
+                {projects.length > 0 ? `${projects.length}+` : "0+"}
               </div>
               <div className="text-xs text-muted-foreground mt-1">Projects</div>
             </div>
             <div className="w-px h-10 bg-border" />
             <div className="text-center">
               <div className="text-2xl sm:text-3xl font-bold gradient-text">
-                {totalSkills}+
+                {totalSkills > 0 ? `${totalSkills}+` : "0+"}
               </div>
               <div className="text-xs text-muted-foreground mt-1">
                 Technologies
@@ -89,7 +102,7 @@ export default async function HomePage() {
             <div className="w-px h-10 bg-border" />
             <div className="text-center">
               <div className="text-2xl sm:text-3xl font-bold gradient-text">
-                {certifications.length}+
+                {certifications.length > 0 ? `${certifications.length}+` : "0+"}
               </div>
               <div className="text-xs text-muted-foreground mt-1">
                 Certifications

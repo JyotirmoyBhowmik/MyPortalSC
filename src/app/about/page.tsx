@@ -122,6 +122,45 @@ export default async function AboutPage() {
                             </div>
                         </div>
                     )}
+
+                    {/* Education */}
+                    {getContentData(pageContent?.content, "education") && (
+                        <div className="mb-16">
+                            <h2 className="text-3xl font-bold mb-8 flex items-center gap-3">
+                                <span className="w-2 h-8 bg-primary rounded-full" />
+                                Education
+                            </h2>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                {(getContentData(pageContent?.content, "education") as any[]).map((edu, idx) => (
+                                    <div key={idx} className="glass p-6 rounded-xl hover-lift">
+                                        <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary text-xl font-bold mb-4">
+                                            🎓
+                                        </div>
+                                        <h3 className="text-lg font-bold text-foreground mb-1">
+                                            {edu.degree}
+                                        </h3>
+                                        <p className="text-accent font-medium mb-2">{edu.institution}</p>
+                                        <p className="text-sm text-muted-foreground">{edu.year}</p>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Languages */}
+                    {getContentField(pageContent?.content, "languages") && (
+                        <div className="mb-16">
+                            <h2 className="text-3xl font-bold mb-6 flex items-center gap-3">
+                                <span className="w-2 h-8 bg-success rounded-full" />
+                                Languages
+                            </h2>
+                            <div className="glass p-6 rounded-xl inline-block">
+                                <p className="text-lg text-foreground font-medium">
+                                    {getContentField(pageContent?.content, "languages")}
+                                </p>
+                            </div>
+                        </div>
+                    )}
                 </div>
             </section>
 
