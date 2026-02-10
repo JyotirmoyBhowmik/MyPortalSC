@@ -1,5 +1,9 @@
 import type { Metadata } from "next";
-import { getPageContent, getContentField } from "@/lib/data/content";
+import {
+    getPageContent,
+    getContentField,
+    getContentData,
+} from "@/lib/data/content";
 import { getSkillsByCategory } from "@/lib/data/skills";
 import { getAllAchievements } from "@/lib/data/achievements";
 
@@ -81,14 +85,14 @@ export default async function AboutPage() {
                     )}
 
                     {/* Professional Experience */}
-                    {getContentField(pageContent?.content, "experience") && (
+                    {getContentData(pageContent?.content, "experience") && (
                         <div className="mb-16">
                             <h2 className="text-3xl font-bold mb-8 flex items-center gap-3">
                                 <span className="w-2 h-8 bg-accent rounded-full" />
                                 Professional <span className="gradient-text">Experience</span>
                             </h2>
                             <div className="space-y-8 pl-4 border-l-2 border-border/50">
-                                {(getContentField(pageContent?.content, "experience") as any[]).map((exp, idx) => (
+                                {(getContentData(pageContent?.content, "experience") as any[]).map((exp, idx) => (
                                     <div key={idx} className="relative pl-8">
                                         <div className="absolute top-0 left-[-9px] w-4 h-4 rounded-full bg-background border-2 border-accent" />
                                         <div className="glass p-6 rounded-xl hover-lift">

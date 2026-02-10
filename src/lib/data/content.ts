@@ -34,3 +34,19 @@ export function getContentField(
     }
     return "";
 }
+
+// Helper to safely extract any field type from JSONB content
+export function getContentData(
+    content: Json | null | undefined,
+    field: string
+): any {
+    if (
+        content &&
+        typeof content === "object" &&
+        !Array.isArray(content) &&
+        field in content
+    ) {
+        return (content as Record<string, Json | undefined>)[field];
+    }
+    return null;
+}
