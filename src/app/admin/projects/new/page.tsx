@@ -4,11 +4,16 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Button from "@/components/ui/Button";
 import { createProject } from "@/app/admin/actions/projects";
+import ImageUpload from "@/components/admin/ImageUpload";
+import DocumentUpload from "@/components/admin/DocumentUpload";
 
 export default function NewProjectPage() {
     const router = useRouter();
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+
+    const [image, setImage] = useState<string | null>(null);
+    const [documents, setDocuments] = useState<any[]>([]);
 
     async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
@@ -40,10 +45,14 @@ export default function NewProjectPage() {
                 github_url: (formData.get("github_url") as string) || null,
                 live_url: (formData.get("live_url") as string) || null,
                 order_index: parseInt(formData.get("order_index") as string) || 0,
-            });
+                featured_image_url: image, // Add image
+                documents: documents as any, // Add documents
+            } as any);
             router.push("/admin/projects");
         } catch (err) {
-            setError(err instanceof Error ? err.message : "Failed to create project");
+            setError(
+                err instanceof Error ? err.message : "Failed to create project"
+            );
         }
         setLoading(false);
     }
@@ -79,6 +88,18 @@ export default function NewProjectPage() {
                     />
                 </div>
 
+                {/* Image Upload */}
+                <div>
+                    <label className="block text-sm font-medium mb-3">
+                        Featured Image
+                    </label>
+                    <ImageUpload
+                        value={image}
+                        onChange={setImage}
+                        onRemove={() => setImage(null)}
+                    />
+                </div>
+
                 <div>
                     <label className="block text-sm font-medium mb-1.5">
                         Short Description
@@ -99,6 +120,22 @@ export default function NewProjectPage() {
                         rows={6}
                         className="admin-input resize-none"
                         placeholder="In-depth description of the project, technologies used, challenges, and outcomes…"
+                    />
+                </div>
+
+                {/* Document Upload */}
+                <div>
+                    <label className="block text-sm font-medium mb-3">
+                        Project Documents
+                    </label>
+                    <DocumentUpload
+                        value={documents}
+                        onChange={setDocuments}
+                        onRemove={(index) => {
+                            const newDocs = [...documents];
+                            newDocs.splice(index, 1);
+                            setDocuments(newDocs);
+                        }}
                     />
                 </div>
 

@@ -164,13 +164,24 @@ export default function ProjectsGrid({ projects }: ProjectsGridProps) {
                     <Link
                         key={project.id}
                         href={`/projects/${project.slug}`}
-                        className="group glass rounded-xl overflow-hidden hover-lift"
+                        className="group glass rounded-xl overflow-hidden hover-lift flex flex-col h-full"
                     >
-                        <div className="h-44 bg-gradient-to-br from-primary/10 to-accent/10 flex items-center justify-center relative overflow-hidden">
-                            <div className="w-14 h-14 rounded-xl gradient-bg opacity-25 group-hover:opacity-50 transition-opacity" />
-                            <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                        <div className="relative h-48 w-full bg-gradient-to-br from-primary/10 to-accent/10 flex items-center justify-center overflow-hidden">
+                            {project.featured_image_url ? (
+                                // eslint-disable-next-line @next/next/no-img-element
+                                <img
+                                    src={project.featured_image_url}
+                                    alt={project.title}
+                                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                                />
+                            ) : (
+                                <>
+                                    <div className="w-14 h-14 rounded-xl gradient-bg opacity-25 group-hover:opacity-50 transition-opacity" />
+                                    <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                                </>
+                            )}
                         </div>
-                        <div className="p-5">
+                        <div className="p-5 flex-1 flex flex-col">
                             <div className="flex items-center gap-2 mb-3">
                                 <Badge variant="primary">{project.status}</Badge>
                                 {project.domain?.slice(0, 1).map((d) => (
@@ -182,10 +193,10 @@ export default function ProjectsGrid({ projects }: ProjectsGridProps) {
                             <h3 className="text-base font-semibold text-foreground group-hover:text-primary transition-colors mb-2">
                                 {project.title}
                             </h3>
-                            <p className="text-sm text-muted-foreground line-clamp-2 mb-4">
+                            <p className="text-sm text-muted-foreground line-clamp-3 mb-4 flex-1">
                                 {project.short_description}
                             </p>
-                            <div className="flex flex-wrap gap-1.5">
+                            <div className="flex flex-wrap gap-1.5 mt-auto">
                                 {project.technologies?.slice(0, 4).map((tech) => (
                                     <span
                                         key={tech}

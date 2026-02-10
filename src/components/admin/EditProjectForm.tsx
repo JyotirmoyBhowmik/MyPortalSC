@@ -5,11 +5,18 @@ import { useRouter } from "next/navigation";
 import Button from "@/components/ui/Button";
 import { updateProject } from "@/app/admin/actions/projects";
 import type { Project } from "@/lib/database.types";
+import ImageUpload from "./ImageUpload";
+import DocumentUpload from "./DocumentUpload";
 
 export default function EditProjectForm({ project }: { project: Project }) {
     const router = useRouter();
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+
+    // Initial state from props
+    const [image, setImage] = useState<string | null>(project.featured_image_url);
+    // Explicitly cast documents as any because types haven't been regenerated yet
+    const [documents, setDocuments] = useState<any[]>((project as any).documents || []);
 
     async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
@@ -41,7 +48,9 @@ export default function EditProjectForm({ project }: { project: Project }) {
                 github_url: (formData.get("github_url") as string) || null,
                 live_url: (formData.get("live_url") as string) || null,
                 order_index: parseInt(formData.get("order_index") as string) || 0,
-            });
+                featured_image_url: image, // Add image
+                documents: documents as any, // Add documents (schema pending)
+            } as any);
             router.push("/admin/projects");
         } catch (err) {
             setError(err instanceof Error ? err.message : "Failed to update");
@@ -70,6 +79,18 @@ export default function EditProjectForm({ project }: { project: Project }) {
                 />
             </div>
 
+            {/* Image Upload */}
+            <div>
+                <label className="block text-sm font-medium mb-3">
+                    Featured Image
+                </label>
+                <ImageUpload
+                    value={image}
+                    onChange={setImage}
+                    onRemove={() => setImage(null)}
+                />
+            </div>
+
             <div>
                 <label className="block text-sm font-medium mb-1.5">
                     Short Description
@@ -90,6 +111,22 @@ export default function EditProjectForm({ project }: { project: Project }) {
                     rows={6}
                     className="admin-input resize-none"
                     defaultValue={project.detailed_description || ""}
+                />
+            </div>
+
+            {/* Document Upload */}
+            <div>
+                <label className="block text-sm font-medium mb-3">
+                    Project Documents
+                </label>
+                <DocumentUpload
+                    value={documents}
+                    onChange={setDocuments}
+                    onRemove={(index) => {
+                        const newDocs = [...documents];
+                        newDocs.splice(index, 1);
+                        setDocuments(newDocs);
+                    }}
                 />
             </div>
 

@@ -66,9 +66,18 @@ export default async function ProjectDetailPage({ params }: Props) {
             <section className="px-4 pb-12">
                 <div className="max-w-4xl mx-auto">
                     {/* Featured image area */}
-                    <div className="glass rounded-xl overflow-hidden mb-8">
-                        <div className="h-64 sm:h-80 bg-gradient-to-br from-primary/10 to-accent/10 flex items-center justify-center">
-                            <div className="w-24 h-24 rounded-2xl gradient-bg opacity-30" />
+                    <div className="glass rounded-xl overflow-hidden mb-8 shadow-2xl shadow-primary/5">
+                        <div className="relative h-64 sm:h-96 md:h-[500px] w-full bg-gradient-to-br from-primary/10 to-accent/10 flex items-center justify-center">
+                            {project.featured_image_url ? (
+                                // eslint-disable-next-line @next/next/no-img-element
+                                <img
+                                    src={project.featured_image_url}
+                                    alt={project.title}
+                                    className="w-full h-full object-cover"
+                                />
+                            ) : (
+                                <div className="w-24 h-24 rounded-2xl gradient-bg opacity-30" />
+                            )}
                         </div>
                     </div>
 
@@ -108,8 +117,18 @@ export default async function ProjectDetailPage({ params }: Props) {
                     <div className="flex flex-wrap items-center gap-6 text-sm text-muted-foreground mb-8">
                         {project.start_date && (
                             <div className="flex items-center gap-2">
-                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                <svg
+                                    className="w-4 h-4"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth={2}
+                                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                                    />
                                 </svg>
                                 {new Date(project.start_date).toLocaleDateString("en-US", {
                                     month: "short",
@@ -147,8 +166,18 @@ export default async function ProjectDetailPage({ params }: Props) {
                                 rel="noopener noreferrer"
                                 className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg gradient-bg text-white font-medium shadow-lg shadow-primary/20 text-sm"
                             >
-                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                                <svg
+                                    className="w-4 h-4"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth={2}
+                                        d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+                                    />
                                 </svg>
                                 Live Demo
                             </a>
@@ -164,6 +193,56 @@ export default async function ProjectDetailPage({ params }: Props) {
                             </div>
                         </div>
                     )}
+
+                    {/* Documents */}
+                    {(project as any).documents &&
+                        ((project as any).documents as any[]).length > 0 && (
+                            <div className="glass rounded-xl p-8 mb-8">
+                                <h2 className="text-xl font-semibold mb-4">
+                                    Project Documents
+                                </h2>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    {((project as any).documents as any[]).map(
+                                        (doc: any, i: number) => (
+                                            <a
+                                                key={i}
+                                                href={doc.url}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="flex items-center gap-3 p-4 rounded-lg border border-border hover:bg-surface/50 transition-colors group"
+                                            >
+                                                <div className="w-10 h-10 rounded bg-primary/10 text-primary flex items-center justify-center font-bold text-xs">
+                                                    DOC
+                                                </div>
+                                                <div className="flex-1 min-w-0">
+                                                    <p className="font-medium truncate group-hover:text-primary transition-colors">
+                                                        {doc.name}
+                                                    </p>
+                                                    {doc.size && (
+                                                        <p className="text-xs text-muted-foreground">
+                                                            {(doc.size / 1024).toFixed(1)} KB
+                                                        </p>
+                                                    )}
+                                                </div>
+                                                <svg
+                                                    className="w-5 h-5 text-muted-foreground group-hover:text-primary transition-colors"
+                                                    fill="none"
+                                                    viewBox="0 0 24 24"
+                                                    stroke="currentColor"
+                                                >
+                                                    <path
+                                                        strokeLinecap="round"
+                                                        strokeLinejoin="round"
+                                                        strokeWidth={2}
+                                                        d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
+                                                    />
+                                                </svg>
+                                            </a>
+                                        )
+                                    )}
+                                </div>
+                            </div>
+                        )}
 
                     {/* Technologies */}
                     {project.technologies && project.technologies.length > 0 && (
