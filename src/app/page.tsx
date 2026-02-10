@@ -4,6 +4,8 @@ import { getSkillsByCategory } from "@/lib/data/skills";
 import { getActiveCertifications } from "@/lib/data/certifications";
 import Badge from "@/components/ui/Badge";
 
+export const dynamic = "force-dynamic";
+
 export default async function HomePage() {
   const [projects, skillsByCategory, certifications] = await Promise.all([
     getFeaturedProjects(3),

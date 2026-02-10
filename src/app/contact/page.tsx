@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { getPageContent, getContentField } from "@/lib/data/content";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
     title: "Contact",
     description:

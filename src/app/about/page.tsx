@@ -3,6 +3,8 @@ import { getPageContent, getContentField } from "@/lib/data/content";
 import { getSkillsByCategory } from "@/lib/data/skills";
 import { getAllAchievements } from "@/lib/data/achievements";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
     title: "About",
     description:

@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { getPublishedProjects } from "@/lib/data/projects";
 import ProjectsGrid from "@/components/projects/ProjectsGrid";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
     title: "Projects",
     description:
