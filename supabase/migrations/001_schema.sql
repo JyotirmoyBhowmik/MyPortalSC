@@ -4,7 +4,7 @@
 -- ============================================================
 
 -- 1. Admin Users
-CREATE TABLE admin_users (
+CREATE TABLE IF NOT EXISTS admin_users (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id uuid REFERENCES auth.users(id) ON DELETE CASCADE NOT NULL UNIQUE,
   full_name text NOT NULL,
@@ -14,7 +14,7 @@ CREATE TABLE admin_users (
 );
 
 -- 2. Projects
-CREATE TABLE projects (
+CREATE TABLE IF NOT EXISTS projects (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   title text NOT NULL,
   slug text NOT NULL UNIQUE,
@@ -35,7 +35,7 @@ CREATE TABLE projects (
 );
 
 -- 3. Skills
-CREATE TABLE skills (
+CREATE TABLE IF NOT EXISTS skills (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   name text NOT NULL UNIQUE,
   category text NOT NULL,
@@ -48,7 +48,7 @@ CREATE TABLE skills (
 );
 
 -- 4. Certifications
-CREATE TABLE certifications (
+CREATE TABLE IF NOT EXISTS certifications (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   title text NOT NULL,
   issuing_organization text NOT NULL,
@@ -59,11 +59,12 @@ CREATE TABLE certifications (
   badge_image_url text,
   status text DEFAULT 'active' CHECK (status IN ('active', 'expired', 'archived')),
   created_at timestamptz DEFAULT now() NOT NULL,
-  updated_at timestamptz DEFAULT now() NOT NULL
+  updated_at timestamptz DEFAULT now() NOT NULL,
+  UNIQUE(title, issuing_organization)
 );
 
 -- 5. Achievements
-CREATE TABLE achievements (
+CREATE TABLE IF NOT EXISTS achievements (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   title text NOT NULL,
   description text,
@@ -72,11 +73,12 @@ CREATE TABLE achievements (
   icon_url text,
   order_index integer DEFAULT 0,
   created_at timestamptz DEFAULT now() NOT NULL,
-  updated_at timestamptz DEFAULT now() NOT NULL
+  updated_at timestamptz DEFAULT now() NOT NULL,
+  UNIQUE(title, achievement_date)
 );
 
 -- 6. Content Pages
-CREATE TABLE content_pages (
+CREATE TABLE IF NOT EXISTS content_pages (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   page_key text NOT NULL UNIQUE,
   title text NOT NULL,
@@ -87,9 +89,9 @@ CREATE TABLE content_pages (
 );
 
 -- 7. Page Analytics
-CREATE TABLE page_analytics (
+CREATE TABLE IF NOT EXISTS page_analytics (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-  page_path text NOT NULL,
+  page_path text NOT NULL UNIQUE,
   view_count integer DEFAULT 0,
   unique_visitors integer DEFAULT 0,
   last_viewed timestamptz DEFAULT now() NOT NULL,
@@ -97,7 +99,7 @@ CREATE TABLE page_analytics (
 );
 
 -- 8. Audit Log
-CREATE TABLE audit_log (
+CREATE TABLE IF NOT EXISTS audit_log (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   table_name text NOT NULL,
   operation text NOT NULL CHECK (operation IN ('INSERT', 'UPDATE', 'DELETE')),
@@ -109,23 +111,45 @@ CREATE TABLE audit_log (
 );
 
 -- ============================================================
+-- Constraints Enforcement (for idempotent updates)
+-- ============================================================
+
+DO $$ 
+BEGIN 
+    -- 1. Ensure page_analytics has UNIQUE page_path
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'page_analytics_page_path_key') THEN
+        ALTER TABLE page_analytics ADD CONSTRAINT page_analytics_page_path_key UNIQUE (page_path);
+    END IF;
+
+    -- 2. Ensure certifications has UNIQUE title + organization
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'certifications_title_org_key') THEN
+        ALTER TABLE certifications ADD CONSTRAINT certifications_title_org_key UNIQUE (title, issuing_organization);
+    END IF;
+
+    -- 3. Ensure achievements has UNIQUE title + date
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'achievements_title_date_key') THEN
+        ALTER TABLE achievements ADD CONSTRAINT achievements_title_date_key UNIQUE (title, achievement_date);
+    END IF;
+END $$;
+
+-- ============================================================
 -- Indexes for Performance
 -- ============================================================
 
 -- Projects
-CREATE INDEX idx_projects_status ON projects(status) WHERE status = 'published';
-CREATE INDEX idx_projects_slug ON projects(slug);
-CREATE INDEX idx_projects_created_at ON projects(created_at DESC);
-CREATE INDEX idx_projects_technologies ON projects USING GIN(technologies);
+CREATE INDEX IF NOT EXISTS idx_projects_status ON projects(status) WHERE status = 'published';
+CREATE INDEX IF NOT EXISTS idx_projects_slug ON projects(slug);
+CREATE INDEX IF NOT EXISTS idx_projects_created_at ON projects(created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_projects_technologies ON projects USING GIN(technologies);
 
 -- Skills
-CREATE INDEX idx_skills_category ON skills(category);
-CREATE INDEX idx_skills_order ON skills(order_index);
+CREATE INDEX IF NOT EXISTS idx_skills_category ON skills(category);
+CREATE INDEX IF NOT EXISTS idx_skills_order ON skills(order_index);
 
 -- Certifications
-CREATE INDEX idx_certifications_status ON certifications(status);
-CREATE INDEX idx_certifications_issue_date ON certifications(issue_date DESC);
+CREATE INDEX IF NOT EXISTS idx_certifications_status ON certifications(status);
+CREATE INDEX IF NOT EXISTS idx_certifications_issue_date ON certifications(issue_date DESC);
 
 -- Analytics
-CREATE INDEX idx_page_analytics_path ON page_analytics(page_path);
-CREATE INDEX idx_audit_log_table ON audit_log(table_name, timestamp DESC);
+CREATE INDEX IF NOT EXISTS idx_page_analytics_path ON page_analytics(page_path);
+CREATE INDEX IF NOT EXISTS idx_audit_log_table ON audit_log(table_name, timestamp DESC);

@@ -48,7 +48,7 @@ export default async function AboutPage() {
             {/* Biography */}
             <section className="py-16 px-4">
                 <div className="max-w-4xl mx-auto">
-                    <div className="glass rounded-xl p-8 sm:p-12">
+                    <div className="glass rounded-xl p-8 sm:p-12 mb-12">
                         <div className="flex items-start gap-6">
                             {/* Avatar placeholder */}
                             <div className="hidden sm:block w-20 h-20 rounded-xl gradient-bg flex-shrink-0 flex items-center justify-center text-white text-2xl font-bold">
@@ -63,6 +63,61 @@ export default async function AboutPage() {
                             </div>
                         </div>
                     </div>
+
+                    {/* Vision Statement */}
+                    {getContentField(pageContent?.content, "vision_statement") && (
+                        <div className="relative p-8 sm:p-10 rounded-2xl bg-gradient-to-br from-primary/5 to-transparent border border-primary/20 mb-16">
+                            <div className="absolute top-0 left-0 -translate-x-3 -translate-y-3 text-6xl text-primary/20 font-serif">
+                                &ldquo;
+                            </div>
+                            <h3 className="text-xl font-semibold text-primary mb-4 flex items-center gap-2">
+                                <span className="w-8 h-[1px] bg-primary"></span>
+                                Vision Statement
+                            </h3>
+                            <blockquote className="text-xl sm:text-2xl font-medium leading-relaxed text-foreground">
+                                {getContentField(pageContent?.content, "vision_statement")}
+                            </blockquote>
+                        </div>
+                    )}
+
+                    {/* Professional Experience */}
+                    {getContentField(pageContent?.content, "experience") && (
+                        <div className="mb-16">
+                            <h2 className="text-3xl font-bold mb-8 flex items-center gap-3">
+                                <span className="w-2 h-8 bg-accent rounded-full" />
+                                Professional <span className="gradient-text">Experience</span>
+                            </h2>
+                            <div className="space-y-8 pl-4 border-l-2 border-border/50">
+                                {(getContentField(pageContent?.content, "experience") as any[]).map((exp, idx) => (
+                                    <div key={idx} className="relative pl-8">
+                                        <div className="absolute top-0 left-[-9px] w-4 h-4 rounded-full bg-background border-2 border-accent" />
+                                        <div className="glass p-6 rounded-xl hover-lift">
+                                            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-2">
+                                                <h3 className="text-xl font-bold text-foreground">
+                                                    {exp.role}
+                                                </h3>
+                                                <span className="text-sm font-medium px-3 py-1 rounded-full bg-primary/10 text-primary self-start sm:self-auto">
+                                                    {exp.period}
+                                                </span>
+                                            </div>
+                                            <div className="mb-4">
+                                                <p className="text-lg font-medium text-accent">
+                                                    {exp.company}
+                                                </p>
+                                                <p className="text-sm text-muted-foreground flex items-center gap-1 mt-1">
+                                                    <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+                                                    {exp.location}
+                                                </p>
+                                            </div>
+                                            <p className="text-muted-foreground leading-relaxed whitespace-pre-line">
+                                                {exp.description}
+                                            </p>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    )}
                 </div>
             </section>
 
@@ -70,7 +125,7 @@ export default async function AboutPage() {
             <section className="py-16 px-4 bg-surface/50">
                 <div className="max-w-6xl mx-auto">
                     <h2 className="text-3xl font-bold mb-12 text-center">
-                        Technical <span className="gradient-text">Expertise</span>
+                        Core <span className="gradient-text">Competencies</span>
                     </h2>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -89,8 +144,8 @@ export default async function AboutPage() {
                                                         {skill.name}
                                                     </span>
                                                     <span className="text-xs text-muted-foreground">
-                                                        {skill.proficiency_level}/5 ·{" "}
-                                                        {skill.years_of_experience}y experience
+                                                        {skill.proficiency_level && `${skill.proficiency_level}/5 · `}
+                                                        {skill.years_of_experience}y exp
                                                     </span>
                                                 </div>
                                                 <div className="proficiency-bar">

@@ -1,109 +1,609 @@
 -- ============================================================
--- 004_seed_data.sql — Initial Seed Data for Testing
+-- 004_seed_data.sql — COMPLETE Seed Data (v3)
 -- ============================================================
 -- NOTE: Before running this, create an admin user in Supabase Auth
--- (email: admin@jyotirmoy.dev, password: changeme123!) via the
--- Supabase dashboard or CLI. Then replace the user_id below
--- with the UUID of that auth user.
+-- Then replace the user_id below with the UUID of that auth user.
 -- ============================================================
 
--- Seed Content Pages
+-- Seed Content Pages (Home, About, Contact)
 INSERT INTO content_pages (page_key, title, content, meta_description) VALUES
 (
   'home',
   'Home',
-  '{"hero_title": "Jyotirmoy Bhowmik", "hero_subtitle": "Full-Stack Developer & Tech Enthusiast", "hero_description": "I build modern, scalable web applications with cutting-edge technologies. Passionate about clean code, elegant design, and impactful solutions."}'::jsonb,
-  'Jyotirmoy Bhowmik — Full-Stack Developer portfolio showcasing projects, skills, and certifications.'
+  '{"hero_title": "Jyotirmoy Bhowmik", "hero_subtitle": "Project Manager – IT Infrastructure & Network | Security | Cloud", "hero_description": "IT Infrastructure & Project Management leader with 15+ years of experience delivering secure, resilient enterprise infrastructure and technology programs.", "hero_cta_primary": "View Projects", "hero_cta_secondary": "Contact Me"}'::jsonb,
+  'Jyotirmoy Bhowmik — Project Manager – IT Infrastructure & Network | Security | Cloud'
 ),
 (
   'about',
   'About Me',
-  '{"biography": "I am a passionate full-stack developer with expertise in modern web technologies. My journey in software development has been driven by a deep curiosity for building impactful digital solutions that solve real-world problems.", "professional_summary": "With hands-on experience across the full development lifecycle — from ideation to deployment — I specialize in building scalable, performant web applications using Next.js, React, TypeScript, and cloud-native architectures.", "location": "India", "email": "contact@jyotirmoy.dev"}'::jsonb,
-  'Learn about Jyotirmoy Bhowmik — background, skills, and professional journey.'
+  '{"biography": "As an IT Infrastructure & Project Management leader with over 15 years of experience, I specialize in delivering secure, resilient enterprise infrastructure and technology programs. My journey spans multi-country coordination (Singapore, Malaysia, Bangladesh, Australia) and hands-on leadership in data center operations, disaster recovery transformation, cloud strategy, and large-scale network upgrades.  I have deep expertise working with Industrial Control Systems (ICS) / SCADA environments, driving IT/OT connectivity and security aligned to IEC 62443 principles.", "vision_statement": "To drive digital transformation and operational excellence by bridging the gap between legacy infrastructure and modern, secure, and automated technology landscapes.", "professional_summary": "Skilled in evaluating current-state environments (infra, network, security, IT/OT)—performing gap/risk assessment, defining target architecture (Landing Zone / hybrid), and building practical roadmaps to improve resilience, compliance, and service quality. Proven people leader and stakeholder partner—leading teams (4–16 members), vendors, and cross-functional groups; delivering outcomes through structured governance, documentation, SOPs, and audit readiness.", "location": "Kathmandu, Nepal / India", "email": "jyotirmoy.bhowmik@gmail.com", "phone": "+977-9801009825 / +91-9774135614", "experience": [{"company": "ITC Infotech India Ltd. (Seconded to Surya Nepal Pvt. Ltd.)", "role": "Project Manager & IT Infrastructure Team Lead", "period": "Sep 2016 – Present", "location": "Kathmandu, Nepal", "description": "Lead infrastructure operations and project delivery for enterprise Data Center, Disaster Recovery, ICS/SCADA and SAP ERP environments; manage vendors and coordinate global project teams to align technology outcomes with business objectives. Delivered automation outcomes including 30+ RPA bots and BI dashboards."}, {"company": "Payoda Technologies Pvt. Ltd.", "role": "Senior Engineer – IT Infrastructure & System Integration", "period": "May 2014 – Sep 2016", "location": "Aizawl, India", "description": "Primary networking and security engineer for Mizoram State Data Centre. Led 12-member team supporting LAN/WAN and firewall security for e-governance. Technical lead for RHEL Linux/SQL Server."}, {"company": "Global Innov Source (Sify Technologies)", "role": "Assistant System Administrator Engineer", "period": "Jun 2012 – Apr 2014", "location": "Agartala, India", "description": "Supported Tier-III data center operations within a 16-member team; administered RHEL server farms and network devices. Assisted in virtualization and backup implementation."}]}'::jsonb,
+  'Experienced IT Infrastructure Manager specializing in Data Center, Cloud, and OT Security.'
 ),
 (
   'contact',
   'Contact',
-  '{"email": "contact@jyotirmoy.dev", "github": "https://github.com/jyotirmoy", "linkedin": "https://linkedin.com/in/jyotirmoy", "twitter": "https://twitter.com/jyotirmoy"}'::jsonb,
-  'Get in touch with Jyotirmoy Bhowmik for collaborations, projects, and opportunities.'
-);
+  '{"email": "jyotirmoy.bhowmik@gmail.com", "phone": "+977-9801009825 / +91-9774135614", "linkedin": "https://linkedin.com/in/jyotirmoy-bhowmik", "location": "Kathmandu, Nepal"}'::jsonb,
+  'Contact Jyotirmoy Bhowmik for IT Infrastructure and Project Management opportunities.'
+)
+ON CONFLICT (page_key) DO UPDATE SET title = EXCLUDED.title, content = EXCLUDED.content, meta_description = EXCLUDED.meta_description;
 
--- Seed Skills
+-- Seed Skills (Based on Core Competencies)
 INSERT INTO skills (name, category, proficiency_level, years_of_experience, order_index) VALUES
-('TypeScript', 'Languages', 5, 3.0, 1),
-('JavaScript', 'Languages', 5, 4.0, 2),
-('Python', 'Languages', 4, 3.0, 3),
-('SQL', 'Languages', 4, 3.0, 4),
-('Next.js', 'Frameworks', 5, 2.5, 5),
-('React', 'Frameworks', 5, 3.0, 6),
-('Node.js', 'Frameworks', 4, 3.0, 7),
-('Tailwind CSS', 'Frameworks', 5, 2.0, 8),
-('PostgreSQL', 'Databases', 4, 2.5, 9),
-('Supabase', 'Databases', 4, 1.5, 10),
-('MongoDB', 'Databases', 3, 2.0, 11),
-('Git', 'Tools', 5, 4.0, 12),
-('Docker', 'Tools', 3, 1.5, 13),
-('VS Code', 'Tools', 5, 4.0, 14),
-('Vercel', 'Cloud', 4, 2.0, 15),
-('AWS', 'Cloud', 3, 1.0, 16);
+('Data Center Ops (Win Srv/RHEL)', 'Infrastructure', 5, 15.0, 1),
+('Disaster Recovery / BCP', 'Infrastructure', 5, 10.0, 2),
+('VMware vSphere/ESXi / Hyper-V', 'Infrastructure', 4, 8.0, 3),
+('AWS / Azure Core Services', 'Cloud', 4, 6.0, 4),
+('Microsoft 365 (Exch/SharePoint)', 'Collaboration', 5, 8.0, 5),
+('Cisco/Juniper Routing/Switching', 'Network', 4, 12.0, 6),
+('Palo Alto / Fortinet / Check Point', 'Security', 4, 8.0, 7),
+('Zscaler (SASE) / VPN', 'Security', 4, 4.0, 8),
+('Commvault w/ HPE StoreOnce', 'Tools', 4, 6.0, 9),
+('Tableau / Power BI', 'Analytics', 3, 3.0, 10),
+('RPA (UiPath/AutoEdge)', 'Automation', 3, 3.0, 11),
+('Project Mgmt & Vendor Governance', 'Methodology', 5, 15.0, 12),
+('IT/OT Security (IEC 62443)', 'Security', 4, 5.0, 13)
+ON CONFLICT (name) DO NOTHING;
 
--- Seed Projects
+-- Seed Projects (Comprehensive List: 88 Initiatives, FY 2024-25 to 2016-17)
 INSERT INTO projects (title, slug, short_description, detailed_description, status, domain, technologies, start_date, end_date, github_url, order_index) VALUES
+
+-- FY 2024-25 (Critical/High)
 (
-  'Portfolio Website',
-  'portfolio-website',
-  'A modern, dynamic personal portfolio built with Next.js 14 and Supabase.',
-  'This portfolio is a full-stack web application featuring server-side rendering, dynamic content management via a custom admin dashboard, Supabase authentication, and a beautiful responsive design. It uses Next.js 14 App Router, TypeScript, Tailwind CSS, and Supabase PostgreSQL with Row Level Security.',
+  'Industrial OT Network Segmentation (IEC 62443)',
+  'industrial-ot-network-segmentation-24',
+  'Establish secure OT foundations to protect ICS/SCADA.',
+  'Strategic Area: OT Security. Criticality: Critical. Delivery focus: Define requirements and target controls; Coordinate design/implementation and validation; Drive governance and operational handover.',
   'published',
-  ARRAY['Web Development', 'Full-Stack'],
-  ARRAY['Next.js', 'TypeScript', 'Tailwind CSS', 'Supabase', 'PostgreSQL'],
-  '2026-01-15',
-  '2026-02-10',
-  'https://github.com/jyotirmoy/portfolio',
-  1
+  ARRAY['OT Security', 'Critical'],
+  ARRAY['IEC 62443', 'SCADA', 'Network Segmentation'],
+  '2024-04-01', '2025-03-31', NULL, 1
 ),
 (
-  'Task Management App',
-  'task-management-app',
-  'A collaborative task management application with real-time updates.',
-  'Built with React and Supabase, this application allows teams to create, assign, and track tasks in real-time. Features include drag-and-drop boards, real-time collaboration via Supabase Realtime, and user authentication.',
+  'AI-Driven Energy Analytics & Automation',
+  'ai-energy-analytics-24',
+  'Enable safe OT–IT data exchange for sustainability.',
+  'Strategic Area: IoT / Sustainability. Criticality: High. Delivery focus: Requirements and stakeholder alignment; Delivery coordination and governance; Operational handover and improvement.',
   'published',
-  ARRAY['Web Development', 'SaaS'],
-  ARRAY['React', 'Supabase', 'TypeScript', 'Tailwind CSS'],
-  '2025-09-01',
-  '2025-11-15',
-  'https://github.com/jyotirmoy/taskmanager',
-  2
+  ARRAY['IoT', 'Sustainability', 'High'],
+  ARRAY['IoT', 'Analytics', 'Automation'],
+  '2024-04-01', '2025-03-31', NULL, 2
 ),
 (
-  'E-Commerce Dashboard',
-  'ecommerce-dashboard',
-  'Analytics dashboard for monitoring e-commerce metrics and KPIs.',
-  'A comprehensive analytics dashboard featuring interactive charts, real-time sales data, inventory management, and customer insights. Built with Next.js and integrated with multiple data sources.',
-  'draft',
-  ARRAY['Web Development', 'Analytics'],
-  ARRAY['Next.js', 'Python', 'PostgreSQL', 'Chart.js'],
-  '2025-12-01',
-  NULL,
-  NULL,
-  3
-);
+  'Unified Enterprise Wi-Fi 6 Rollout',
+  'unified-wifi-6-rollout-24',
+  'Modernize wireless to deliver secure connectivity.',
+  'Strategic Area: Network Infra. Criticality: High. Delivery focus: Assess capacity and performance gaps; Plan/design upgrade and coordinate implementation; Stabilize operations and document standards.',
+  'published',
+  ARRAY['Network Infra', 'High'],
+  ARRAY['Wi-Fi 6', 'Cisco'],
+  '2024-04-01', '2025-03-31', NULL, 3
+),
+(
+  'SharePoint & OneDrive Business Implementation',
+  'sharepoint-onedrive-impl-24',
+  'Adopt modern productivity/collaboration platforms.',
+  'Strategic Area: Cloud Collab. Criticality: High. Delivery focus: Define migration/adoption approach; Govern permissions/governance and rollout; Improve collaboration and reduce legacy dependency.',
+  'published',
+  ARRAY['Cloud Collab', 'High'],
+  ARRAY['SharePoint', 'OneDrive'],
+  '2024-04-01', '2025-03-31', NULL, 4
+),
+(
+  'Cloud Landing Zone Architecture Design',
+  'cloud-landing-zone-design-24',
+  'Define scalable cloud foundations (AWS/Azure).',
+  'Strategic Area: Cloud Strategy. Criticality: Critical. Delivery focus: Define cloud target architecture and governance; Coordinate connectivity/migration and security baseline; Enable operations and cost oversight.',
+  'published',
+  ARRAY['Cloud Strategy', 'Critical'],
+  ARRAY['AWS', 'Azure', 'Landing Zone'],
+  '2024-04-01', '2025-03-31', NULL, 5
+),
+(
+  'Centralized IP-Surveillance (Warehousing)',
+  'centralized-ip-surveillance-24',
+  'Extend surveillance coverage to warehouses.',
+  'Strategic Area: Physical Security. Criticality: High. Delivery focus: Define requirements and target controls; Coordinate design/implementation and validation; Drive governance and operational handover.',
+  'published',
+  ARRAY['Physical Security', 'High'],
+  ARRAY['IP Cameras', 'NVR'],
+  '2024-04-01', '2025-03-31', NULL, 6
+),
+(
+  'Remote Construction Site Surveillance System',
+  'remote-site-surveillance-24',
+  'Surveillance for remote sites for asset protection.',
+  'Strategic Area: Physical Security. Criticality: Medium. Delivery focus: Define requirements and target controls; Coordinate design/implementation and validation; Drive governance and operational handover.',
+  'published',
+  ARRAY['Physical Security', 'Medium'],
+  ARRAY['Remote Monitoring'],
+  '2024-04-01', '2025-03-31', NULL, 7
+),
+(
+  'High-Density Fiber Distribution Hub Design',
+  'high-density-fiber-hub-24',
+  'Rationalize and redesign infrastructure for higher availability.',
+  'Strategic Area: Data Center Infra. Criticality: Critical. Delivery focus: Assess current state and risks; Coordinate modernization/migration and testing; Operationalize with SOPs and monitoring.',
+  'published',
+  ARRAY['Data Center Infra', 'Critical'],
+  ARRAY['Fiber Optics', 'Data Center'],
+  '2024-04-01', '2025-03-31', NULL, 8
+),
+(
+  'Core Network Switch Lifecycle Replacement',
+  'core-switch-replacement-24',
+  'Upgrade switching to keep EOL remediation.',
+  'Strategic Area: Network Infra. Criticality: Critical. Delivery focus: Assess capacity and performance gaps; Plan/design upgrade and coordinate implementation; Stabilize operations and document standards.',
+  'published',
+  ARRAY['Network Infra', 'Critical'],
+  ARRAY['Switches', 'Core Networking'],
+  '2024-04-01', '2025-03-31', NULL, 9
+),
+
+-- FY 2023-24
+(
+  'Corporate Web Asset Cloud Migration (AWS/Azure)',
+  'web-asset-cloud-migration-23',
+  'Migrate web assets to cloud platforms.',
+  'Strategic Area: Cloud / Digital. Criticality: High. Delivery focus: Define cloud target architecture and governance; Coordinate connectivity/migration and security baseline; Enable operations and cost oversight.',
+  'published',
+  ARRAY['Cloud', 'Digital', 'High'],
+  ARRAY['AWS', 'Azure', 'Web Hosting'],
+  '2023-04-01', '2024-03-31', NULL, 10
+),
+(
+  'OT Network Security Roadmap Planning',
+  'ot-security-roadmap-23',
+  'Strengthen governance through roadmaps and assessments.',
+  'Strategic Area: OT Security. Criticality: Critical. Delivery focus: Define requirements and target controls; Coordinate design/implementation and validation; Drive governance and operational handover.',
+  'published',
+  ARRAY['OT Security', 'Critical'],
+  ARRAY['IEC 62443', 'Strategy'],
+  '2023-04-01', '2024-03-31', NULL, 11
+),
+(
+  'Energy Compliance & Monitoring Blueprint',
+  'energy-compliance-blueprint-23',
+  'Create blueprints to guide compliance.',
+  'Strategic Area: Compliance. Criticality: High. Delivery focus: Requirements and stakeholder alignment; Delivery coordination and governance; Operational handover and improvement.',
+  'published',
+  ARRAY['Compliance', 'High'],
+  ARRAY['Monitoring', 'Sustainability'],
+  '2023-04-01', '2024-03-31', NULL, 12
+),
+(
+  'Centralized Infrastructure Hosting Assessment',
+  'hosting-assessment-23',
+  'Assess hosting options to optimize cost/risk.',
+  'Strategic Area: Strategy. Criticality: Critical. Delivery focus: Requirements and stakeholder alignment; Delivery coordination and governance; Operational handover and improvement.',
+  'published',
+  ARRAY['Strategy', 'Critical'],
+  ARRAY['Infrastructure Assessment'],
+  '2023-04-01', '2024-03-31', NULL, 13
+),
+(
+  'Enterprise Windows 11 OS Transition',
+  'win11-transition-23',
+  'Modernize OS baselines (Windows 11).',
+  'Strategic Area: End-User Compute. Criticality: Medium. Delivery focus: Requirements and stakeholder alignment; Delivery coordination and governance; Operational handover and improvement.',
+  'published',
+  ARRAY['End-User Compute', 'Medium'],
+  ARRAY['Windows 11'],
+  '2023-04-01', '2024-03-31', NULL, 14
+),
+(
+  'Legacy Server OS Modernization (2012R2)',
+  'legacy-server-modernization-23',
+  'Modernize legacy server OS (2012R2).',
+  'Strategic Area: Infrastructure. Criticality: High. Delivery focus: Assess current state and risks; Coordinate modernization/migration and testing; Operationalize with SOPs and monitoring.',
+  'published',
+  ARRAY['Infrastructure', 'High'],
+  ARRAY['Windows Server 2012 R2'],
+  '2023-04-01', '2024-03-31', NULL, 15
+),
+(
+  'Dark Fiber WAN Capacity Expansion',
+  'dark-fiber-wan-23',
+  'Expand WAN capacity and strengthen reliability.',
+  'Strategic Area: Network Infra. Criticality: High. Delivery focus: Assess capacity and performance gaps; Plan/design upgrade and coordinate implementation; Stabilize operations and document standards.',
+  'published',
+  ARRAY['Network Infra', 'High'],
+  ARRAY['Dark Fiber', 'WAN'],
+  '2023-04-01', '2024-03-31', NULL, 16
+),
+(
+  'Infrastructure Observability Suite (Zabbix)',
+  'zabbix-observability-23',
+  'Implement Zabbix and standardize monitoring visualization.',
+  'Strategic Area: ITOps / Monitoring. Criticality: High. Delivery focus: Identify high-value use cases and requirements; Implement tooling/dashboards/bots and validate; Embed operations and continuous improvement.',
+  'published',
+  ARRAY['ITOps', 'Monitoring', 'High'],
+  ARRAY['Zabbix', 'Observability'],
+  '2023-04-01', '2024-03-31', NULL, 17
+),
+
+-- FY 2022-23
+(
+  'Mission-Critical ERP Server Virtualization',
+  'erp-server-virt-22',
+  'Virtualize mission-critical ERP servers.',
+  'Strategic Area: Infrastructure. Criticality: Critical. Delivery focus: Assess current state and risks; Coordinate modernization/migration and testing; Operationalize with SOPs and monitoring.',
+  'published',
+  ARRAY['Infrastructure', 'Critical'],
+  ARRAY['VMware', 'ERP'],
+  '2022-04-01', '2023-03-31', NULL, 18
+),
+(
+  'EHS Incident Management SaaS Evaluation',
+  'ehs-saas-eval-22',
+  'Evaluate SaaS for incident management.',
+  'Strategic Area: Compliance. Criticality: Medium. Delivery focus: Requirements and stakeholder alignment; Delivery coordination and governance; Operational handover and improvement.',
+  'published',
+  ARRAY['Compliance', 'Medium'],
+  ARRAY['SaaS', 'EHS'],
+  '2022-04-01', '2023-03-31', NULL, 19
+),
+(
+  'Real-time Utility Monitoring System (IoT)',
+  'utility-iot-monitoring-22',
+  'Enable safe OT–IT data exchange (IoT).',
+  'Strategic Area: Sustainability. Criticality: Medium. Delivery focus: Requirements and stakeholder alignment; Delivery coordination and governance; Operational handover and improvement.',
+  'published',
+  ARRAY['Sustainability', 'Medium'],
+  ARRAY['IoT', 'Utility Monitoring'],
+  '2022-04-01', '2023-03-31', NULL, 20
+),
+(
+  'Core Backbone Upgrade (1G to 10G)',
+  'core-backbone-upgrade-22',
+  'Upgrade backbone, switching and routing (1G -> 10G).',
+  'Strategic Area: Network Infra. Criticality: Critical. Delivery focus: Assess capacity and performance gaps; Plan/design upgrade and coordinate implementation; Stabilize operations and document standards.',
+  'published',
+  ARRAY['Network Infra', 'Critical'],
+  ARRAY['10G Ethernet', 'Switching'],
+  '2022-04-01', '2023-03-31', NULL, 21
+),
+(
+  'Financial MIS Analytics Dashboard',
+  'financial-mis-dashboard-22',
+  'Financial MIS Analytics Dashboard Development.',
+  'Strategic Area: Data Analytics. Criticality: High. Delivery focus: Identify high-value use cases and requirements; Implement tooling/dashboards/bots and validate; Embed operations and continuous improvement.',
+  'published',
+  ARRAY['Data Analytics', 'High'],
+  ARRAY['Tableau', 'Power BI'],
+  '2022-04-01', '2023-03-31', NULL, 22
+),
+(
+  'RPA Deployment (Bots)',
+  'rpa-deployment-22',
+  'RPA Deployment (Attended/Unattended Bots).',
+  'Strategic Area: Automation. Criticality: High. Delivery focus: Identify high-value use cases and requirements; Implement tooling/dashboards/bots and validate; Embed operations and continuous improvement.',
+  'published',
+  ARRAY['Automation', 'High'],
+  ARRAY['RPA', 'UiPath'],
+  '2022-04-01', '2023-03-31', NULL, 25
+),
+(
+  'Centralized Patch Management (WSUS)',
+  'wsus-patch-mgmt-22',
+  'Reduce attack surface with patch discipline.',
+  'Strategic Area: Security Ops. Criticality: Critical. Delivery focus: Define requirements and target controls; Coordinate design/implementation and validation; Drive governance and operational handover.',
+  'published',
+  ARRAY['Security Ops', 'Critical'],
+  ARRAY['WSUS', 'Patch Management'],
+  '2022-04-01', '2023-03-31', NULL, 28
+),
+(
+  'Legacy Data Center Decommissioning (Floor 1)',
+  'legacy-dc-decom-22',
+  'Decommission legacy data center floor.',
+  'Strategic Area: Infrastructure. Criticality: Medium. Delivery focus: Assess current state and risks; Coordinate modernization/migration and testing; Operationalize with SOPs and monitoring.',
+  'published',
+  ARRAY['Infrastructure', 'Medium'],
+  ARRAY['Decommissioning', 'Data Center'],
+  '2022-04-01', '2023-03-31', NULL, 29
+),
+(
+  'Cloud Storage Migration (OneDrive/SharePoint)',
+  'cloud-storage-mig-22',
+  'Migrate content to OneDrive/SharePoint.',
+  'Strategic Area: Cloud Storage. Criticality: High. Delivery focus: Define migration/adoption approach; Govern permissions/governance and rollout; Improve collaboration and reduce legacy dependency.',
+  'published',
+  ARRAY['Cloud Storage', 'High'],
+  ARRAY['OneDrive', 'SharePoint'],
+  '2022-04-01', '2023-03-31', NULL, 30
+),
+(
+  'Microsoft 365 & Intune MDM Procurement',
+  'm365-intune-procure-22',
+  'Establish governance for identity/device management.',
+  'Strategic Area: Cloud / Security. Criticality: Critical. Delivery focus: Define requirements and target controls; Coordinate design/implementation and validation; Drive governance and operational handover.',
+  'published',
+  ARRAY['Cloud', 'Security', 'Critical'],
+  ARRAY['Intune', 'MDM', 'Office 365'],
+  '2022-04-01', '2023-03-31', NULL, 33
+),
+(
+  'Managed Print Services Implementation',
+  'managed-print-services-22',
+  'Managed Print Services Implementation.',
+  'Strategic Area: Ops Efficiency. Criticality: Low. Delivery focus: Requirements and stakeholder alignment; Delivery coordination and governance; Operational handover and improvement.',
+  'published',
+  ARRAY['Ops Efficiency', 'Low'],
+  ARRAY['Managed Print'],
+  '2022-04-01', '2023-03-31', NULL, 34
+),
+
+-- FY 2021-22
+(
+  'Disaster Recovery Geo-Redundancy Migration',
+  'dr-geo-redundancy-21',
+  'Improve business continuity with DR readiness and geo-redundancy.',
+  'Strategic Area: BCP / DR. Criticality: Critical. Delivery focus: Assess current state and risks; Coordinate modernization/migration and testing; Operationalize with SOPs and monitoring.',
+  'published',
+  ARRAY['BCP', 'DR', 'Critical'],
+  ARRAY['Geo-Redundancy', 'VMware', 'StoreOnce'],
+  '2021-04-01', '2022-03-31', NULL, 36
+),
+(
+  'Robotic Process Automation (Scale-out)',
+  'rpa-scale-out-21',
+  'Robotic Process Automation (Scale-out Phase).',
+  'Strategic Area: Automation. Criticality: High. Delivery focus: Identify high-value use cases and requirements; Implement tooling/dashboards/bots and validate; Embed operations and continuous improvement.',
+  'published',
+  ARRAY['Automation', 'High'],
+  ARRAY['RPA', 'UiPath'],
+  '2021-04-01', '2022-03-31', NULL, 37
+),
+(
+  'ERP Landscape Virtualization (Dev/QA/Prod)',
+  'erp-landscape-virt-21',
+  'Virtualize ERP environment.',
+  'Strategic Area: Infrastructure. Criticality: Critical. Delivery focus: Assess current state and risks; Coordinate modernization/migration and testing; Operationalize with SOPs and monitoring.',
+  'published',
+  ARRAY['Infrastructure', 'Critical'],
+  ARRAY['VMware', 'ERP'],
+  '2021-04-01', '2022-03-31', NULL, 38
+),
+(
+  'Microsoft 365 Enterprise Rollout',
+  'm365-enterprise-rollout-21',
+  'Improve user productivity with standardized tools (M365).',
+  'Strategic Area: Cloud Productivity. Criticality: High. Delivery focus: Define migration/adoption approach; Govern permissions/governance and rollout; Improve collaboration and reduce legacy dependency.',
+  'published',
+  ARRAY['Cloud Productivity', 'High'],
+  ARRAY['M365', 'Teams'],
+  '2021-04-01', '2022-03-31', NULL, 40
+),
+(
+  'Hybrid Cloud Connectivity (Azure ExpressRoute)',
+  'hybrid-cloud-connectivity-21',
+  'Define scalable cloud foundations (ExpressRoute).',
+  'Strategic Area: Cloud Network. Criticality: Critical. Delivery focus: Assess capacity and performance gaps; Plan/design upgrade and coordinate implementation; Stabilize operations and document standards.',
+  'published',
+  ARRAY['Cloud Network', 'Critical'],
+  ARRAY['Azure ExpressRoute'],
+  '2021-04-01', '2022-03-31', NULL, 41
+),
+(
+  'Enterprise Backup & Storage Enhancement',
+  'backup-storage-enhancement-21',
+  'Modernize storage and backup platforms.',
+  'Strategic Area: Data Protection. Criticality: Critical. Delivery focus: Assess current state and risks; Coordinate modernization/migration and testing; Operationalize with SOPs and monitoring.',
+  'published',
+  ARRAY['Data Protection', 'Critical'],
+  ARRAY['Backup', 'Storage'],
+  '2021-04-01', '2022-03-31', NULL, 42
+),
+(
+  'Internal PKI & CA Certificate Deployment',
+  'internal-pki-ca-21',
+  'Enable audit readiness through assessments and certificate governance.',
+  'Strategic Area: Cybersecurity. Criticality: High. Delivery focus: Define requirements and target controls; Coordinate design/implementation and validation; Drive governance and operational handover.',
+  'published',
+  ARRAY['Cybersecurity', 'High'],
+  ARRAY['PKI', 'CA'],
+  '2021-04-01', '2022-03-31', NULL, 50
+),
+
+-- FY 2020-21
+(
+  'Disk-Based Backup Modernization',
+  'disk-backup-modernization-20',
+  'Modernize backup to improve recoverability (Disk-based).',
+  'Strategic Area: Data Protection. Criticality: Critical. Delivery focus: Assess current state and risks; Coordinate modernization/migration and testing; Operationalize with SOPs and monitoring.',
+  'published',
+  ARRAY['Data Protection', 'Critical'],
+  ARRAY['Disk Backup', 'StoreOnce'],
+  '2020-04-01', '2021-03-31', NULL, 51
+),
+(
+  'Network Access Control (RADIUS/802.1x)',
+  'nac-radius-8021x-20',
+  'Reduce attack surface with access controls (RADIUS/802.1x).',
+  'Strategic Area: Cybersecurity. Criticality: Critical. Delivery focus: Define requirements and target controls; Coordinate design/implementation and validation; Drive governance and operational handover.',
+  'published',
+  ARRAY['Cybersecurity', 'Critical'],
+  ARRAY['NAC', 'RADIUS', '802.1x'],
+  '2020-04-01', '2021-03-31', NULL, 53
+),
+(
+  'Enterprise Digital Rights Management (DRM)',
+  'enterprise-drm-20',
+  'Enable audit readiness with DRM.',
+  'Strategic Area: Data Security. Criticality: Critical. Delivery focus: Define requirements and target controls; Coordinate design/implementation and validation; Drive governance and operational handover.',
+  'published',
+  ARRAY['Data Security', 'Critical'],
+  ARRAY['DRM', 'Information Protection'],
+  '2020-04-01', '2021-03-31', NULL, 56
+),
+(
+  'RPA: IT Service Desk & Finance Automation',
+  'rpa-service-desk-20',
+  'RPA for IT Service Desk & Finance Automation.',
+  'Strategic Area: Automation. Criticality: High. Delivery focus: Identify high-value use cases and requirements; Implement tooling/dashboards/bots and validate; Embed operations and continuous improvement.',
+  'published',
+  ARRAY['Automation', 'High'],
+  ARRAY['RPA', 'UiPath'],
+  '2020-04-01', '2021-03-31', NULL, 57
+),
+(
+  'Interim Disaster Recovery Site Setup',
+  'interim-dr-site-20',
+  'Setup Interim DR Site.',
+  'Strategic Area: BCP / DR. Criticality: Critical. Delivery focus: Assess current state and risks; Coordinate modernization/migration and testing; Operationalize with SOPs and monitoring.',
+  'published',
+  ARRAY['BCP', 'DR', 'Critical'],
+  ARRAY['DR Site'],
+  '2020-04-01', '2021-03-31', NULL, 60
+),
+(
+  'DMZ Network Virtualization',
+  'dmz-net-viol-20',
+  'Strengthen boundary protections (DMZ/security zones).',
+  'Strategic Area: Network Security. Criticality: High. Delivery focus: Define requirements and target controls; Coordinate design/implementation and validation; Drive governance and operational handover.',
+  'published',
+  ARRAY['Network Security', 'High'],
+  ARRAY['DMZ', 'Virtualization'],
+  '2020-04-01', '2021-03-31', NULL, 61
+),
+
+-- FY 2019-20
+(
+  'Zero-Impact ERP OS Migration',
+  'erp-os-migration-19',
+  'Migrated ERP OS with zero impact.',
+  'Strategic Area: Infrastructure. Criticality: Critical. Delivery focus: Assess current state and risks; Coordinate modernization/migration and testing; Operationalize with SOPs and monitoring.',
+  'published',
+  ARRAY['Infrastructure', 'Critical'],
+  ARRAY['ERP', 'OS Migration'],
+  '2019-04-01', '2020-03-31', NULL, 62
+),
+(
+  'Legacy Storage Platform Replacement',
+  'legacy-storage-replacement-19',
+  'Replacement of legacy storage platforms.',
+  'Strategic Area: Infrastructure. Criticality: Critical. Delivery focus: Assess current state and risks; Coordinate modernization/migration and testing; Operationalize with SOPs and monitoring.',
+  'published',
+  ARRAY['Infrastructure', 'Critical'],
+  ARRAY['Storage'],
+  '2019-04-01', '2020-03-31', NULL, 63
+),
+(
+  'Backup Workflow Redesign & Tool Upgrade',
+  'backup-workflow-redesign-19',
+  'Redesign backup workflow and upgrade tools.',
+  'Strategic Area: Data Protection. Criticality: High. Delivery focus: Assess current state and risks; Coordinate modernization/migration and testing; Operationalize with SOPs and monitoring.',
+  'published',
+  ARRAY['Data Protection', 'High'],
+  ARRAY['Backup', 'Tools'],
+  '2019-04-01', '2020-03-31', NULL, 64
+),
+(
+  'Network AAA Security Implementation',
+  'network-aaa-security-19',
+  'Reduce attack surface with AAA security.',
+  'Strategic Area: Cybersecurity. Criticality: Critical. Delivery focus: Define requirements and target controls; Coordinate design/implementation and validation; Drive governance and operational handover.',
+  'published',
+  ARRAY['Cybersecurity', 'Critical'],
+  ARRAY['AAA', 'Security'],
+  '2019-04-01', '2020-03-31', NULL, 68
+),
+(
+  'Greenfield Factory IT Infrastructure Design',
+  'greenfield-factory-infra-19',
+  'Design IT infrastructure for Greenfield Factory.',
+  'Strategic Area: Infrastructure. Criticality: High. Delivery focus: Assess current state and risks; Coordinate modernization/migration and testing; Operationalize with SOPs and monitoring.',
+  'published',
+  ARRAY['Infrastructure', 'High'],
+  ARRAY['Factory IT'],
+  '2019-04-01', '2020-03-31', NULL, 71
+),
+
+-- FY 2018-19
+(
+  '3-Zone Security Virtualization Initiative',
+  '3-zone-security-virt-18',
+  'Run structured assessments/POCs to select fit-for-purpose technologies.',
+  'Strategic Area: Infrastructure. Criticality: Critical. Delivery focus: Assess current state and risks; Coordinate modernization/migration and testing; Operationalize with SOPs and monitoring.',
+  'published',
+  ARRAY['Infrastructure', 'Critical'],
+  ARRAY['Security', 'Virtualization'],
+  '2018-04-01', '2019-03-31', NULL, 72
+),
+(
+  'Border Router & Internet Gateway Upgrade',
+  'border-router-upgrade-18',
+  'Upgrade backbone, switching and routing.',
+  'Strategic Area: Network Infra. Criticality: Critical. Delivery focus: Assess capacity and performance gaps; Plan/design upgrade and coordinate implementation; Stabilize operations and document standards.',
+  'published',
+  ARRAY['Network Infra', 'Critical'],
+  ARRAY['Cisco', 'Routing'],
+  '2018-04-01', '2019-03-31', NULL, 74
+),
+(
+  'Microsoft RAP Security Assessment',
+  'microsoft-rap-security-18',
+  'Microsoft RAP Security Assessment.',
+  'Strategic Area: Cybersecurity. Criticality: High. Delivery focus: Define requirements and target controls; Coordinate design/implementation and validation; Drive governance and operational handover.',
+  'published',
+  ARRAY['Cybersecurity', 'High'],
+  ARRAY['Assessment', 'Security'],
+  '2018-04-01', '2019-03-31', NULL, 78
+),
+(
+  'Active Directory Security Audit',
+  'ad-security-audit-18',
+  'Active Directory Security Audit.',
+  'Strategic Area: Cybersecurity. Criticality: High. Delivery focus: Define requirements and target controls; Coordinate design/implementation and validation; Drive governance and operational handover.',
+  'published',
+  ARRAY['Cybersecurity', 'High'],
+  ARRAY['AD', 'Audit'],
+  '2018-04-01', '2019-03-31', NULL, 80
+),
+
+-- FY 2017-18
+(
+  'High-Availability (N+1) Infrastructure Redesign',
+  'ha-infra-redesign-17',
+  'Rationalize and redesign infrastructure for higher availability.',
+  'Strategic Area: Infrastructure. Criticality: Critical. Delivery focus: Assess current state and risks; Coordinate modernization/migration and testing; Operationalize with SOPs and monitoring.',
+  'published',
+  ARRAY['Infrastructure', 'Critical'],
+  ARRAY['HA', 'Redesign'],
+  '2017-04-01', '2018-03-31', NULL, 83
+),
+(
+  'Active Directory Functional Level Upgrade',
+  'ad-functional-upgrade-17',
+  'Active Directory Functional Level Upgrade.',
+  'Strategic Area: Infrastructure. Criticality: Critical. Delivery focus: Assess current state and risks; Coordinate modernization/migration and testing; Operationalize with SOPs and monitoring.',
+  'published',
+  ARRAY['Infrastructure', 'Critical'],
+  ARRAY['AD', 'Upgrade'],
+  '2017-04-01', '2018-03-31', NULL, 85
+),
+(
+  'Centralized Surveillance Operations Center',
+  'centralized-surveillance-17',
+  'Centralize surveillance operations.',
+  'Strategic Area: Physical Security. Criticality: High. Delivery focus: Define requirements and target controls; Coordinate design/implementation and validation; Drive governance and operational handover.',
+  'published',
+  ARRAY['Physical Security', 'High'],
+  ARRAY['CCTV', 'Surveillance'],
+  '2017-04-01', '2018-03-31', NULL, 86
+)
+
+ON CONFLICT (slug) DO UPDATE SET title = EXCLUDED.title, short_description = EXCLUDED.short_description, detailed_description = EXCLUDED.detailed_description, technologies = EXCLUDED.technologies, start_date = EXCLUDED.start_date, end_date = EXCLUDED.end_date, domain = EXCLUDED.domain;
 
 -- Seed Certifications
 INSERT INTO certifications (title, issuing_organization, issue_date, expiry_date, credential_id, credential_url, status) VALUES
-('AWS Certified Cloud Practitioner', 'Amazon Web Services', '2025-06-15', '2028-06-15', 'AWS-CCP-12345', 'https://aws.amazon.com/verification', 'active'),
-('Meta Front-End Developer', 'Meta (Coursera)', '2025-03-20', NULL, 'META-FE-67890', 'https://coursera.org/verify/67890', 'active'),
-('Google IT Automation with Python', 'Google (Coursera)', '2024-11-10', NULL, 'GOOGLE-PY-54321', 'https://coursera.org/verify/54321', 'active');
+('Master of Computer Applications (MCA)', 'Tripura University', '2013-06-01', NULL, NULL, NULL, 'active'),
+('Bachelor of Computer Applications (BCA)', 'ICFAI University (Tripura)', '2010-06-01', NULL, NULL, NULL, 'active')
+ON CONFLICT (title, issuing_organization) DO NOTHING;
 
 -- Seed Achievements
 INSERT INTO achievements (title, description, achievement_date, category, order_index) VALUES
-('Hackathon Winner', 'First place at the Regional Tech Hackathon 2025 for building an AI-powered accessibility tool.', '2025-08-20', 'Competition', 1),
-('Open Source Contributor', 'Contributed 50+ pull requests to popular open-source projects including Next.js and Supabase.', '2025-05-15', 'Open Source', 2),
-('Dean''s List', 'Recognized on the Dean''s List for academic excellence in Computer Science.', '2025-01-10', 'Academic', 3);
-
--- Seed Page Analytics
-INSERT INTO page_analytics (page_path, view_count, unique_visitors) VALUES
-('/', 150, 120),
-('/about', 80, 65),
-('/projects', 95, 78),
-('/contact', 45, 38);
+('30+ RPA Bots Deployed', 'Delivered automation at scale across IT service desk and finance/reporting processes.', '2023-01-01', 'Automation', 1),
+('Tableau/Power BI Implementation', 'Built analytics capability for sales, inventory, and performance reporting.', '2022-01-01', 'Analytics', 2),
+('Zero-Impact ERP OS Migration', 'Successfully migrated mission-critical ERP OS with zero business impact.', '2020-01-01', 'Infrastructure', 3)
+ON CONFLICT (title, achievement_date) DO NOTHING;

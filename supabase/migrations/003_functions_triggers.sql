@@ -12,22 +12,27 @@ END;
 $$ LANGUAGE plpgsql;
 
 -- Apply to relevant tables
+DROP TRIGGER IF EXISTS update_projects_updated_at ON projects;
 CREATE TRIGGER update_projects_updated_at
   BEFORE UPDATE ON projects
   FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
+DROP TRIGGER IF EXISTS update_admin_users_updated_at ON admin_users;
 CREATE TRIGGER update_admin_users_updated_at
   BEFORE UPDATE ON admin_users
   FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
+DROP TRIGGER IF EXISTS update_skills_updated_at ON skills;
 CREATE TRIGGER update_skills_updated_at
   BEFORE UPDATE ON skills
   FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
+DROP TRIGGER IF EXISTS update_certifications_updated_at ON certifications;
 CREATE TRIGGER update_certifications_updated_at
   BEFORE UPDATE ON certifications
   FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
+DROP TRIGGER IF EXISTS update_achievements_updated_at ON achievements;
 CREATE TRIGGER update_achievements_updated_at
   BEFORE UPDATE ON achievements
   FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
@@ -57,18 +62,22 @@ END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
 -- Apply audit triggers to core tables
+DROP TRIGGER IF EXISTS projects_audit_trigger ON projects;
 CREATE TRIGGER projects_audit_trigger
   AFTER INSERT OR UPDATE OR DELETE ON projects
   FOR EACH ROW EXECUTE FUNCTION log_audit_event();
 
+DROP TRIGGER IF EXISTS skills_audit_trigger ON skills;
 CREATE TRIGGER skills_audit_trigger
   AFTER INSERT OR UPDATE OR DELETE ON skills
   FOR EACH ROW EXECUTE FUNCTION log_audit_event();
 
+DROP TRIGGER IF EXISTS certifications_audit_trigger ON certifications;
 CREATE TRIGGER certifications_audit_trigger
   AFTER INSERT OR UPDATE OR DELETE ON certifications
   FOR EACH ROW EXECUTE FUNCTION log_audit_event();
 
+DROP TRIGGER IF EXISTS achievements_audit_trigger ON achievements;
 CREATE TRIGGER achievements_audit_trigger
   AFTER INSERT OR UPDATE OR DELETE ON achievements
   FOR EACH ROW EXECUTE FUNCTION log_audit_event();

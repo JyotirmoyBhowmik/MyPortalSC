@@ -1,0 +1,1763 @@
+--- File: Jyotirmoy_Bhowmik_Resume.docx ---
+Jyotirmoy Bhowmik
+Project Manager – IT Infrastructure & Network | Security | Cloud 
+Kathmandu, Nepal  |  +977-9801009825  |  +91-9774135614  |  jyotirmoy.bhowmik@gmail.com
+Professional Summary
+IT Infrastructure & Project Management leader with 15+ years of experience delivering secure, resilient enterprise infrastructure and technology programs across India and Nepal with multi-country coordination exposure (Singapore, Malaysia, Bangladesh, Australia).
+Strong track record in data center operations, disaster recovery transformation, cloud strategy and migrations (AWS/Azure), Microsoft 365 modernization, and large-scale network & security upgrades.
+Deep experience working with Industrial Control Systems (ICS) / SCADA environments—driving IT/OT connectivity, OT security roadmap planning, and segmentation initiatives aligned to IEC 62443 principles.
+Skilled in evaluating current-state environments (infra, network, security, IT/OT)—performing gap/risk assessment, defining target architecture (Landing Zone / hybrid), and building practical roadmaps to improve resilience, compliance, and service quality.
+Proven people leader and stakeholder partner—leading teams (4–16 members), vendors, and cross-functional groups; delivering outcomes through structured governance, documentation, SOPs, and audit readiness.
+Delivered automation and analytics outcomes including 30+ RPA bots and BI dashboards (Tableau/Power BI) to improve operational efficiency and reporting.
+Core Competencies
+IT Infrastructure Operations: Data Center management, capacity planning, OS administration (Windows Server, RHEL), patching, troubleshooting, service continuity.
+Network & Security: Cisco/Juniper switching & routing, firewall administration (Palo Alto/Fortinet/Check Point), VPN, proxy/SASE (Zscaler), network segmentation and access controls.
+Cloud & Collaboration: AWS and Azure core services, Microsoft 365 (Exchange, Teams, SharePoint, OneDrive, Power BI), identity and access fundamentals.
+Disaster Recovery & Backup: DR strategy & testing, hybrid DR design, Commvault backup administration, geo-replication using HPE StoreOnce / enterprise storage.
+Virtualization & Platforms: VMware vSphere/ESXi, Hyper-V, Citrix, Red Hat Virtualization; SAP/ERP hosting support.
+Project/Program Management: Scope & planning, vendor management, procurement, budget tracking, risk management, documentation, stakeholder communication.
+Automation & Analytics: RPA (UiPath / AutomationEdge / Automation Anywhere), dashboards and reporting (Tableau/Power BI), process improvement.
+Professional Experience
+ITC Infotech India Ltd. (Seconded to Surya Nepal Pvt. Ltd.) — Kathmandu, Nepal
+Project Manager & IT Infrastructure Team Lead | Sep 2016 – Present
+Lead infrastructure operations and project delivery for enterprise Data Center, Disaster Recovery, ICS/SCADA and SAP ERP environments; manage vendors and coordinate global project teams to align technology outcomes with business objectives.
+Key Responsibilities & Achievements
+Own end-to-end infrastructure delivery and operations across data center, DR, server platforms, and network/security services; ensure 24x7 service continuity through support governance (AMC/warranty/third-party).
+Drive cloud modernization and collaboration adoption—migrated enterprise productivity and core services to Microsoft 365 (E3/E5) with SharePoint/OneDrive integration.
+Modernized security posture by introducing Zscaler SASE to replace legacy proxy/VPN approach, strengthening secure remote access and web controls.
+Led evaluation and migration of Disaster Recovery from traditional architecture to hybrid virtual design with landing-zone approach, improving resilience and recovery readiness.
+Administer enterprise backup and resilience using Commvault with geo-replication on HPE StoreOnce to improve data protection and redundancy.
+Delivered automation at scale—deployed 30+ RPA bots across IT service desk and finance/reporting processes; improved cycle times and reduced manual workload.
+Built analytics and reporting capability—delivered Tableau/Power BI dashboards for sales, inventory, and performance reporting; enabled informed decision-making.
+Delivered IT/OT connectivity improvements for industrial environments supporting Utility Management (SCADA) and EHS sustainability initiatives; coordinated solution evaluation (IBM Maximo, Envizi, Conserve.AI, Gensuite) and stakeholder alignment.
+Maintain governance: IT policies/SOP adherence, documentation, training and audit readiness across infrastructure and security operations.
+Selected high-impact programs delivered/led (Critical/High):
+Industrial OT Network Segmentation aligned to IEC 62443 principles.
+Cloud Landing Zone Architecture Design.
+Core Network Switch Lifecycle Replacement – EOL remediation.
+Core Backbone Upgrade (1G to 10G).
+Disaster Recovery Geo-Redundancy Migration.
+Enterprise Backup & Storage Enhancement / Disk-Based Backup Modernization.
+Microsoft 365 Enterprise Rollout + Intune/MDM procurement.
+Network Access Control (RADIUS/802.1x) & AAA security implementation.
+Infrastructure Observability Suite (Zabbix).
+Unified Enterprise Wi‑Fi 6 Rollout (Multi‑Site).
+Mission-Critical ERP Virtualization and Zero-Impact ERP OS Migration.
+RPA deployment (Attended/Unattended) scale-out + Finance/Service Desk automation.
+Technology Environment: AWS; Azure; Microsoft 365; VMware; Hyper‑V; RHEL; Windows Server; Cisco/Juniper; Palo Alto/Fortinet/Check Point; Zscaler; Commvault; HPE StoreOnce; Tableau; Power BI; UiPath/AutomationEdge/Automation Anywhere; Zabbix
+Payoda Technologies Pvt. Ltd. — Aizawl, India
+Senior Engineer – IT Infrastructure & System Integration  |  May 2014 – Sep 2016
+Client: Mizoram State Data Centre, Mizoram State e‑Governance Society (Govt. of Mizoram)
+Primary networking and security engineer for a state government data center; led a 12-member team supporting LAN/WAN, switching and firewall security for e‑governance applications.
+Technical lead for RHEL Linux and SQL Server environments—installation, configuration, performance tuning, patching and availability management.
+Conducted requirement analysis and contributed to infrastructure upgrade design; coordinated vendors and procurement to optimize cost and timelines.
+Global Innov Source (Sify Technologies) — Agartala, India
+Assistant System Administrator Engineer  |  Jun 2012 – Apr 2014
+Client: Tripura State Data Center, Tripura State e‑Governance Society (Govt. of Tripura)
+Supported Tier‑III data center operations within a 16-member team; administered RHEL server farms and network devices; handled patching, configuration changes and capacity planning.
+Assisted implementation of virtualization and backup systems; supported incident resolution and performance improvements.
+Created documentation and trained junior team members to standardize operational processes.
+Education
+Master of Computer Applications (MCA), Tripura University — 2013
+Bachelor of Computer Applications (BCA), ICFAI University (Tripura) — 2010
+Higher Secondary (12th, Science), National Institute of Open Schooling (NIOS) — 2007
+Additional Information
+Languages: Hindi, English, Bengali (Fluent)
+
+==================================================
+
+--- File: Jyotirmoy_Bhowmik_Activity_Summary.docx ---
+Activity Summary – Jyotirmoy Bhowmik | Manager – IT Infrastructure & Network 
+Delivered multi-year modernization across OT/IT security, factory connectivity, data center & DR, cloud collaboration, monitoring/observability, automation and compliance—improving resilience, performance and governance across multi-site operations.
+Improvement & Advancement (year‑on‑year maturity)
+Standardize and refresh core infrastructure to improve performance, scalability and operational consistency.
+Embed security‑by‑design in OT/IT connectivity, access and change management to reduce risk without disrupting production.
+Strengthen resilience via DR preparedness, modern backup practices and disciplined recovery routines.
+Move from reactive to proactive operations using observability, health reporting and service KPIs.
+Accelerate digitization through SharePoint/OneDrive, targeted automation (RPA) and governed GenAI readiness (Copilot).
+Strategic Focus – Security & Risk Management
+Execute an IT/OT security roadmap aligned to business priorities and compliance expectations.
+Apply segmentation and least‑privilege access to protect critical systems and limit lateral movement.
+Improve hygiene and readiness with patch/vulnerability cadence, logging/monitoring and incident playbooks.
+Core Roles & Responsibilities 
+Lead OT/IT network architecture and multi‑site roadmap execution (LAN/WAN/Wi‑Fi; secure segmentation).
+Operate Data Center, DR and backup/restore governance (availability, capacity and recovery readiness).
+Manage ISP/WAN/Internet services; coordinate endpoint operations, patching and compliance renewals.
+Own budgeting, CAPEX/OPEX procurement, vendor negotiation and contract renewals; deliver service reporting.
+Selected Initiatives (improvement, advancement & business benefit)
+Theme
+Initiatives & business benefit (summary)
+Secure OT/IT & Industry 4.0 readiness
+OT network rollout and segmentation; security requirements translated into solution design/procurement—reduced exposure and improved production connectivity.
+Sustainability & analytics advancement
+Energy monitoring automation approach (central collection, dashboards, anomaly visibility)—better insight for utilities and compliance.
+Network modernization & scale
+Backbone/campus upgrades, capacity uplift and wireless refresh—higher performance, stability and user experience across sites.
+Resilience & data protection
+DR readiness and backup/retention modernization—improved recoverability and reduced operational risk.
+Cloud collaboration & content modernization
+SharePoint/OneDrive rollout and content migration—stronger collaboration, mobility and governance.
+Operational excellence, automation & GenAI
+Monitoring (e.g., Zabbix), service health reporting, RPA use cases and governed Copilot evaluation—faster detection and productivity gains.
+Business Value Delivered
+Reduced operational/cyber risk through stronger security architecture, controlled access and governance.
+Improved reliability via standardization, lifecycle remediation and DC/DR/backup resilience.
+Faster execution and collaboration through modern workplace adoption and digitized workflows.
+Better transparency with monitoring dashboards, health reporting and disciplined operational reviews.
+Stronger cost control through budgeting discipline, vendor negotiation and timely renewals.
+
+==================================================
+
+--- File: Jyotirmoy_Bhowmik_Detailed Activities & Initiative.docx ---
+Detailed Activities & Initiative (2016–Present)
+1) Operational Activities (BAU) — consolidated
+Service Operations & Reliability
+Data Center operations and service availability management (capacity, uptime, routine checks).
+Disaster Recovery operational readiness (procedures, coordination, recovery validation).
+Backup and restoration operations (schedule governance, restore assurance, retention alignment).
+Health operational reporting (daily/monthly service health, utilization and exception reporting).
+Network & Connectivity Operations
+ISP / intranet / internet link governance and coordination (performance, availability, escalation).
+LAN/WAN operations and lifecycle management (switching/routing, standardization and hardening).
+Site connectivity readiness for factories/warehouses/offices (implementation coordination, stabilization).
+End‑User & Workplace Services
+Endpoint operations (laptop/desktop/printer): onboarding, allocation, issue resolution coordination.
+Software/tool renewals and support renewals; entitlement governance and renewal planning.
+User enablement for collaboration and mobility initiatives (adoption coordination, comms support).
+Governance, Compliance & Financial Management
+Budgeting, annual planning and outlook for infrastructure investments and run-cost.
+CAPEX/OPEX procurement and negotiation; agreement renewals and vendor governance.
+Infrastructure compliance readiness (policies, controls, documentation, audit support).
+Programs & Architecture
+IT projects: network architecture and infrastructure design (requirements, target architecture, delivery governance).
+Modernization and automation programs (RPA, analytics enablement) to improve efficiency and reporting.
+Copilot evaluation/rollout readiness planning to improve knowledge work productivity under governance.
+2) Initiative Portfolio — consolidated into programs
+A. OT/Factory Modernization & Security (Industry 4.0 readiness)
+Establish secure OT foundations (segmentation, access controls) to protect ICS/SCADA environments.
+Enable safe OT–IT data exchange to support monitoring, analytics and future automation.
+Strengthen governance through roadmaps, assessments and vendor coordination.
+#
+Initiative
+FY
+Strategic Area
+Criticality
+Delivery focus (merged/standardized)
+1
+Industrial OT Network Segmentation (IEC 62443)
+2024-25
+OT Security
+Critical
+Define requirements and target controls; Coordinate design/implementation and validation; Drive governance and operational handover
+2
+AI-Driven Energy Analytics & Automation
+2024-25
+IoT / Sustainability
+High
+Requirements and stakeholder alignment; Delivery coordination and governance; Operational handover and improvement
+11
+OT Network Security Roadmap Planning
+2023-24
+OT Security
+Critical
+Define requirements and target controls; Coordinate design/implementation and validation; Drive governance and operational handover
+20
+Real-time Utility Monitoring System (IoT)
+2022-23
+Sustainability
+Medium
+Requirements and stakeholder alignment; Delivery coordination and governance; Operational handover and improvement
+B. Network Modernization & Site Connectivity
+Upgrade backbone, switching and routing to improve reliability, performance and capacity.
+Expand WAN capacity and strengthen internet gateway resiliency to support business growth.
+Modernize wireless to deliver secure, consistent connectivity across sites.
+#
+Initiative
+FY
+Strategic Area
+Criticality
+Delivery focus (merged/standardized)
+3
+Unified Enterprise Wi-Fi 6 Rollout (Multi-Site)
+2024-25
+Network Infra
+High
+Assess capacity and performance gaps; Plan/design upgrade and coordinate implementation; Stabilize operations and document standards
+9
+Core Network Switch Lifecycle Replacement (EOL)
+2024-25
+Network Infra
+Critical
+Assess capacity and performance gaps; Plan/design upgrade and coordinate implementation; Stabilize operations and document standards
+16
+Dark Fiber WAN Capacity Expansion
+2023-24
+Network Infra
+High
+Assess capacity and performance gaps; Plan/design upgrade and coordinate implementation; Stabilize operations and document standards
+21
+Core Backbone Upgrade (1G to 10G Switching)
+2022-23
+Network Infra
+Critical
+Assess capacity and performance gaps; Plan/design upgrade and coordinate implementation; Stabilize operations and document standards
+26
+Edge Router Infrastructure Refresh (Cisco)
+2022-23
+Network Infra
+High
+Assess capacity and performance gaps; Plan/design upgrade and coordinate implementation; Stabilize operations and document standards
+74
+Border Router & Internet Gateway Upgrade
+2018-19
+Network Infra
+Critical
+Assess capacity and performance gaps; Plan/design upgrade and coordinate implementation; Stabilize operations and document standards
+C. Data Center, Storage & Backup/DR Resilience
+Improve business continuity with DR readiness, geo-redundancy and operational drills.
+Modernize storage and backup platforms to improve recoverability and reduce operational risk.
+Rationalize and redesign infrastructure for higher availability and scalability.
+#
+Initiative
+FY
+Strategic Area
+Criticality
+Delivery focus (merged/standardized)
+8
+High-Density Fiber Distribution Hub Design
+2024-25
+Data Center Infra
+Critical
+Assess current state and risks; Coordinate modernization/migration and testing; Operationalize with SOPs and monitoring
+29
+Legacy Data Center Decommissioning (Floor 1)
+2022-23
+Infrastructure
+Medium
+Assess current state and risks; Coordinate modernization/migration and testing; Operationalize with SOPs and monitoring
+36
+Disaster Recovery Geo-Redundancy Migration
+2021-22
+BCP / DR
+Critical
+Assess current state and risks; Coordinate modernization/migration and testing; Operationalize with SOPs and monitoring
+42
+Enterprise Backup & Storage Enhancement
+2021-22
+Data Protection
+Critical
+Assess current state and risks; Coordinate modernization/migration and testing; Operationalize with SOPs and monitoring
+51
+Disk-Based Backup Modernization
+2020-21
+Data Protection
+Critical
+Assess current state and risks; Coordinate modernization/migration and testing; Operationalize with SOPs and monitoring
+52
+High-Performance Storage Migration (Flash)
+2020-21
+Infrastructure
+Critical
+Assess current state and risks; Coordinate modernization/migration and testing; Operationalize with SOPs and monitoring
+60
+Interim Disaster Recovery Site Setup
+2020-21
+BCP / DR
+Critical
+Assess current state and risks; Coordinate modernization/migration and testing; Operationalize with SOPs and monitoring
+63
+Legacy Storage Platform Replacement
+2019-20
+Infrastructure
+Critical
+Assess current state and risks; Coordinate modernization/migration and testing; Operationalize with SOPs and monitoring
+64
+Backup Workflow Redesign & Tool Upgrade
+2019-20
+Data Protection
+High
+Assess current state and risks; Coordinate modernization/migration and testing; Operationalize with SOPs and monitoring
+83
+High-Availability (N+1) Infrastructure Redesign
+2017-18
+Infrastructure
+Critical
+Assess current state and risks; Coordinate modernization/migration and testing; Operationalize with SOPs and monitoring
+D. Cloud Foundations & Digital Platforms
+Define scalable cloud foundations (landing zone, private connectivity) for secure hosting.
+Modernize digital platforms (web assets) and strengthen operational security controls.
+Assess hosting options to optimize cost, risk and scalability.
+#
+Initiative
+FY
+Strategic Area
+Criticality
+Delivery focus (merged/standardized)
+5
+Cloud Landing Zone Architecture Design
+2024-25
+Cloud Strategy
+Critical
+Define cloud target architecture and governance; Coordinate connectivity/migration and security baseline; Enable operations and cost oversight
+10
+Corporate WebsiteCloud Migration (AWS/Azure)
+2023-24
+Cloud / Digital
+High
+Define cloud target architecture and governance; Coordinate connectivity/migration and security baseline; Enable operations and cost oversight
+13
+Centralized Infrastructure Hosting Assessment
+2023-24
+Strategy
+Critical
+Requirements and stakeholder alignment; Delivery coordination and governance; Operational handover and improvement
+41
+Hybrid Cloud Connectivity (Azure ExpressRoute)
+2021-22
+Cloud Network
+Critical
+Assess capacity and performance gaps; Plan/design upgrade and coordinate implementation; Stabilize operations and document standards
+44
+Corporate Web Maintenance & Security Patching
+2021-22
+Web Ops
+Low
+Requirements and stakeholder alignment; Delivery coordination and governance; Operational handover and improvement
+55
+Corporate Website Technology Upgrade
+2020-21
+Digital
+Medium
+Requirements and stakeholder alignment; Delivery coordination and governance; Operational handover and improvement
+E. Collaboration & Content Modernization
+Adopt modern productivity and collaboration platforms and migrate content to cloud services.
+Establish governance for identity/device management and information access.
+Improve user productivity and support hybrid work with standardized tools.
+#
+Initiative
+FY
+Strategic Area
+Criticality
+Delivery focus (merged/standardized)
+4
+SharePoint & OneDrive Business Implementation
+2024-25
+Cloud Collab
+High
+Define migration/adoption approach; Govern permissions/governance and rollout; Improve collaboration and reduce legacy dependency
+30
+Cloud Storage Migration (OneDrive/SharePoint)
+2022-23
+Cloud Storage
+High
+Define migration/adoption approach; Govern permissions/governance and rollout; Improve collaboration and reduce legacy dependency
+31
+File Server to Cloud Content Migration
+2022-23
+Data Mgmt
+Medium
+Define migration/adoption approach; Govern permissions/governance and rollout; Improve collaboration and reduce legacy dependency
+33
+Microsoft 365 & Intune MDM Procurement
+2022-23
+Cloud / Security
+Critical
+Define requirements and target controls; Coordinate design/implementation and validation; Drive governance and operational handover
+40
+Microsoft 365 Enterprise Rollout
+2021-22
+Cloud Productivity
+High
+Define migration/adoption approach; Govern permissions/governance and rollout; Improve collaboration and reduce legacy dependency
+54
+Office 365 Initial Pilot & Deployment
+2020-21
+Cloud Productivity
+High
+Define migration/adoption approach; Govern permissions/governance and rollout; Improve collaboration and reduce legacy dependency
+F. Security Hardening & Compliance Enablement
+Reduce attack surface with access controls, patch discipline and authentication hardening.
+Enable audit readiness through assessments, certificate governance and security tooling.
+Strengthen boundary protections (DMZ/security zones) aligned to operational needs.
+#
+Initiative
+FY
+Strategic Area
+Criticality
+Delivery focus (merged/standardized)
+28
+Centralized Patch Management (WSUS) Rollout
+2022-23
+Security Ops
+Critical
+Define requirements and target controls; Coordinate design/implementation and validation; Drive governance and operational handover
+50
+Internal PKI & CA Certificate Deployment
+2021-22
+Cybersecurity
+High
+Define requirements and target controls; Coordinate design/implementation and validation; Drive governance and operational handover
+53
+Network Access Control (RADIUS/802.1x)
+2020-21
+Cybersecurity
+Critical
+Define requirements and target controls; Coordinate design/implementation and validation; Drive governance and operational handover
+56
+Enterprise Digital Rights Management (DRM)
+2020-21
+Data Security
+Critical
+Define requirements and target controls; Coordinate design/implementation and validation; Drive governance and operational handover
+61
+DMZ Network Virtualization
+2020-21
+Network Security
+High
+Define requirements and target controls; Coordinate design/implementation and validation; Drive governance and operational handover
+68
+Network AAA Security Implementation
+2019-20
+Cybersecurity
+Critical
+Define requirements and target controls; Coordinate design/implementation and validation; Drive governance and operational handover
+78
+Microsoft RAP Security Assessment
+2018-19
+Cybersecurity
+High
+Define requirements and target controls; Coordinate design/implementation and validation; Drive governance and operational handover
+80
+Active Directory Security Audit
+2018-19
+Cybersecurity
+High
+Define requirements and target controls; Coordinate design/implementation and validation; Drive governance and operational handover
+G. Automation, Analytics & Business Enablement
+Automate repeatable processes to reduce manual effort and improve turnaround time.
+Enable analytics platforms and dashboards to improve decision-making and reporting.
+Standardize monitoring visualization to support proactive operations.
+#
+Initiative
+FY
+Strategic Area
+Criticality
+Delivery focus (merged/standardized)
+22
+Financial MIS Analytics Dashboard Development
+2022-23
+Data Analytics
+High
+Identify high-value use cases and requirements; Implement tooling/dashboards/bots and validate; Embed operations and continuous improvement
+23
+Enterprise Monitoring Visualization Deployment
+2022-23
+ITOps
+Low
+Identify high-value use cases and requirements; Implement tooling/dashboards/bots and validate; Embed operations and continuous improvement
+25
+RPA Deployment (Attended & Unattended Bots)
+2022-23
+Automation
+High
+Identify high-value use cases and requirements; Implement tooling/dashboards/bots and validate; Embed operations and continuous improvement
+32
+PowerBI Analytics Platform Procurement
+2022-23
+BI / Analytics
+Medium
+Identify high-value use cases and requirements; Implement tooling/dashboards/bots and validate; Embed operations and continuous improvement
+37
+Robotic Process Automation (Scale-out Phase)
+2021-22
+Automation
+High
+Identify high-value use cases and requirements; Implement tooling/dashboards/bots and validate; Embed operations and continuous improvement
+49
+Tableau BI Infrastructure Setup
+2021-22
+Data Analytics
+High
+Identify high-value use cases and requirements; Implement tooling/dashboards/bots and validate; Embed operations and continuous improvement
+57
+RPA: IT Service Desk & Finance Automation
+2020-21
+Automation
+High
+Identify high-value use cases and requirements; Implement tooling/dashboards/bots and validate; Embed operations and continuous improvement
+H. Business Applications, FinTech Integrations & Governance
+Enable critical integrations and portals to streamline business workflows and compliance.
+Support finance process digitization and payment integrations.
+Drive governance portals and policy automation for better control and visibility.
+#
+Initiative
+FY
+Strategic Area
+Criticality
+Delivery focus (merged/standardized)
+43
+Corporate Governance Portal Go-Live
+2021-22
+Compliance
+Medium
+Requirements and stakeholder alignment; Delivery coordination and governance; Operational handover and improvement
+45
+Banking Interface Integration (NCHL/ERP)
+2021-22
+FinTech Integration
+Critical
+Requirements and stakeholder alignment; Delivery coordination and governance; Operational handover and improvement
+46
+Automated EFT Payment Gateway Integration
+2021-22
+FinTech Integration
+Critical
+Requirements and stakeholder alignment; Delivery coordination and governance; Operational handover and improvement
+48
+Financial Accounting Tool Implementation
+2021-22
+Finance Apps
+High
+Requirements and stakeholder alignment; Delivery coordination and governance; Operational handover and improvement
+58
+Management Information System (MIS) Portal
+2020-21
+Applications
+Medium
+Requirements and stakeholder alignment; Delivery coordination and governance; Operational handover and improvement
+59
+E-Governance Policy Portal
+2020-21
+Compliance
+Medium
+Requirements and stakeholder alignment; Delivery coordination and governance; Operational handover and improvement
+77
+Automated User Acceptance System (Lotus)
+2018-19
+Applications
+Low
+Requirements and stakeholder alignment; Delivery coordination and governance; Operational handover and improvement
+I. Physical Security & Surveillance Modernization
+Centralize surveillance operations to improve monitoring and incident response.
+Extend coverage to warehouses and remote sites for asset protection and safety.
+Standardize platforms to simplify operations and support scalability.
+#
+Initiative
+FY
+Strategic Area
+Criticality
+Delivery focus (merged/standardized)
+6
+Centralized IP-Surveillance (Warehousing)
+2024-25
+Physical Security
+High
+Define requirements and target controls; Coordinate design/implementation and validation; Drive governance and operational handover
+7
+Remote Construction Site Surveillance System
+2024-25
+Physical Security
+Medium
+Define requirements and target controls; Coordinate design/implementation and validation; Drive governance and operational handover
+86
+Centralized Surveillance Operations Center
+2017-18
+Physical Security
+High
+Define requirements and target controls; Coordinate design/implementation and validation; Drive governance and operational handover
+87
+Multi-Site CCTV Implementation (Phase 1)
+2016-17
+Physical Security
+Medium
+Define requirements and target controls; Coordinate design/implementation and validation; Drive governance and operational handover
+J. IT Asset Management & Operational Efficiency
+Improve endpoint and asset lifecycle governance and operational efficiency.
+Modernize OS baselines and optimize support tooling to reduce downtime and improve service.
+Build/expand IT infrastructure for new facilities and business needs.
+#
+Initiative
+FY
+Strategic Area
+Criticality
+Delivery focus (merged/standardized)
+14
+Enterprise Windows 11 OS Transition
+2023-24
+End-User Compute
+Medium
+Requirements and stakeholder alignment; Delivery coordination and governance; Operational handover and improvement
+15
+Legacy Server OS Modernization (2012R2)
+2023-24
+Infrastructure
+High
+Assess current state and risks; Coordinate modernization/migration and testing; Operationalize with SOPs and monitoring
+34
+Managed Print Services Implementation
+2022-23
+Ops Efficiency
+Low
+Requirements and stakeholder alignment; Delivery coordination and governance; Operational handover and improvement
+35
+IT Asset Lifecycle Management System
+2022-23
+ITAM
+Medium
+Requirements and stakeholder alignment; Delivery coordination and governance; Operational handover and improvement
+47
+IT Asset Disposal & Write-off Governance
+2021-22
+ITAM / Compliance
+Low
+Requirements and stakeholder alignment; Delivery coordination and governance; Operational handover and improvement
+65
+Windows Server OS Risk Remediation
+2019-20
+Infrastructure
+High
+Assess current state and risks; Coordinate modernization/migration and testing; Operationalize with SOPs and monitoring
+66
+IT Asset Management Portal Implementation
+2019-20
+ITAM
+Low
+Requirements and stakeholder alignment; Delivery coordination and governance; Operational handover and improvement
+69
+VSS Clone Endpoint Deployment Optimization
+2019-20
+ITOps Efficiency
+Medium
+Identify high-value use cases and requirements; Implement tooling/dashboards/bots and validate; Embed operations and continuous improvement
+70
+Remote Support Services Implementation
+2019-20
+ITOps
+Low
+Identify high-value use cases and requirements; Implement tooling/dashboards/bots and validate; Embed operations and continuous improvement
+71
+Greenfield Factory IT Infrastructure Design
+2019-20
+Infrastructure
+High
+Assess current state and risks; Coordinate modernization/migration and testing; Operationalize with SOPs and monitoring
+75
+Factory IT Infrastructure Procurement
+2018-19
+Infrastructure
+High
+Assess current state and risks; Coordinate modernization/migration and testing; Operationalize with SOPs and monitoring
+76
+Warehouse IT Infrastructure Setup (Redundant)
+2018-19
+Infrastructure
+High
+Assess current state and risks; Coordinate modernization/migration and testing; Operationalize with SOPs and monitoring
+79
+Remote Assistance (MSRA) Deployment
+2018-19
+End-User Support
+Low
+Requirements and stakeholder alignment; Delivery coordination and governance; Operational handover and improvement
+84
+Windows 10 & Office 2013 Migration
+2017-18
+End-User Compute
+High
+Requirements and stakeholder alignment; Delivery coordination and governance; Operational handover and improvement
+K. Assessments, Due Diligence & Strategy/POCs
+Run structured assessments/POCs to select fit-for-purpose technologies and reduce adoption risk.
+Support M&A and network services assessments with infrastructure due diligence.
+Create blueprints to guide compliance and monitoring improvements.
+#
+Initiative
+FY
+Strategic Area
+Criticality
+Delivery focus (merged/standardized)
+12
+Energy Compliance & Monitoring Blueprint
+2023-24
+Compliance
+High
+Requirements and stakeholder alignment; Delivery coordination and governance; Operational handover and improvement
+19
+EHS Incident Management SaaS Evaluation
+2022-23
+Compliance
+Medium
+Requirements and stakeholder alignment; Delivery coordination and governance; Operational handover and improvement
+24
+Branch Office Managed Network Services Assessment
+2022-23
+Network Ops
+Medium
+Assess capacity and performance gaps; Plan/design upgrade and coordinate implementation; Stabilize operations and document standards
+39
+Subsidiary IT Infrastructure Due Diligence
+2021-22
+M&A Strategy
+High
+Requirements and stakeholder alignment; Delivery coordination and governance; Operational handover and improvement
+67
+Backup Solution Proof of Concept (POC)
+2019-20
+Technology Eval
+Low
+Requirements and stakeholder alignment; Delivery coordination and governance; Operational handover and improvement
+72
+3-Zone Security Virtualization Initiative
+2018-19
+Infrastructure
+Critical
+Assess current state and risks; Coordinate modernization/migration and testing; Operationalize with SOPs and monitoring
+73
+DMZ Server Consolidation
+2018-19
+Infrastructure
+High
+Assess current state and risks; Coordinate modernization/migration and testing; Operationalize with SOPs and monitoring
+81
+Virtualization Procurement & Planning
+2017-18
+Strategy
+Medium
+Requirements and stakeholder alignment; Delivery coordination and governance; Operational handover and improvement
+82
+Infrastructure Monitoring Tool Pilot
+2017-18
+Monitoring
+Medium
+Identify high-value use cases and requirements; Implement tooling/dashboards/bots and validate; Embed operations and continuous improvement
+88
+Virtualization Technology POC
+2016-17
+Technology Eval
+Low
+Requirements and stakeholder alignment; Delivery coordination and governance; Operational handover and improvement
+L. Other initiatives (not otherwise grouped)
+Additional initiatives.
+#
+Initiative
+FY
+Strategic Area
+Criticality
+Delivery focus (merged/standardized)
+17
+Infrastructure Observability Suite (Zabbix)
+2023-24
+ITOps / Monitoring
+High
+Identify high-value use cases and requirements; Implement tooling/dashboards/bots and validate; Embed operations and continuous improvement
+18
+Mission-Critical ERP Server Virtualization
+2022-23
+Infrastructure
+Critical
+Assess current state and risks; Coordinate modernization/migration and testing; Operationalize with SOPs and monitoring
+27
+Hybrid Boardroom Conferencing Solution (Polycom)
+2022-23
+AV / Collab
+Medium
+Define coverage and operational requirements; Coordinate implementation and integration; Centralize monitoring/support model
+38
+ERP Landscape Virtualization (Dev/QA/Prod)
+2021-22
+Infrastructure
+Critical
+Assess current state and risks; Coordinate modernization/migration and testing; Operationalize with SOPs and monitoring
+62
+Zero-Impact ERP OS Migration
+2019-20
+Infrastructure
+Critical
+Assess current state and risks; Coordinate modernization/migration and testing; Operationalize with SOPs and monitoring
+85
+Active Directory Functional Level Upgrade
+2017-18
+Infrastructure
+Critical
+Assess current state and risks; Coordinate modernization/migration and testing; Operationalize with SOPs and monitoring
+#
+Global Standard Project Title
+Strategic Area
+Fiscal Year
+Criticality
+1
+Industrial OT Network Segmentation (IEC 62443)
+OT Security
+2024-25
+Critical
+2
+AI-Driven Energy Analytics & Automation
+IoT / Sustainability
+2024-25
+High
+3
+Unified Enterprise Wi-Fi 6 Rollout (Multi-Site)
+Network Infra
+2024-25
+High
+4
+SharePoint & OneDrive Business Implementation
+Cloud Collab
+2024-25
+High
+5
+Cloud Landing Zone Architecture Design
+Cloud Strategy
+2024-25
+Critical
+6
+Centralized IP-Surveillance (Warehousing)
+Physical Security
+2024-25
+High
+7
+Remote Construction Site Surveillance System
+Physical Security
+2024-25
+Medium
+8
+High-Density Fiber Distribution Hub Design
+Data Center Infra
+2024-25
+Critical
+9
+Core Network Switch Lifecycle Replacement (EOL)
+Network Infra
+2024-25
+Critical
+10
+Corporate Web Asset Cloud Migration (AWS/Azure)
+Cloud / Digital
+2023-24
+High
+11
+OT Network Security Roadmap Planning
+OT Security
+2023-24
+Critical
+12
+Energy Compliance & Monitoring Blueprint
+Compliance
+2023-24
+High
+13
+Centralized Infrastructure Hosting Assessment
+Strategy
+2023-24
+Critical
+14
+Enterprise Windows 11 OS Transition
+End-User Compute
+2023-24
+Medium
+15
+Legacy Server OS Modernization (2012R2)
+Infrastructure
+2023-24
+High
+16
+Dark Fiber WAN Capacity Expansion
+Network Infra
+2023-24
+High
+17
+Infrastructure Observability Suite (Zabbix)
+ITOps / Monitoring
+2023-24
+High
+18
+Mission-Critical ERP Server Virtualization
+Infrastructure
+2022-23
+Critical
+19
+EHS Incident Management SaaS Evaluation
+Compliance
+2022-23
+Medium
+20
+Real-time Utility Monitoring System (IoT)
+Sustainability
+2022-23
+Medium
+21
+Core Backbone Upgrade (1G to 10G Switching)
+Network Infra
+2022-23
+Critical
+22
+Financial MIS Analytics Dashboard Development
+Data Analytics
+2022-23
+High
+23
+Enterprise Monitoring Visualization Deployment
+ITOps
+2022-23
+Low
+24
+Branch Office Managed Network Services Assessment
+Network Ops
+2022-23
+Medium
+25
+RPA Deployment (Attended & Unattended Bots)
+Automation
+2022-23
+High
+26
+Edge Router Infrastructure Refresh (Cisco)
+Network Infra
+2022-23
+High
+27
+Hybrid Boardroom Conferencing Solution (Polycom)
+AV / Collab
+2022-23
+Medium
+28
+Centralized Patch Management (WSUS) Rollout
+Security Ops
+2022-23
+Critical
+29
+Legacy Data Center Decommissioning (Floor 1)
+Infrastructure
+2022-23
+Medium
+30
+Cloud Storage Migration (OneDrive/SharePoint)
+Cloud Storage
+2022-23
+High
+31
+File Server to Cloud Content Migration
+Data Mgmt
+2022-23
+Medium
+32
+PowerBI Analytics Platform Procurement
+BI / Analytics
+2022-23
+Medium
+33
+Microsoft 365 & Intune MDM Procurement
+Cloud / Security
+2022-23
+Critical
+34
+Managed Print Services Implementation
+Ops Efficiency
+2022-23
+Low
+35
+IT Asset Lifecycle Management System
+ITAM
+2022-23
+Medium
+36
+Disaster Recovery Geo-Redundancy Migration
+BCP / DR
+2021-22
+Critical
+37
+Robotic Process Automation (Scale-out Phase)
+Automation
+2021-22
+High
+38
+ERP Landscape Virtualization (Dev/QA/Prod)
+Infrastructure
+2021-22
+Critical
+39
+Subsidiary IT Infrastructure Due Diligence
+M&A Strategy
+2021-22
+High
+40
+Microsoft 365 Enterprise Rollout
+Cloud Productivity
+2021-22
+High
+41
+Hybrid Cloud Connectivity (Azure ExpressRoute)
+Cloud Network
+2021-22
+Critical
+42
+Enterprise Backup & Storage Enhancement
+Data Protection
+2021-22
+Critical
+43
+Corporate Governance Portal Go-Live
+Compliance
+2021-22
+Medium
+44
+Corporate Web Maintenance & Security Patching
+Web Ops
+2021-22
+Low
+45
+Banking Interface Integration (NCHL/ERP)
+FinTech Integration
+2021-22
+Critical
+46
+Automated EFT Payment Gateway Integration
+FinTech Integration
+2021-22
+Critical
+47
+IT Asset Disposal & Write-off Governance
+ITAM / Compliance
+2021-22
+Low
+48
+Financial Accounting Tool Implementation
+Finance Apps
+2021-22
+High
+49
+Tableau BI Infrastructure Setup
+Data Analytics
+2021-22
+High
+50
+Internal PKI & CA Certificate Deployment
+Cybersecurity
+2021-22
+High
+51
+Disk-Based Backup Modernization
+Data Protection
+2020-21
+Critical
+52
+High-Performance Storage Migration (Flash)
+Infrastructure
+2020-21
+Critical
+53
+Network Access Control (RADIUS/802.1x)
+Cybersecurity
+2020-21
+Critical
+54
+Office 365 Initial Pilot & Deployment
+Cloud Productivity
+2020-21
+High
+55
+Corporate Website Technology Upgrade
+Digital
+2020-21
+Medium
+56
+Enterprise Digital Rights Management (DRM)
+Data Security
+2020-21
+Critical
+57
+RPA: IT Service Desk & Finance Automation
+Automation
+2020-21
+High
+58
+Management Information System (MIS) Portal
+Applications
+2020-21
+Medium
+59
+E-Governance Policy Portal
+Compliance
+2020-21
+Medium
+60
+Interim Disaster Recovery Site Setup
+BCP / DR
+2020-21
+Critical
+61
+DMZ Network Virtualization
+Network Security
+2020-21
+High
+62
+Zero-Impact ERP OS Migration
+Infrastructure
+2019-20
+Critical
+63
+Legacy Storage Platform Replacement
+Infrastructure
+2019-20
+Critical
+64
+Backup Workflow Redesign & Tool Upgrade
+Data Protection
+2019-20
+High
+65
+Windows Server OS Risk Remediation
+Infrastructure
+2019-20
+High
+66
+IT Asset Management Portal Implementation
+ITAM
+2019-20
+Low
+67
+Backup Solution Proof of Concept (POC)
+Technology Eval
+2019-20
+Low
+68
+Network AAA Security Implementation
+Cybersecurity
+2019-20
+Critical
+69
+VSS Clone Endpoint Deployment Optimization
+ITOps Efficiency
+2019-20
+Medium
+70
+Remote Support Services Implementation
+ITOps
+2019-20
+Low
+71
+Greenfield Factory IT Infrastructure Design
+Infrastructure
+2019-20
+High
+72
+3-Zone Security Virtualization Initiative
+Infrastructure
+2018-19
+Critical
+73
+DMZ Server Consolidation
+Infrastructure
+2018-19
+High
+74
+Border Router & Internet Gateway Upgrade
+Network Infra
+2018-19
+Critical
+75
+Factory IT Infrastructure Procurement
+Infrastructure
+2018-19
+High
+76
+Warehouse IT Infrastructure Setup (Redundant)
+Infrastructure
+2018-19
+High
+77
+Automated User Acceptance System (Lotus)
+Applications
+2018-19
+Low
+78
+Microsoft RAP Security Assessment
+Cybersecurity
+2018-19
+High
+79
+Remote Assistance (MSRA) Deployment
+End-User Support
+2018-19
+Low
+80
+Active Directory Security Audit
+Cybersecurity
+2018-19
+High
+81
+Virtualization Procurement & Planning
+Strategy
+2017-18
+Medium
+82
+Infrastructure Monitoring Tool Pilot
+Monitoring
+2017-18
+Medium
+83
+High-Availability (N+1) Infrastructure Redesign
+Infrastructure
+2017-18
+Critical
+84
+Windows 10 & Office 2013 Migration
+End-User Compute
+2017-18
+High
+85
+Active Directory Functional Level Upgrade
+Infrastructure
+2017-18
+Critical
+86
+Centralized Surveillance Operations Center
+Physical Security
+2017-18
+High
+87
+Multi-Site CCTV Implementation (Phase 1)
+Physical Security
+2016-17
+Medium
+88
+Virtualization Technology POC
+Technology Eval
+2016-17
+Low
+
+==================================================
+
+--- File: Jyotirmoy_Bhowmik_Detailed__YearWise_.docx ---
+Detailed Activities & Initiative Year Wise
+Operational Activities (BAU) — consolidated
+Service Operations & Reliability
+Data Center operations and service availability management (capacity, uptime, routine checks).
+Disaster Recovery operational readiness (procedures, coordination, recovery validation).
+Backup and restoration operations (schedule governance, restore assurance, retention alignment).
+Health operational reporting (daily/monthly service health, utilization and exception reporting).
+Network & Connectivity Operations
+ISP / intranet / internet link governance and coordination (performance, availability, escalation).
+LAN/WAN operations and lifecycle management (switching/routing, standardization and hardening).
+Site connectivity readiness for factories/warehouses/offices (implementation coordination, stabilization).
+End‑User & Workplace Services
+Endpoint operations (laptop/desktop/printer): onboarding, allocation, issue resolution coordination.
+Software/tool renewals and support renewals; entitlement governance and renewal planning.
+User enablement for collaboration and mobility initiatives (adoption coordination, comms support).
+Governance, Compliance & Financial Management
+Budgeting, annual planning and outlook for infrastructure investments and run-cost.
+CAPEX/OPEX procurement and negotiation; agreement renewals and vendor governance.
+Infrastructure compliance readiness (policies, controls, documentation, audit support).
+Programs & Architecture
+IT projects: network architecture and infrastructure design (requirements, target architecture, delivery governance).
+Modernization and automation programs (RPA, analytics enablement) to improve efficiency and reporting.
+Copilot evaluation/rollout readiness planning to improve knowledge work productivity under governance.
+Initiatives — Year-wise Register (with Program column)
+Fiscal Year: 2024-25
+#
+Program
+Initiative (Global Standard Project Title)
+Strategic Area
+Criticality
+1
+A
+Industrial OT Network Segmentation (IEC 62443)
+OT Security
+Critical
+2
+A
+AI-Driven Energy Analytics & Automation
+IoT / Sustainability
+High
+3
+B
+Unified Enterprise Wi-Fi 6 Rollout (Multi-Site)
+Network Infra
+High
+4
+E
+SharePoint & OneDrive Business Implementation
+Cloud Collab
+High
+5
+D
+Cloud Landing Zone Architecture Design
+Cloud Strategy
+Critical
+6
+I
+Centralized IP-Surveillance (Warehousing)
+Physical Security
+High
+7
+I
+Remote Construction Site Surveillance System
+Physical Security
+Medium
+8
+C
+High-Density Fiber Distribution Hub Design
+Data Center Infra
+Critical
+9
+B
+Core Network Switch Lifecycle Replacement (EOL)
+Network Infra
+Critical
+Fiscal Year: 2023-24
+#
+Program
+Initiative (Global Standard Project Title)
+Strategic Area
+Criticality
+10
+D
+Corporate Web Asset Cloud Migration (AWS/Azure)
+Cloud / Digital
+High
+11
+A
+OT Network Security Roadmap Planning
+OT Security
+Critical
+12
+K
+Energy Compliance & Monitoring Blueprint
+Compliance
+High
+13
+D
+Centralized Infrastructure Hosting Assessment
+Strategy
+Critical
+14
+J
+Enterprise Windows 11 OS Transition
+End-User Compute
+Medium
+15
+J
+Legacy Server OS Modernization (2012R2)
+Infrastructure
+High
+16
+B
+Dark Fiber WAN Capacity Expansion
+Network Infra
+High
+17
+Z
+Infrastructure Observability Suite (Zabbix)
+ITOps / Monitoring
+High
+Fiscal Year: 2022-23
+#
+Program
+Initiative (Global Standard Project Title)
+Strategic Area
+Criticality
+18
+Z
+Mission-Critical ERP Server Virtualization
+Infrastructure
+Critical
+19
+K
+EHS Incident Management SaaS Evaluation
+Compliance
+Medium
+20
+A
+Real-time Utility Monitoring System (IoT)
+Sustainability
+Medium
+21
+B
+Core Backbone Upgrade (1G to 10G Switching)
+Network Infra
+Critical
+22
+G
+Financial MIS Analytics Dashboard Development
+Data Analytics
+High
+23
+G
+Enterprise Monitoring Visualization Deployment
+ITOps
+Low
+24
+K
+Branch Office Managed Network Services Assessment
+Network Ops
+Medium
+25
+G
+RPA Deployment (Attended & Unattended Bots)
+Automation
+High
+26
+B
+Edge Router Infrastructure Refresh (Cisco)
+Network Infra
+High
+27
+Z
+Hybrid Boardroom Conferencing Solution (Polycom)
+AV / Collab
+Medium
+28
+F
+Centralized Patch Management (WSUS) Rollout
+Security Ops
+Critical
+29
+C
+Legacy Data Center Decommissioning (Floor 1)
+Infrastructure
+Medium
+30
+E
+Cloud Storage Migration (OneDrive/SharePoint)
+Cloud Storage
+High
+31
+E
+File Server to Cloud Content Migration
+Data Mgmt
+Medium
+32
+G
+PowerBI Analytics Platform Procurement
+BI / Analytics
+Medium
+33
+E
+Microsoft 365 & Intune MDM Procurement
+Cloud / Security
+Critical
+34
+J
+Managed Print Services Implementation
+Ops Efficiency
+Low
+35
+J
+IT Asset Lifecycle Management System
+ITAM
+Medium
+Fiscal Year: 2021-22
+#
+Program
+Initiative (Global Standard Project Title)
+Strategic Area
+Criticality
+36
+C
+Disaster Recovery Geo-Redundancy Migration
+BCP / DR
+Critical
+37
+G
+Robotic Process Automation (Scale-out Phase)
+Automation
+High
+38
+Z
+ERP Landscape Virtualization (Dev/QA/Prod)
+Infrastructure
+Critical
+39
+K
+Subsidiary IT Infrastructure Due Diligence
+M&A Strategy
+High
+40
+E
+Microsoft 365 Enterprise Rollout
+Cloud Productivity
+High
+41
+D
+Hybrid Cloud Connectivity (Azure ExpressRoute)
+Cloud Network
+Critical
+42
+C
+Enterprise Backup & Storage Enhancement
+Data Protection
+Critical
+43
+H
+Corporate Governance Portal Go-Live
+Compliance
+Medium
+44
+D
+Corporate Web Maintenance & Security Patching
+Web Ops
+Low
+45
+H
+Banking Interface Integration (NCHL/ERP)
+FinTech Integration
+Critical
+46
+H
+Automated EFT Payment Gateway Integration
+FinTech Integration
+Critical
+47
+J
+IT Asset Disposal & Write-off Governance
+ITAM / Compliance
+Low
+48
+H
+Financial Accounting Tool Implementation
+Finance Apps
+High
+49
+G
+Tableau BI Infrastructure Setup
+Data Analytics
+High
+50
+F
+Internal PKI & CA Certificate Deployment
+Cybersecurity
+High
+Fiscal Year: 2020-21
+#
+Program
+Initiative (Global Standard Project Title)
+Strategic Area
+Criticality
+51
+C
+Disk-Based Backup Modernization
+Data Protection
+Critical
+52
+C
+High-Performance Storage Migration (Flash)
+Infrastructure
+Critical
+53
+F
+Network Access Control (RADIUS/802.1x)
+Cybersecurity
+Critical
+54
+E
+Office 365 Initial Pilot & Deployment
+Cloud Productivity
+High
+55
+D
+Corporate Website Technology Upgrade
+Digital
+Medium
+56
+F
+Enterprise Digital Rights Management (DRM)
+Data Security
+Critical
+57
+G
+RPA: IT Service Desk & Finance Automation
+Automation
+High
+58
+H
+Management Information System (MIS) Portal
+Applications
+Medium
+59
+H
+E-Governance Policy Portal
+Compliance
+Medium
+60
+C
+Interim Disaster Recovery Site Setup
+BCP / DR
+Critical
+61
+F
+DMZ Network Virtualization
+Network Security
+High
+Fiscal Year: 2019-20
+#
+Program
+Initiative (Global Standard Project Title)
+Strategic Area
+Criticality
+62
+Z
+Zero-Impact ERP OS Migration
+Infrastructure
+Critical
+63
+C
+Legacy Storage Platform Replacement
+Infrastructure
+Critical
+64
+C
+Backup Workflow Redesign & Tool Upgrade
+Data Protection
+High
+65
+J
+Windows Server OS Risk Remediation
+Infrastructure
+High
+66
+J
+IT Asset Management Portal Implementation
+ITAM
+Low
+67
+K
+Backup Solution Proof of Concept (POC)
+Technology Eval
+Low
+68
+F
+Network AAA Security Implementation
+Cybersecurity
+Critical
+69
+J
+VSS Clone Endpoint Deployment Optimization
+ITOps Efficiency
+Medium
+70
+J
+Remote Support Services Implementation
+ITOps
+Low
+71
+J
+Greenfield Factory IT Infrastructure Design
+Infrastructure
+High
+Fiscal Year: 2018-19
+#
+Program
+Initiative (Global Standard Project Title)
+Strategic Area
+Criticality
+72
+K
+3-Zone Security Virtualization Initiative
+Infrastructure
+Critical
+73
+K
+DMZ Server Consolidation
+Infrastructure
+High
+74
+B
+Border Router & Internet Gateway Upgrade
+Network Infra
+Critical
+75
+J
+Factory IT Infrastructure Procurement
+Infrastructure
+High
+76
+J
+Warehouse IT Infrastructure Setup (Redundant)
+Infrastructure
+High
+77
+H
+Automated User Acceptance System (Lotus)
+Applications
+Low
+78
+F
+Microsoft RAP Security Assessment
+Cybersecurity
+High
+79
+J
+Remote Assistance (MSRA) Deployment
+End-User Support
+Low
+80
+F
+Active Directory Security Audit
+Cybersecurity
+High
+Fiscal Year: 2017-18
+#
+Program
+Initiative (Global Standard Project Title)
+Strategic Area
+Criticality
+81
+K
+Virtualization Procurement & Planning
+Strategy
+Medium
+82
+K
+Infrastructure Monitoring Tool Pilot
+Monitoring
+Medium
+83
+C
+High-Availability (N+1) Infrastructure Redesign
+Infrastructure
+Critical
+84
+J
+Windows 10 & Office 2013 Migration
+End-User Compute
+High
+85
+Z
+Active Directory Functional Level Upgrade
+Infrastructure
+Critical
+86
+I
+Centralized Surveillance Operations Center
+Physical Security
+High
+Fiscal Year: 2016-17
+#
+Program
+Initiative (Global Standard Project Title)
+Strategic Area
+Criticality
+87
+I
+Multi-Site CCTV Implementation (Phase 1)
+Physical Security
+Medium
+88
+K
+Virtualization Technology POC
+Technology Eval
+Low
+Program Legend
+A: OT/Factory Modernization & Security
+B: Network Modernization & Site Connectivity
+C: Data Center, Storage & Backup/DR Resilience
+D: Cloud Foundations & Digital Platforms
+E: Collaboration & Content Modernization
+F: Security Hardening & Compliance Enablement
+G: Automation, Analytics & Business Enablement
+H: Business Applications, FinTech Integrations & Governance
+I: Physical Security & Surveillance Modernization
+J: IT Asset Management & Operational Efficiency
+K: Assessments, Due Diligence & Strategy/POCs
+
+==================================================
+

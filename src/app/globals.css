@@ -130,37 +130,64 @@
 }
 
 :root {
-  /* Core Palette — Midnight + Indigo */
-  --background: #06070a;
-  --foreground: #f0f0f5;
-  --surface: #0f1117;
-  --surface-hover: #161821;
-  --border-color: rgba(255, 255, 255, 0.06);
-  --border-hover: rgba(255, 255, 255, 0.12);
-  --primary: #6366f1;
-  --primary-hover: #818cf8;
-  --primary-fg: #ffffff;
-  --accent: #a78bfa;
-  --accent-hover: #c4b5fd;
-  --muted: #1e2030;
-  --muted-fg: #9ca3af;
-  --success: #34d399;
-  --warning: #fbbf24;
-  --danger: #f87171;
-  --card-bg: rgba(15, 17, 23, 0.8);
-  --card-hover: rgba(22, 24, 33, 0.9);
+  /* Deep Modern Palette — Navy, Slate, Electric Green */
+  --background: #0a192f;
+  --foreground: #8892b0;
 
-  /* Gradient tokens */
-  --gradient-primary: linear-gradient(135deg, #6366f1 0%, #a78bfa 50%, #ec4899 100%);
-  --gradient-subtle: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(167, 139, 250, 0.1) 100%);
-  --gradient-hero: radial-gradient(ellipse at 30% 0%, rgba(99, 102, 241, 0.15) 0%, transparent 60%),
-    radial-gradient(ellipse at 70% 100%, rgba(236, 72, 153, 0.1) 0%, transparent 50%);
-  --gradient-card: linear-gradient(145deg, rgba(99, 102, 241, 0.04) 0%, rgba(167, 139, 250, 0.02) 100%);
+  /* Surface: Lighter Navy for cards/sidebar */
+  --surface: #112240;
+  --surface-hover: #233554;
+
+  --border-color: rgba(100, 255, 218, 0.1);
+  --border-hover: rgba(100, 255, 218, 0.2);
+
+  /* Primary: Electric Green */
+  --primary: #64ffda;
+  --primary-hover: #99ffea;
+  --primary-fg: #0a192f;
+
+  /* Accent: Amber */
+  --accent: #fcd34d;
+  --accent-hover: #fbbf24;
+
+  /* Text */
+  --muted: #233554;
+  --muted-fg: #a8b2d1;
+
+  /* Status */
+  --success: #64ffda;
+  --warning: #fcd34d;
+  --danger: #ef4444;
+
+  /* Card */
+  --card-bg: rgba(17, 34, 64, 0.7);
+  --card-hover: rgba(23, 42, 69, 0.8);
+
+  /* Gradient tokens - Updated for Green/Amber/Navy */
+  --gradient-primary: linear-gradient(135deg, #64ffda 0%, #0a192f 100%);
+  /* Green to Navy fade */
+  --gradient-subtle: linear-gradient(135deg, rgba(100, 255, 218, 0.1) 0%, rgba(10, 25, 47, 0) 100%);
+  --gradient-hero: radial-gradient(ellipse at 30% 0%, rgba(100, 255, 218, 0.08) 0%, transparent 60%),
+    radial-gradient(ellipse at 70% 100%, rgba(252, 211, 77, 0.05) 0%, transparent 50%);
+  --gradient-card: linear-gradient(145deg, rgba(100, 255, 218, 0.03) 0%, rgba(10, 25, 47, 0) 100%);
 
   /* Glass */
-  --glass-bg: rgba(15, 17, 23, 0.6);
-  --glass-border: rgba(255, 255, 255, 0.08);
-  --glass-blur: 16px;
+  --glass-bg: rgba(17, 34, 64, 0.7);
+  --glass-border: rgba(100, 255, 218, 0.1);
+  --glass-blur: 12px;
+
+  /* Headings color (Lightest Slate) */
+  --heading: #ccd6f6;
+}
+
+/* Global Heading Overrides for Deep Modern */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: var(--heading);
 }
 
 /* ============================================================
