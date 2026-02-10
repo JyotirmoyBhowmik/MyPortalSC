@@ -45,26 +45,34 @@ export default async function HomePage() {
           </div>
 
           {/* Name */}
-          <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black tracking-tight mb-6 animate-slide-up">
-            Hi, I&apos;m{" "}
+          <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black tracking-tight mb-4 animate-slide-up">
             <span className="gradient-text">{heroTitle || "Jyotirmoy Bhowmik"}</span>
           </h1>
 
           {/* Tagline / Subtitle */}
-          {heroSubtitle && (
-            <h2 className="text-xl sm:text-2xl font-bold text-foreground mb-4 animate-slide-up stagger-1">
-              {heroSubtitle}
-            </h2>
-          )}
+          <h2 className="text-xl sm:text-2xl font-bold text-foreground mb-4 animate-slide-up stagger-1 max-w-3xl mx-auto">
+            {heroSubtitle || "Project Manager – IT Infrastructure & Network | Security | Cloud"}
+          </h2>
+
+          {/* Contact Info Line */}
+          <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-4 text-sm sm:text-base text-muted-foreground mb-8 animate-slide-up stagger-2">
+            <span>Kathmandu, Nepal</span>
+            <span className="hidden sm:inline">•</span>
+            <span>+977-9801009825</span>
+            <span className="hidden sm:inline">•</span>
+            <span>+91-9774135614</span>
+            <span className="hidden sm:inline">•</span>
+            <a href="mailto:jyotirmoy.bhowmik@gmail.com" className="hover:text-primary transition-colors">jyotirmoy.bhowmik@gmail.com</a>
+          </div>
 
           {/* Description */}
-          <p className="text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto mb-10 animate-slide-up stagger-2 leading-relaxed">
+          <p className="text-lg sm:text-xl text-muted-foreground max-w-4xl mx-auto mb-10 animate-slide-up stagger-3 leading-relaxed">
             {heroDescription ||
-              "IT Infrastructure & Project Management leader delivering secure, resilient enterprise infrastructure."}
+              "IT Infrastructure & Project Management leader with 15+ years of experience delivering secure, resilient enterprise infrastructure and technology programs across India and Nepal."}
           </p>
 
           {/* CTAs */}
-          <div className="flex flex-wrap items-center justify-center gap-4 animate-slide-up stagger-3">
+          <div className="flex flex-wrap items-center justify-center gap-4 animate-slide-up stagger-4">
             <Link
               href="/projects"
               className="inline-flex items-center gap-2 px-6 py-3 rounded-lg gradient-bg text-white font-medium shadow-lg shadow-primary/25 hover:shadow-primary/40 transition-shadow"

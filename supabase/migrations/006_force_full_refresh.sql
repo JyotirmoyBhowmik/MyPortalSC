@@ -28,7 +28,7 @@ INSERT INTO content_pages (page_key, title, content, meta_description) VALUES
 (
   'home',
   'Home',
-  '{"hero_title": "Jyotirmoy Bhowmik", "hero_subtitle": "Project Manager – IT Infrastructure & Network | Security | Cloud", "hero_description": "IT Infrastructure & Project Management leader with 15+ years of experience delivering secure, resilient enterprise infrastructure and technology programs.", "hero_cta_primary": "View Projects", "hero_cta_secondary": "Contact Me"}'::jsonb,
+  '{"hero_title": "Jyotirmoy Bhowmik", "hero_subtitle": "Project Manager – IT Infrastructure & Network | Security | Cloud", "hero_description": "IT Infrastructure & Project Management leader with 15+ years of experience delivering secure, resilient enterprise infrastructure and technology programs across India and Nepal.", "hero_cta_primary": "View Projects", "hero_cta_secondary": "Get in Touch"}'::jsonb,
   'Jyotirmoy Bhowmik — Project Manager – IT Infrastructure & Network | Security | Cloud'
 ),
 (
