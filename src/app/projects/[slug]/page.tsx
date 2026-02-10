@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getProjectBySlug, getPublishedProjects } from "@/lib/data/projects";
+import { getProjectBySlug } from "@/lib/data/projects";
 import Badge from "@/components/ui/Badge";
 
 interface Props {
@@ -26,10 +26,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     };
 }
 
-export async function generateStaticParams() {
-    const projects = await getPublishedProjects();
-    return projects.map((p) => ({ slug: p.slug }));
-}
+
 
 export default async function ProjectDetailPage({ params }: Props) {
     const { slug } = await params;
