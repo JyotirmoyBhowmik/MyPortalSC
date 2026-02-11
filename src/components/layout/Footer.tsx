@@ -39,10 +39,31 @@ const socialLinks = [
     },
 ];
 
-export default function Footer() {
+export default function Footer({ flags = {} }: { flags?: Record<string, boolean> }) {
+    const quickLinks = [
+        { href: "/", label: "Home", visible: true },
+        // Tier 1
+        { href: "/executive-summary", label: "Executive Summary", visible: flags["feature_executive_summary"] },
+        { href: "/testimonials", label: "Testimonials", visible: flags["feature_testimonials"] },
+        { href: "/timeline", label: "Timeline", visible: flags["feature_timeline"] },
+        // Standard
+        { href: "/about", label: "About", visible: true },
+        { href: "/initiatives", label: "Initiatives", visible: true },
+        { href: "/projects", label: "Projects", visible: true },
+        { href: "/skills", label: "Skills", visible: true },
+        // Tier 7
+        { href: "/blog", label: "Blog", visible: flags["feature_blog"] },
+        { href: "/case-studies", label: "Case Studies", visible: flags["feature_case_studies"] },
+        { href: "/speaking", label: "Speaking", visible: flags["feature_speaking"] },
+        { href: "/publications", label: "Publications", visible: flags["feature_publications"] },
+        { href: "/downloads", label: "Downloads", visible: flags["feature_downloads"] },
+        // Contact
+        { href: "/contact", label: "Contact", visible: true },
+    ].filter(link => link.visible);
+
     return (
         <footer className="border-t border-border bg-surface/50">
-            <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                     {/* Brand */}
                     <div>

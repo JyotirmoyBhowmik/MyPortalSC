@@ -61,11 +61,17 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+import { getFeatureFlags } from "@/lib/data/settings";
+
+// ... imports
+
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const flags = await getFeatureFlags();
+
   return (
     <html lang="en" className="dark" suppressHydrationWarning>
       <body
@@ -73,9 +79,9 @@ export default function RootLayout({
       >
         <ThemeProvider>
           <I18nProvider>
-            <Navbar />
+            <Navbar flags={flags} />
             <main className="min-h-screen pt-16">{children}</main>
-            <Footer />
+            <Footer flags={flags} />
           </I18nProvider>
         </ThemeProvider>
       </body>

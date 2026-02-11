@@ -80,3 +80,20 @@ export async function updateSetting(key: string, value: unknown) {
     }
     return { success: true };
 }
+
+export async function getFeatureFlags(): Promise<Record<string, boolean>> {
+    const settings = await getAllSettings();
+    const flags: Record<string, boolean> = {};
+
+    settings.forEach((setting) => {
+        let isEnabled = false;
+        if (typeof setting.value === "boolean") {
+            isEnabled = setting.value;
+        } else if (setting.value === "true" || setting.value === true) {
+            isEnabled = true;
+        }
+        flags[setting.key] = isEnabled;
+    });
+
+    return flags;
+}
