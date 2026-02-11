@@ -68,19 +68,25 @@ export default async function HomePage() {
           {/* Description */}
           <p className="text-lg sm:text-xl text-muted-foreground max-w-4xl mx-auto mb-10 animate-slide-up stagger-3 leading-relaxed">
             {heroDescription ||
-              "IT Infrastructure & Project Management leader with 15+ years of experience delivering secure, resilient enterprise infrastructure and technology programs across India and Nepal."}
+              "IT Infrastructure & Project Management leader with 15+ years of experience delivering secure, resilient enterprise infrastructure and technology programs across India and Nepal with multi-country coordination exposure."}
           </p>
 
           {/* CTAs */}
           <div className="flex flex-wrap items-center justify-center gap-4 animate-slide-up stagger-4">
             <Link
-              href="/projects"
+              href="/initiatives"
               className="inline-flex items-center gap-2 px-6 py-3 rounded-lg gradient-bg text-white font-medium shadow-lg shadow-primary/25 hover:shadow-primary/40 transition-shadow"
             >
-              View My Work
+              View Initiatives
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
               </svg>
+            </Link>
+            <Link
+              href="/about"
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-lg border border-border text-foreground font-medium hover:bg-surface hover:border-border-hover transition-all"
+            >
+              About Me
             </Link>
             <Link
               href="/contact"
@@ -94,17 +100,24 @@ export default async function HomePage() {
           <div className="flex items-center justify-center gap-8 sm:gap-12 mt-16 animate-fade-in stagger-4">
             <div className="text-center">
               <div className="text-2xl sm:text-3xl font-bold gradient-text">
-                {projects.length > 0 ? `${projects.length}+` : "0+"}
+                88+
               </div>
-              <div className="text-xs text-muted-foreground mt-1">Projects</div>
+              <div className="text-xs text-muted-foreground mt-1">Initiatives</div>
             </div>
             <div className="w-px h-10 bg-border" />
             <div className="text-center">
               <div className="text-2xl sm:text-3xl font-bold gradient-text">
-                {totalSkills > 0 ? `${totalSkills}+` : "0+"}
+                15+
+              </div>
+              <div className="text-xs text-muted-foreground mt-1">Years Experience</div>
+            </div>
+            <div className="w-px h-10 bg-border" />
+            <div className="text-center">
+              <div className="text-2xl sm:text-3xl font-bold gradient-text">
+                12
               </div>
               <div className="text-xs text-muted-foreground mt-1">
-                Technologies
+                Programs
               </div>
             </div>
             <div className="w-px h-10 bg-border" />
@@ -120,6 +133,39 @@ export default async function HomePage() {
         </div>
       </section>
 
+      {/* ========== CORE COMPETENCIES SUMMARY ========== */}
+      <section className="py-24 px-4 bg-surface/50">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl sm:text-4xl font-bold mb-4">
+              Core <span className="gradient-text">Competencies</span>
+            </h2>
+            <p className="text-muted-foreground max-w-2xl mx-auto">
+              Deep expertise across IT infrastructure, security, cloud, and enterprise technology management.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {[
+              { icon: "🏢", title: "IT Infrastructure", desc: "Data Center, capacity planning, OS administration, patching, service continuity" },
+              { icon: "🔒", title: "Network & Security", desc: "Cisco/Juniper, Palo Alto/Fortinet, VPN, Zscaler SASE, network segmentation" },
+              { icon: "☁️", title: "Cloud & Collaboration", desc: "AWS, Azure, Microsoft 365, identity management, hybrid cloud" },
+              { icon: "🔄", title: "Disaster Recovery", desc: "DR strategy & testing, hybrid DR, Commvault, geo-replication, HPE StoreOnce" },
+              { icon: "🖥️", title: "Virtualization", desc: "VMware vSphere/ESXi, Hyper-V, Citrix, Red Hat Virtualization, SAP hosting" },
+              { icon: "📋", title: "Project Management", desc: "Scope & planning, vendor management, procurement, budget, risk, governance" },
+              { icon: "🤖", title: "Automation & Analytics", desc: "30+ RPA bots (UiPath), Tableau/Power BI dashboards, process improvement" },
+              { icon: "🏭", title: "OT/ICS Security", desc: "IT/OT connectivity, SCADA environments, IEC 62443, OT security roadmaps" },
+            ].map((comp) => (
+              <div key={comp.title} className="glass rounded-xl p-6 hover-lift transition-all duration-300">
+                <div className="text-3xl mb-3">{comp.icon}</div>
+                <h3 className="text-sm font-semibold text-primary uppercase tracking-wider mb-2">{comp.title}</h3>
+                <p className="text-sm text-muted-foreground leading-relaxed">{comp.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* ========== FEATURED PROJECTS ========== */}
       <section className="py-24 px-4">
         <div className="max-w-6xl mx-auto">
@@ -129,8 +175,7 @@ export default async function HomePage() {
               Featured <span className="gradient-text">Projects</span>
             </h2>
             <p className="text-muted-foreground max-w-xl mx-auto">
-              A curated selection of recent work showcasing my expertise in
-              modern web development.
+              A curated selection of enterprise infrastructure and technology projects.
             </p>
           </div>
 
@@ -143,8 +188,17 @@ export default async function HomePage() {
                 className={`group glass rounded-xl overflow-hidden hover-lift stagger-${i + 1}`}
               >
                 {/* Image placeholder */}
-                <div className="h-48 bg-gradient-to-br from-primary/10 to-accent/10 flex items-center justify-center">
-                  <div className="w-16 h-16 rounded-xl gradient-bg opacity-30 group-hover:opacity-60 transition-opacity" />
+                <div className="h-48 bg-gradient-to-br from-primary/10 to-accent/10 flex items-center justify-center overflow-hidden">
+                  {project.featured_image_url ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={project.featured_image_url}
+                      alt={project.title}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    />
+                  ) : (
+                    <div className="w-16 h-16 rounded-xl gradient-bg opacity-30 group-hover:opacity-60 transition-opacity" />
+                  )}
                 </div>
                 <div className="p-6">
                   <div className="flex items-center gap-2 mb-3">
@@ -199,7 +253,7 @@ export default async function HomePage() {
               Skills & <span className="gradient-text">Technologies</span>
             </h2>
             <p className="text-muted-foreground max-w-xl mx-auto">
-              Technologies I work with to build production-ready applications.
+              Technologies and platforms used to deliver enterprise infrastructure and security solutions.
             </p>
           </div>
 
@@ -304,8 +358,9 @@ export default async function HomePage() {
                 Let&apos;s work <span className="gradient-text">together</span>
               </h2>
               <p className="text-muted-foreground mb-8 max-w-lg mx-auto">
-                I&apos;m always open to discussing new projects, collaborations,
-                or opportunities to be part of your vision.
+                I&apos;m always open to discussing new challenges, infrastructure
+                modernization programs, or opportunities to drive technology
+                transformation.
               </p>
               <Link
                 href="/contact"

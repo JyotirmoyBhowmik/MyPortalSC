@@ -8,6 +8,7 @@ const navLinks = [
     { href: "/", label: "Home" },
     { href: "/about", label: "About" },
     { href: "/skills", label: "Skills" },
+    { href: "/initiatives", label: "Initiatives" },
     { href: "/projects", label: "Projects" },
     { href: "/contact", label: "Contact" },
 ];
@@ -36,7 +37,7 @@ export default function Navbar() {
                     {/* Desktop Nav */}
                     <div className="hidden md:flex items-center gap-1">
                         {navLinks.map((link) => {
-                            const isActive = pathname === link.href;
+                            const isActive = pathname === link.href || (link.href !== "/" && pathname.startsWith(link.href));
                             return (
                                 <Link
                                     key={link.href}
@@ -104,7 +105,7 @@ export default function Navbar() {
                     <div className="md:hidden pb-4 animate-slide-down">
                         <div className="flex flex-col gap-1 pt-2 border-t border-border">
                             {navLinks.map((link) => {
-                                const isActive = pathname === link.href;
+                                const isActive = pathname === link.href || (link.href !== "/" && pathname.startsWith(link.href));
                                 return (
                                     <Link
                                         key={link.href}

@@ -7,7 +7,7 @@ export const dynamic = "force-dynamic";
 export const metadata: Metadata = {
     title: "Projects",
     description:
-        "Explore projects by Jyotirmoy Bhowmik — full-stack web applications, SaaS tools, and more.",
+        "Explore enterprise projects by Jyotirmoy Bhowmik — IT infrastructure, security, cloud, and technology programs.",
 };
 
 export default async function ProjectsPage() {
@@ -24,11 +24,11 @@ export default async function ProjectsPage() {
                 />
                 <div className="relative z-10 max-w-4xl mx-auto text-center">
                     <h1 className="text-4xl sm:text-5xl font-bold mb-6 animate-slide-up">
-                        My <span className="gradient-text">Projects</span>
+                        Enterprise <span className="gradient-text">Projects</span>
                     </h1>
                     <p className="text-lg text-muted-foreground max-w-2xl mx-auto animate-slide-up stagger-1">
-                        A collection of projects showcasing my skills in building modern,
-                        scalable web applications.
+                        A collection of enterprise technology projects spanning infrastructure,
+                        security, cloud, and operational technology.
                     </p>
                 </div>
             </section>

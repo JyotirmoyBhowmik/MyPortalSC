@@ -3,7 +3,9 @@ import Link from "next/link";
 const quickLinks = [
     { href: "/", label: "Home" },
     { href: "/about", label: "About" },
+    { href: "/initiatives", label: "Initiatives" },
     { href: "/projects", label: "Projects" },
+    { href: "/skills", label: "Skills" },
     { href: "/contact", label: "Contact" },
 ];
 
@@ -51,8 +53,8 @@ export default function Footer() {
                             <span className="text-lg font-bold">Jyotirmoy Bhowmik</span>
                         </div>
                         <p className="text-sm text-muted-foreground leading-relaxed">
-                            Full-Stack Developer building modern, scalable web applications
-                            with cutting-edge technologies.
+                            IT Infrastructure &amp; Project Management Leader delivering secure,
+                            resilient enterprise technology programs across South Asia.
                         </p>
                     </div>
 
@@ -93,6 +95,10 @@ export default function Footer() {
                                     {social.icon}
                                 </a>
                             ))}
+                        </div>
+                        <div className="mt-4 text-sm text-muted-foreground space-y-1">
+                            <p>📍 Kathmandu, Nepal</p>
+                            <p>📧 jyotirmoy.bhowmik@gmail.com</p>
                         </div>
                     </div>
                 </div>

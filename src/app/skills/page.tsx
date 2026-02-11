@@ -25,7 +25,8 @@ export default async function SkillsPage() {
                         My <span className="gradient-text">Skills</span>
                     </h1>
                     <p className="text-lg text-muted-foreground max-w-2xl mx-auto animate-slide-up stagger-1">
-                        A comprehensive overview of my technical capabilities and professional expertise.
+                        Deep expertise across IT infrastructure, cloud platforms, network &amp; security,
+                        and enterprise technology management — built over 15+ years of hands-on delivery.
                     </p>
                 </div>
 
