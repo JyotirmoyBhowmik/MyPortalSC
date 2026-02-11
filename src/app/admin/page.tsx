@@ -4,7 +4,7 @@ export default async function AdminDashboardPage() {
     const supabase = await createClient();
 
     // Fetch counts
-    const [projectsRes, skillsRes, certsRes, achievementsRes, analyticsRes, auditRes] =
+    const [projectsRes, skillsRes, certsRes, achievementsRes, analyticsRes, auditRes, initiativesRes] =
         await Promise.all([
             supabase.from("projects").select("id", { count: "exact", head: true }),
             supabase.from("skills").select("id", { count: "exact", head: true }),
@@ -16,6 +16,7 @@ export default async function AdminDashboardPage() {
                 .select("*")
                 .order("timestamp", { ascending: false })
                 .limit(10),
+            supabase.from("initiatives").select("id", { count: "exact", head: true }),
         ]);
 
     const totalViews =
@@ -39,6 +40,12 @@ export default async function AdminDashboardPage() {
             value: certsRes.count ?? 0,
             icon: "🏆",
             color: "from-amber-500/20 to-amber-600/20",
+        },
+        {
+            label: "Initiatives",
+            value: initiativesRes.count ?? 0,
+            icon: "⚡",
+            color: "from-cyan-500/20 to-cyan-600/20",
         },
         {
             label: "Page Views",
@@ -87,10 +94,10 @@ export default async function AdminDashboardPage() {
                             >
                                 <div
                                     className={`w-2 h-2 rounded-full ${log.operation === "INSERT"
-                                            ? "bg-success"
-                                            : log.operation === "UPDATE"
-                                                ? "bg-warning"
-                                                : "bg-danger"
+                                        ? "bg-success"
+                                        : log.operation === "UPDATE"
+                                            ? "bg-warning"
+                                            : "bg-danger"
                                         }`}
                                 />
                                 <div className="flex-1 min-w-0">

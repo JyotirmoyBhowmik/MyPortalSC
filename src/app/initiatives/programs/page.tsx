@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import {
-    programs,
+    getAllPrograms,
     getInitiativesByProgram,
     getInitiativeStats,
 } from "@/lib/data/initiatives";
+
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
     title: "Programs",
@@ -12,8 +14,21 @@ export const metadata: Metadata = {
         "12 strategic programs spanning OT security, network modernization, cloud foundations, and more — organized by Jyotirmoy Bhowmik.",
 };
 
-export default function ProgramsPage() {
-    const stats = getInitiativeStats();
+export default async function ProgramsPage() {
+    const [programs, stats] = await Promise.all([
+        getAllPrograms(),
+        getInitiativeStats(),
+    ]);
+
+    // Fetch initiatives per program
+    const programsWithInitiatives = await Promise.all(
+        programs.map(async (program) => {
+            const initiatives = await getInitiativesByProgram(program.id);
+            const critical = initiatives.filter((i) => i.criticality === "Critical").length;
+            const high = initiatives.filter((i) => i.criticality === "High").length;
+            return { ...program, initiatives, critical, high };
+        })
+    );
 
     return (
         <>
@@ -50,73 +65,64 @@ export default function ProgramsPage() {
             <section className="py-16 px-4">
                 <div className="max-w-6xl mx-auto">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        {programs.map((program) => {
-                            const initiatives = getInitiativesByProgram(program.code);
-                            const critical = initiatives.filter((i) => i.criticality === "Critical").length;
-                            const high = initiatives.filter((i) => i.criticality === "High").length;
-
-                            return (
-                                <div
-                                    key={program.code}
-                                    className="glass rounded-xl p-6 hover-lift transition-all duration-300"
-                                >
-                                    <div className="flex items-start gap-4 mb-4">
-                                        <div className="text-3xl">{program.icon}</div>
-                                        <div className="flex-1">
-                                            <div className="flex items-center gap-2 mb-1">
-                                                <span className="w-7 h-7 rounded-lg bg-primary/10 flex items-center justify-center text-primary font-bold text-xs">
-                                                    {program.code}
-                                                </span>
-                                                <h3 className="text-lg font-bold text-foreground">
-                                                    {program.name}
-                                                </h3>
-                                            </div>
-                                            <p className="text-sm text-muted-foreground leading-relaxed mt-2">
-                                                {program.description}
-                                            </p>
+                        {programsWithInitiatives.map((program) => (
+                            <div
+                                key={program.code}
+                                className="glass rounded-xl p-6 hover-lift transition-all duration-300"
+                            >
+                                <div className="flex items-start gap-4 mb-4">
+                                    <div className="text-3xl">{program.icon}</div>
+                                    <div className="flex-1">
+                                        <div className="flex items-center gap-2 mb-1">
+                                            <span className="w-7 h-7 rounded-lg bg-primary/10 flex items-center justify-center text-primary font-bold text-xs">
+                                                {program.code}
+                                            </span>
+                                            <h3 className="text-lg font-bold text-foreground">
+                                                {program.name}
+                                            </h3>
                                         </div>
-                                    </div>
-
-                                    {/* Stats row */}
-                                    <div className="flex items-center gap-4 pt-4 border-t border-border/50">
-                                        <span className="text-sm font-medium text-foreground">
-                                            {initiatives.length} initiative{initiatives.length !== 1 ? "s" : ""}
-                                        </span>
-                                        {critical > 0 && (
-                                            <span className="text-xs px-2 py-0.5 rounded bg-red-500/10 text-red-400">
-                                                {critical} Critical
-                                            </span>
-                                        )}
-                                        {high > 0 && (
-                                            <span className="text-xs px-2 py-0.5 rounded bg-amber-500/10 text-amber-400">
-                                                {high} High
-                                            </span>
-                                        )}
-                                    </div>
-
-                                    {/* Initiative list */}
-                                    <div className="mt-4 space-y-2">
-                                        {initiatives.slice(0, 4).map((init) => (
-                                            <Link
-                                                key={init.id}
-                                                href={`/initiatives/${init.slug}`}
-                                                className="block text-sm text-muted-foreground hover:text-primary transition-colors truncate pl-4 border-l-2 border-border/50 hover:border-primary/50"
-                                            >
-                                                {init.title}
-                                            </Link>
-                                        ))}
-                                        {initiatives.length > 4 && (
-                                            <Link
-                                                href={`/initiatives?program=${program.code}`}
-                                                className="block text-sm text-primary font-medium pl-4"
-                                            >
-                                                +{initiatives.length - 4} more →
-                                            </Link>
-                                        )}
+                                        <p className="text-sm text-muted-foreground leading-relaxed mt-2">
+                                            {program.description}
+                                        </p>
                                     </div>
                                 </div>
-                            );
-                        })}
+
+                                {/* Stats row */}
+                                <div className="flex items-center gap-4 pt-4 border-t border-border/50">
+                                    <span className="text-sm font-medium text-foreground">
+                                        {program.initiatives.length} initiative{program.initiatives.length !== 1 ? "s" : ""}
+                                    </span>
+                                    {program.critical > 0 && (
+                                        <span className="text-xs px-2 py-0.5 rounded bg-red-500/10 text-red-400">
+                                            {program.critical} Critical
+                                        </span>
+                                    )}
+                                    {program.high > 0 && (
+                                        <span className="text-xs px-2 py-0.5 rounded bg-amber-500/10 text-amber-400">
+                                            {program.high} High
+                                        </span>
+                                    )}
+                                </div>
+
+                                {/* Initiative list */}
+                                <div className="mt-4 space-y-2">
+                                    {program.initiatives.slice(0, 4).map((init) => (
+                                        <Link
+                                            key={init.id}
+                                            href={`/initiatives/${init.slug}`}
+                                            className="block text-sm text-muted-foreground hover:text-primary transition-colors truncate pl-4 border-l-2 border-border/50 hover:border-primary/50"
+                                        >
+                                            {init.title}
+                                        </Link>
+                                    ))}
+                                    {program.initiatives.length > 4 && (
+                                        <p className="text-sm text-primary font-medium pl-4">
+                                            +{program.initiatives.length - 4} more
+                                        </p>
+                                    )}
+                                </div>
+                            </div>
+                        ))}
                     </div>
                 </div>
             </section>

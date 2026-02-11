@@ -180,7 +180,7 @@
   --heading: #ccd6f6;
 }
 
-/* Global Heading Overrides for Deep Modern */
+/* Global Heading Overrides */
 h1,
 h2,
 h3,
@@ -188,6 +188,105 @@ h4,
 h5,
 h6 {
   color: var(--heading);
+}
+
+/* ============================================================
+   Theme: Midnight Purple (deep-navy is default in :root)
+   ============================================================ */
+[data-theme="midnight-purple"] {
+  --background: #0f0a1e;
+  --foreground: #a89cc8;
+  --surface: #1a1333;
+  --surface-hover: #2a1f4d;
+  --border-color: rgba(139, 92, 246, 0.15);
+  --border-hover: rgba(139, 92, 246, 0.3);
+  --primary: #a78bfa;
+  --primary-hover: #c4b5fd;
+  --primary-fg: #0f0a1e;
+  --accent: #67e8f9;
+  --accent-hover: #a5f3fc;
+  --muted: #1a1333;
+  --muted-fg: #b8a9d9;
+  --success: #a78bfa;
+  --warning: #fbbf24;
+  --danger: #f87171;
+  --card-bg: rgba(26, 19, 51, 0.7);
+  --card-hover: rgba(42, 31, 77, 0.8);
+  --gradient-primary: linear-gradient(135deg, #a78bfa 0%, #67e8f9 100%);
+  --gradient-subtle: linear-gradient(135deg, rgba(167, 139, 250, 0.1) 0%, rgba(15, 10, 30, 0) 100%);
+  --gradient-hero: radial-gradient(ellipse at 30% 0%, rgba(167, 139, 250, 0.08) 0%, transparent 60%),
+    radial-gradient(ellipse at 70% 100%, rgba(103, 232, 249, 0.05) 0%, transparent 50%);
+  --gradient-card: linear-gradient(145deg, rgba(167, 139, 250, 0.03) 0%, rgba(15, 10, 30, 0) 100%);
+  --glass-bg: rgba(26, 19, 51, 0.7);
+  --glass-border: rgba(139, 92, 246, 0.12);
+  --glass-blur: 12px;
+  --heading: #e2d9f3;
+}
+
+/* ============================================================
+   Theme: Carbon
+   ============================================================ */
+[data-theme="carbon"] {
+  --background: #111111;
+  --foreground: #a1a1aa;
+  --surface: #1c1c1c;
+  --surface-hover: #2a2a2a;
+  --border-color: rgba(251, 146, 60, 0.12);
+  --border-hover: rgba(251, 146, 60, 0.25);
+  --primary: #fb923c;
+  --primary-hover: #fdba74;
+  --primary-fg: #111111;
+  --accent: #e4e4e7;
+  --accent-hover: #fafafa;
+  --muted: #1c1c1c;
+  --muted-fg: #a1a1aa;
+  --success: #4ade80;
+  --warning: #fbbf24;
+  --danger: #ef4444;
+  --card-bg: rgba(28, 28, 28, 0.7);
+  --card-hover: rgba(42, 42, 42, 0.8);
+  --gradient-primary: linear-gradient(135deg, #fb923c 0%, #e4e4e7 100%);
+  --gradient-subtle: linear-gradient(135deg, rgba(251, 146, 60, 0.08) 0%, rgba(17, 17, 17, 0) 100%);
+  --gradient-hero: radial-gradient(ellipse at 30% 0%, rgba(251, 146, 60, 0.06) 0%, transparent 60%),
+    radial-gradient(ellipse at 70% 100%, rgba(228, 228, 231, 0.04) 0%, transparent 50%);
+  --gradient-card: linear-gradient(145deg, rgba(251, 146, 60, 0.03) 0%, rgba(17, 17, 17, 0) 100%);
+  --glass-bg: rgba(28, 28, 28, 0.7);
+  --glass-border: rgba(251, 146, 60, 0.1);
+  --glass-blur: 12px;
+  --heading: #fafafa;
+}
+
+/* ============================================================
+   Theme: Emerald Forest
+   ============================================================ */
+[data-theme="emerald-forest"] {
+  --background: #081c15;
+  --foreground: #86a89a;
+  --surface: #0d2818;
+  --surface-hover: #14402a;
+  --border-color: rgba(74, 222, 128, 0.12);
+  --border-hover: rgba(74, 222, 128, 0.25);
+  --primary: #4ade80;
+  --primary-hover: #86efac;
+  --primary-fg: #081c15;
+  --accent: #fbbf24;
+  --accent-hover: #fcd34d;
+  --muted: #0d2818;
+  --muted-fg: #a3c4b5;
+  --success: #4ade80;
+  --warning: #fbbf24;
+  --danger: #f87171;
+  --card-bg: rgba(13, 40, 24, 0.7);
+  --card-hover: rgba(20, 64, 42, 0.8);
+  --gradient-primary: linear-gradient(135deg, #4ade80 0%, #fbbf24 100%);
+  --gradient-subtle: linear-gradient(135deg, rgba(74, 222, 128, 0.1) 0%, rgba(8, 28, 21, 0) 100%);
+  --gradient-hero: radial-gradient(ellipse at 30% 0%, rgba(74, 222, 128, 0.08) 0%, transparent 60%),
+    radial-gradient(ellipse at 70% 100%, rgba(251, 191, 36, 0.05) 0%, transparent 50%);
+  --gradient-card: linear-gradient(145deg, rgba(74, 222, 128, 0.03) 0%, rgba(8, 28, 21, 0) 100%);
+  --glass-bg: rgba(13, 40, 24, 0.7);
+  --glass-border: rgba(74, 222, 128, 0.1);
+  --glass-blur: 12px;
+  --heading: #d1e7dd;
 }
 
 /* ============================================================

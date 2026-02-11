@@ -2,11 +2,22 @@
 
 import { useState, useMemo } from "react";
 import Link from "next/link";
-import type { Initiative, ProgramMeta } from "@/lib/data/initiatives";
+import type { Program } from "@/lib/database.types";
+
+interface InitiativeItem {
+    id: string;
+    title: string;
+    slug: string;
+    fiscal_year: string;
+    strategic_area: string;
+    criticality: "Critical" | "High" | "Medium" | "Low";
+    programCode: string;
+    programName: string;
+}
 
 interface InitiativesGridProps {
-    initiatives: Initiative[];
-    programs: ProgramMeta[];
+    initiatives: InitiativeItem[];
+    programs: Program[];
     fiscalYears: string[];
     strategicAreas: string[];
 }
@@ -29,12 +40,10 @@ export default function InitiativesGrid({
     initiatives,
     programs,
     fiscalYears,
-    strategicAreas,
 }: InitiativesGridProps) {
     const [search, setSearch] = useState("");
     const [selectedFY, setSelectedFY] = useState<string | null>(null);
     const [selectedProgram, setSelectedProgram] = useState<string | null>(null);
-    const [selectedArea, setSelectedArea] = useState<string | null>(null);
     const [selectedCriticality, setSelectedCriticality] = useState<string | null>(null);
 
     const filtered = useMemo(() => {
@@ -42,16 +51,15 @@ export default function InitiativesGrid({
             const matchesSearch =
                 !search ||
                 init.title.toLowerCase().includes(search.toLowerCase()) ||
-                init.strategicArea.toLowerCase().includes(search.toLowerCase());
-            const matchesFY = !selectedFY || init.fiscalYear === selectedFY;
-            const matchesProgram = !selectedProgram || init.program === selectedProgram;
-            const matchesArea = !selectedArea || init.strategicArea === selectedArea;
+                init.strategic_area.toLowerCase().includes(search.toLowerCase());
+            const matchesFY = !selectedFY || init.fiscal_year === selectedFY;
+            const matchesProgram = !selectedProgram || init.programCode === selectedProgram;
             const matchesCriticality = !selectedCriticality || init.criticality === selectedCriticality;
-            return matchesSearch && matchesFY && matchesProgram && matchesArea && matchesCriticality;
+            return matchesSearch && matchesFY && matchesProgram && matchesCriticality;
         });
-    }, [initiatives, search, selectedFY, selectedProgram, selectedArea, selectedCriticality]);
+    }, [initiatives, search, selectedFY, selectedProgram, selectedCriticality]);
 
-    const hasFilters = search || selectedFY || selectedProgram || selectedArea || selectedCriticality;
+    const hasFilters = search || selectedFY || selectedProgram || selectedCriticality;
 
     return (
         <>
@@ -136,7 +144,7 @@ export default function InitiativesGrid({
                             </button>
                         )}
                         <button
-                            onClick={() => { setSearch(""); setSelectedFY(null); setSelectedProgram(null); setSelectedArea(null); setSelectedCriticality(null); }}
+                            onClick={() => { setSearch(""); setSelectedFY(null); setSelectedProgram(null); setSelectedCriticality(null); }}
                             className="text-xs text-muted-foreground hover:text-foreground ml-2 transition-colors"
                         >
                             Clear all
@@ -161,7 +169,7 @@ export default function InitiativesGrid({
                         {/* Top row: FY and Criticality */}
                         <div className="flex items-center justify-between mb-3">
                             <span className="text-xs font-medium text-muted-foreground">
-                                FY {init.fiscalYear}
+                                FY {init.fiscal_year}
                             </span>
                             <span className={`inline-flex items-center gap-1.5 text-xs font-medium px-2 py-0.5 rounded-full border ${criticalityColors[init.criticality]}`}>
                                 <span className={`w-1.5 h-1.5 rounded-full ${criticalityDots[init.criticality]}`} />
@@ -175,12 +183,12 @@ export default function InitiativesGrid({
                         </h3>
 
                         {/* Strategic Area */}
-                        <p className="text-xs text-muted-foreground mb-3">{init.strategicArea}</p>
+                        <p className="text-xs text-muted-foreground mb-3">{init.strategic_area}</p>
 
                         {/* Program Badge */}
                         <div className="flex items-center gap-2 mt-auto pt-3 border-t border-border/50">
                             <span className="text-xs px-2 py-0.5 rounded bg-primary/10 text-primary font-medium">
-                                {init.program}
+                                {init.programCode}
                             </span>
                             <span className="text-xs text-muted-foreground truncate">
                                 {init.programName}

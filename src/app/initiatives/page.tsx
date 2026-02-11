@@ -1,12 +1,14 @@
 import type { Metadata } from "next";
 import {
     getAllInitiatives,
-    programs,
+    getAllPrograms,
     getAllFiscalYears,
     getAllStrategicAreas,
     getInitiativeStats,
 } from "@/lib/data/initiatives";
 import InitiativesGrid from "@/components/initiatives/InitiativesGrid";
+
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
     title: "Initiatives",
@@ -14,11 +16,14 @@ export const metadata: Metadata = {
         "88 enterprise initiatives across IT infrastructure, security, cloud, and operational technology delivered by Jyotirmoy Bhowmik.",
 };
 
-export default function InitiativesPage() {
-    const initiatives = getAllInitiatives();
-    const fiscalYears = getAllFiscalYears();
-    const strategicAreas = getAllStrategicAreas();
-    const stats = getInitiativeStats();
+export default async function InitiativesPage() {
+    const [initiatives, programs, fiscalYears, strategicAreas, stats] = await Promise.all([
+        getAllInitiatives(),
+        getAllPrograms(),
+        getAllFiscalYears(),
+        getAllStrategicAreas(),
+        getInitiativeStats(),
+    ]);
 
     return (
         <>
@@ -69,7 +74,11 @@ export default function InitiativesPage() {
             <section className="py-16 px-4">
                 <div className="max-w-6xl mx-auto">
                     <InitiativesGrid
-                        initiatives={initiatives}
+                        initiatives={initiatives.map((i) => ({
+                            ...i,
+                            programCode: i.programs?.code ?? "",
+                            programName: i.programs?.name ?? "Other",
+                        }))}
                         programs={programs}
                         fiscalYears={fiscalYears}
                         strategicAreas={strategicAreas}

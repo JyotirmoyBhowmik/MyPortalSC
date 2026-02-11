@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
+import ThemeSwitcher from "@/components/ThemeSwitcher";
 
 const navLinks = [
     { href: "/", label: "Home" },
@@ -59,8 +60,9 @@ export default function Navbar() {
                         })}
                     </div>
 
-                    {/* CTA + Mobile Toggle */}
-                    <div className="flex items-center gap-3">
+                    {/* CTA + Theme + Mobile Toggle */}
+                    <div className="flex items-center gap-2">
+                        <ThemeSwitcher />
                         <Link
                             href="/contact"
                             className="hidden sm:inline-flex items-center px-4 py-2 text-sm font-medium rounded-lg bg-primary text-primary-foreground hover:bg-primary-hover transition-all shadow-lg shadow-primary/20"
@@ -127,6 +129,6 @@ export default function Navbar() {
                     </div>
                 )}
             </nav>
-        </header>
+        </header >
     );
 }

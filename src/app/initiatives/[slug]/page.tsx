@@ -4,9 +4,9 @@ import { notFound } from "next/navigation";
 import {
     getInitiativeBySlug,
     getInitiativesByProgram,
-    getProgramByCode,
-    getAllInitiatives,
 } from "@/lib/data/initiatives";
+
+export const dynamic = "force-dynamic";
 
 interface Props {
     params: Promise<{ slug: string }>;
@@ -14,16 +14,12 @@ interface Props {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
     const { slug } = await params;
-    const initiative = getInitiativeBySlug(slug);
+    const initiative = await getInitiativeBySlug(slug);
     if (!initiative) return { title: "Initiative Not Found" };
     return {
         title: initiative.title,
-        description: `${initiative.title} — ${initiative.programName} (FY ${initiative.fiscalYear}). Strategic Area: ${initiative.strategicArea}. Criticality: ${initiative.criticality}.`,
+        description: `${initiative.title} — ${initiative.programs?.name ?? "Program"} (FY ${initiative.fiscal_year}). Strategic Area: ${initiative.strategic_area}. Criticality: ${initiative.criticality}.`,
     };
-}
-
-export async function generateStaticParams() {
-    return getAllInitiatives().map((i) => ({ slug: i.slug }));
 }
 
 const criticalityColors: Record<string, string> = {
@@ -35,13 +31,15 @@ const criticalityColors: Record<string, string> = {
 
 export default async function InitiativeDetailPage({ params }: Props) {
     const { slug } = await params;
-    const initiative = getInitiativeBySlug(slug);
+    const initiative = await getInitiativeBySlug(slug);
     if (!initiative) notFound();
 
-    const program = getProgramByCode(initiative.program);
-    const relatedInitiatives = getInitiativesByProgram(initiative.program)
-        .filter((i) => i.id !== initiative.id)
-        .slice(0, 6);
+    const program = initiative.programs;
+    const relatedInitiatives = initiative.program_id
+        ? (await getInitiativesByProgram(initiative.program_id))
+            .filter((i) => i.id !== initiative.id)
+            .slice(0, 6)
+        : [];
 
     return (
         <>
@@ -68,13 +66,13 @@ export default async function InitiativeDetailPage({ params }: Props) {
                         {/* Top badges */}
                         <div className="flex flex-wrap items-center gap-3 mb-6">
                             <span className="text-xs font-medium px-3 py-1 rounded-full bg-primary/10 text-primary border border-primary/20">
-                                FY {initiative.fiscalYear}
+                                FY {initiative.fiscal_year}
                             </span>
                             <span className={`inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1 rounded-full border ${criticalityColors[initiative.criticality]}`}>
                                 {initiative.criticality}
                             </span>
                             <span className="text-xs px-3 py-1 rounded-full bg-accent/10 text-accent border border-accent/20">
-                                {initiative.strategicArea}
+                                {initiative.strategic_area}
                             </span>
                         </div>
 
@@ -94,22 +92,22 @@ export default async function InitiativeDetailPage({ params }: Props) {
                                     className="inline-flex items-center gap-2 text-foreground hover:text-primary transition-colors"
                                 >
                                     <span className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center text-primary font-bold text-sm">
-                                        {initiative.program}
+                                        {program?.code ?? "–"}
                                     </span>
-                                    <span className="font-medium">{initiative.programName}</span>
+                                    <span className="font-medium">{program?.name ?? "Unassigned"}</span>
                                 </Link>
                             </div>
                             <div>
                                 <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">
                                     Strategic Area
                                 </h3>
-                                <p className="text-foreground font-medium">{initiative.strategicArea}</p>
+                                <p className="text-foreground font-medium">{initiative.strategic_area}</p>
                             </div>
                             <div>
                                 <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">
                                     Fiscal Year
                                 </h3>
-                                <p className="text-foreground font-medium">FY {initiative.fiscalYear}</p>
+                                <p className="text-foreground font-medium">FY {initiative.fiscal_year}</p>
                             </div>
                             <div>
                                 <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">
@@ -121,22 +119,24 @@ export default async function InitiativeDetailPage({ params }: Props) {
                     </div>
 
                     {/* Delivery Focus */}
-                    <div className="glass rounded-xl p-8 mb-8">
-                        <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
-                            <span className="w-2 h-6 bg-primary rounded-full" />
-                            Delivery Focus
-                        </h2>
-                        <div className="space-y-3">
-                            {initiative.deliveryFocus.split(";").map((focus, idx) => (
-                                <div key={idx} className="flex items-start gap-3">
-                                    <div className="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center text-primary text-xs font-bold flex-shrink-0 mt-0.5">
-                                        {idx + 1}
+                    {initiative.delivery_focus && (
+                        <div className="glass rounded-xl p-8 mb-8">
+                            <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
+                                <span className="w-2 h-6 bg-primary rounded-full" />
+                                Delivery Focus
+                            </h2>
+                            <div className="space-y-3">
+                                {initiative.delivery_focus.split(";").map((focus, idx) => (
+                                    <div key={idx} className="flex items-start gap-3">
+                                        <div className="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center text-primary text-xs font-bold flex-shrink-0 mt-0.5">
+                                            {idx + 1}
+                                        </div>
+                                        <p className="text-muted-foreground leading-relaxed">{focus.trim()}</p>
                                     </div>
-                                    <p className="text-muted-foreground leading-relaxed">{focus.trim()}</p>
-                                </div>
-                            ))}
+                                ))}
+                            </div>
                         </div>
-                    </div>
+                    )}
 
                     {/* Program Context */}
                     {program && (
@@ -156,7 +156,7 @@ export default async function InitiativeDetailPage({ params }: Props) {
                         <div>
                             <h2 className="text-xl font-semibold mb-6 flex items-center gap-2">
                                 <span className="w-2 h-6 bg-accent rounded-full" />
-                                Related Initiatives in Program {initiative.program}
+                                Related Initiatives in Program {program?.code}
                             </h2>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 {relatedInitiatives.map((ri) => (
@@ -166,7 +166,7 @@ export default async function InitiativeDetailPage({ params }: Props) {
                                         className="group glass rounded-xl p-5 hover-lift"
                                     >
                                         <div className="flex items-center justify-between mb-2">
-                                            <span className="text-xs text-muted-foreground">FY {ri.fiscalYear}</span>
+                                            <span className="text-xs text-muted-foreground">FY {ri.fiscal_year}</span>
                                             <span className={`inline-flex items-center gap-1 text-xs font-medium px-2 py-0.5 rounded-full border ${criticalityColors[ri.criticality]}`}>
                                                 {ri.criticality}
                                             </span>
@@ -174,7 +174,7 @@ export default async function InitiativeDetailPage({ params }: Props) {
                                         <h3 className="text-sm font-semibold text-foreground group-hover:text-primary transition-colors">
                                             {ri.title}
                                         </h3>
-                                        <p className="text-xs text-muted-foreground mt-1">{ri.strategicArea}</p>
+                                        <p className="text-xs text-muted-foreground mt-1">{ri.strategic_area}</p>
                                     </Link>
                                 ))}
                             </div>

@@ -316,3 +316,34 @@ export type ContentPage = Tables<"content_pages">;
 export type PageAnalytic = Tables<"page_analytics">;
 export type AuditLogEntry = Tables<"audit_log">;
 export type AdminUser = Tables<"admin_users">;
+
+// Programs & Initiatives types (DB-backed)
+export type Program = {
+    id: string;
+    code: string;
+    name: string;
+    description: string | null;
+    icon: string;
+    order_index: number;
+    created_at: string;
+    updated_at: string;
+};
+
+export type Initiative = {
+    id: string;
+    title: string;
+    slug: string;
+    program_id: string | null;
+    fiscal_year: string;
+    strategic_area: string;
+    criticality: "Critical" | "High" | "Medium" | "Low";
+    delivery_focus: string | null;
+    status: "draft" | "published" | "archived";
+    order_index: number;
+    created_at: string;
+    updated_at: string;
+};
+
+export type InitiativeWithProgram = Initiative & {
+    programs: Program | null;
+};
