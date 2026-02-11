@@ -1,102 +1,99 @@
 import { createClient } from "@/lib/supabase/server";
 
+export const dynamic = "force-dynamic";
+
 export default async function AdminAnalyticsPage() {
     const supabase = await createClient();
 
-    const { data: analytics } = await supabase
-        .from("page_analytics")
-        .select("*")
-        .order("view_count", { ascending: false });
+    const { data: recentEvents } = await supabase
+        .from("visitor_events")
+        .select("page_path, event_type, created_at, referrer, device_type, country")
+        .order("created_at", { ascending: false })
+        .limit(50);
 
-    const totalViews = analytics?.reduce((s, a) => s + (a.view_count || 0), 0) ?? 0;
-    const totalVisitors = analytics?.reduce(
-        (s, a) => s + (a.unique_visitors || 0),
-        0
-    ) ?? 0;
-    const maxViews = Math.max(...(analytics?.map((a) => a.view_count) ?? [1]));
+    // Aggregate page views
+    const pageCounts: Record<string, number> = {};
+    const deviceCounts: Record<string, number> = {};
+    const countryCounts: Record<string, number> = {};
+
+    recentEvents?.forEach((e) => {
+        pageCounts[e.page_path] = (pageCounts[e.page_path] || 0) + 1;
+        if (e.device_type) deviceCounts[e.device_type] = (deviceCounts[e.device_type] || 0) + 1;
+        if (e.country) countryCounts[e.country] = (countryCounts[e.country] || 0) + 1;
+    });
+
+    const topPages = Object.entries(pageCounts)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 10);
 
     return (
         <div>
             <div className="mb-8">
                 <h1 className="text-2xl font-bold">Analytics</h1>
                 <p className="text-sm text-muted-foreground mt-1">
-                    Page views and visitor statistics
+                    Visitor analytics and engagement metrics (privacy-first, no cookies).
                 </p>
             </div>
 
-            {/* Summary cards */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
-                <div className="glass rounded-xl p-5">
-                    <div className="text-3xl font-bold gradient-text">{totalViews}</div>
-                    <div className="text-sm text-muted-foreground mt-1">Total Page Views</div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+                <div className="glass rounded-xl p-6 text-center">
+                    <p className="text-3xl font-black text-primary">{recentEvents?.length || 0}</p>
+                    <p className="text-xs text-muted-foreground mt-1">Recent Events</p>
                 </div>
-                <div className="glass rounded-xl p-5">
-                    <div className="text-3xl font-bold gradient-text">{totalVisitors}</div>
-                    <div className="text-sm text-muted-foreground mt-1">Unique Visitors</div>
+                <div className="glass rounded-xl p-6 text-center">
+                    <p className="text-3xl font-black text-primary">{Object.keys(pageCounts).length}</p>
+                    <p className="text-xs text-muted-foreground mt-1">Unique Pages</p>
                 </div>
-                <div className="glass rounded-xl p-5">
-                    <div className="text-3xl font-bold gradient-text">
-                        {analytics?.length ?? 0}
+                <div className="glass rounded-xl p-6 text-center">
+                    <p className="text-3xl font-black text-primary">{Object.keys(countryCounts).length}</p>
+                    <p className="text-xs text-muted-foreground mt-1">Countries</p>
+                </div>
+            </div>
+
+            {/* Top Pages */}
+            <div className="glass rounded-xl p-6 mb-6">
+                <h2 className="text-sm font-bold mb-4">Top Pages</h2>
+                {topPages.length > 0 ? (
+                    <div className="space-y-2">
+                        {topPages.map(([page, count]) => (
+                            <div key={page} className="flex items-center justify-between text-sm">
+                                <span className="text-muted-foreground truncate">{page}</span>
+                                <span className="font-mono text-primary font-bold">{count}</span>
+                            </div>
+                        ))}
                     </div>
-                    <div className="text-sm text-muted-foreground mt-1">Tracked Pages</div>
-                </div>
+                ) : (
+                    <p className="text-sm text-muted-foreground text-center py-4">No analytics data yet.</p>
+                )}
             </div>
 
-            {/* Bar Chart */}
-            <div className="glass rounded-xl p-6 mb-8">
-                <h2 className="text-lg font-semibold mb-6">Page Views by Path</h2>
-                <div className="space-y-4">
-                    {analytics?.map((a) => (
-                        <div key={a.id} className="flex items-center gap-4">
-                            <div className="w-24 text-sm font-mono text-muted-foreground truncate flex-shrink-0">
-                                {a.page_path}
-                            </div>
-                            <div className="flex-1">
-                                <div className="h-7 bg-muted rounded-lg overflow-hidden relative">
-                                    <div
-                                        className="h-full rounded-lg gradient-bg flex items-center justify-end pr-3 transition-all duration-700"
-                                        style={{
-                                            width: `${Math.max((a.view_count / maxViews) * 100, 8)}%`,
-                                        }}
-                                    >
-                                        <span className="text-xs font-medium text-white">
-                                            {a.view_count}
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="text-xs text-muted-foreground w-16 text-right flex-shrink-0">
-                                {a.unique_visitors} unique
-                            </div>
-                        </div>
-                    ))}
-                </div>
-            </div>
-
-            {/* Table */}
+            {/* Recent Events Table */}
             <div className="glass rounded-xl overflow-hidden">
-                <table className="w-full text-sm">
-                    <thead>
-                        <tr className="border-b border-border">
-                            <th className="text-left p-4 font-medium text-muted-foreground">Page</th>
-                            <th className="text-right p-4 font-medium text-muted-foreground">Views</th>
-                            <th className="text-right p-4 font-medium text-muted-foreground">Visitors</th>
-                            <th className="text-right p-4 font-medium text-muted-foreground hidden sm:table-cell">Last Viewed</th>
+                <table className="w-full">
+                    <thead className="bg-surface/50">
+                        <tr>
+                            <th className="text-left text-xs font-semibold text-muted-foreground px-4 py-3">Page</th>
+                            <th className="text-left text-xs font-semibold text-muted-foreground px-4 py-3">Type</th>
+                            <th className="text-left text-xs font-semibold text-muted-foreground px-4 py-3 hidden md:table-cell">Device</th>
+                            <th className="text-left text-xs font-semibold text-muted-foreground px-4 py-3">Time</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        {analytics?.map((a) => (
-                            <tr key={a.id} className="border-b border-border/50 hover:bg-surface/50">
-                                <td className="p-4 font-mono">{a.page_path}</td>
-                                <td className="p-4 text-right">{a.view_count}</td>
-                                <td className="p-4 text-right">{a.unique_visitors}</td>
-                                <td className="p-4 text-right text-muted-foreground hidden sm:table-cell">
-                                    {new Date(a.last_viewed).toLocaleDateString()}
+                    <tbody className="divide-y divide-border/50">
+                        {recentEvents?.slice(0, 20).map((e, i) => (
+                            <tr key={i} className="hover:bg-surface/30 transition-colors">
+                                <td className="px-4 py-2 text-sm text-foreground">{e.page_path}</td>
+                                <td className="px-4 py-2">
+                                    <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-primary/10 text-primary">{e.event_type}</span>
                                 </td>
+                                <td className="px-4 py-2 text-sm text-muted-foreground hidden md:table-cell">{e.device_type || "—"}</td>
+                                <td className="px-4 py-2 text-xs text-muted-foreground">{new Date(e.created_at).toLocaleString()}</td>
                             </tr>
                         ))}
                     </tbody>
                 </table>
+                {(!recentEvents || recentEvents.length === 0) && (
+                    <p className="text-sm text-muted-foreground text-center py-8">No events recorded yet.</p>
+                )}
             </div>
         </div>
     );
