@@ -1,0 +1,83 @@
+# Portfolio V3 Overhaul — Walkthrough
+
+## Summary
+
+Transformed the portfolio from a generic **"Full-Stack Developer"** presentation into a comprehensive **IT Infrastructure & Project Management Leader** showcase for Jyotirmoy Bhowmik, featuring 88 enterprise initiatives across 12 strategic programs.
+
+## Changes Made
+
+### 1. Global Identity (3 files)
+
+| File | Change |
+|------|--------|
+| [layout.tsx](file:///c:/Users/TEST/MyPortalSC/src/app/layout.tsx) | Title, description, keywords → IT Infrastructure & PM |
+| [Navbar.tsx](file:///c:/Users/TEST/MyPortalSC/src/components/layout/Navbar.tsx) | Added "Initiatives" nav link |
+| [Footer.tsx](file:///c:/Users/TEST/MyPortalSC/src/components/layout/Footer.tsx) | Updated tagline, added location/email |
+
+### 2. Home Page — Complete Rewrite
+
+[page.tsx](file:///c:/Users/TEST/MyPortalSC/src/app/page.tsx)
+
+- Hero with professional summary & contact info
+- Stats: **88+ Initiatives · 15+ Years · 12 Programs**
+- 8 Core Competency cards (IT Infra, Network & Security, Cloud, DR, Virtualization, PM, Automation, OT/ICS)
+- Updated Featured Projects and Skills sections
+- Rewritten CTA
+
+### 3. About Page — Professional Profile
+
+[about/page.tsx](file:///c:/Users/TEST/MyPortalSC/src/app/about/page.tsx)
+
+- 6-point professional summary
+- Vision statement with decorative quote styling
+- 12 selected programs delivered
+- Professional experience timeline (3 roles with tech environments)
+- Core Roles & Responsibilities
+- Business Value Delivered (5 themes)
+- Education (3 entries) & Languages
+
+### 4. New Initiatives Feature (5 files)
+
+This is the largest new feature — a complete initiative tracking system:
+
+| File | Description |
+|------|-------------|
+| [initiatives.ts](file:///c:/Users/TEST/MyPortalSC/src/lib/data/initiatives.ts) | **88 initiatives** + 12 program definitions + helper functions |
+| [InitiativesGrid.tsx](file:///c:/Users/TEST/MyPortalSC/src/components/initiatives/InitiativesGrid.tsx) | Filterable grid (FY, Program, Criticality, Search) |
+| [initiatives/page.tsx](file:///c:/Users/TEST/MyPortalSC/src/app/initiatives/page.tsx) | Listing page with stats hero |
+| [initiatives/[slug]/page.tsx](file:///c:/Users/TEST/MyPortalSC/src/app/initiatives/%5Bslug%5D/page.tsx) | 88 detail pages with delivery focus & related initiatives |
+| [initiatives/programs/page.tsx](file:///c:/Users/TEST/MyPortalSC/src/app/initiatives/programs/page.tsx) | 12 program categories overview |
+
+### 5. Minor Page Updates (3 files)
+
+| File | Change |
+|------|--------|
+| [projects/page.tsx](file:///c:/Users/TEST/MyPortalSC/src/app/projects/page.tsx) | "Enterprise Projects" (was "My Projects") |
+| [skills/page.tsx](file:///c:/Users/TEST/MyPortalSC/src/app/skills/page.tsx) | Subtitle mentions infrastructure & security |
+| [contact/page.tsx](file:///c:/Users/TEST/MyPortalSC/src/app/contact/page.tsx) | Kathmandu, Nepal + dual phone numbers |
+
+### 6. Documentation
+
+[DEPLOYMENT_V3.md](file:///c:/Users/TEST/MyPortalSC/docs/DEPLOYMENT_V3.md) — Complete deployment guide with architecture changes, new routes, and verification steps
+
+## Build Verification
+
+```
+✓ Compiled successfully in 5.2s
+✓ Finished TypeScript in 3.8s
+✓ Generating static pages (93/93) in 2.9s
+
+New Routes:
+  ○ /initiatives              (static)
+  ● /initiatives/[slug]       (88 SSG pages)
+  ○ /initiatives/programs     (static)
+```
+
+All 88 initiative detail pages were statically generated at build time via [generateStaticParams](file:///c:/Users/TEST/MyPortalSC/src/app/initiatives/%5Bslug%5D/page.tsx#25-28). Zero TypeScript errors.
+
+## Key Design Decisions
+
+1. **Static data over database** — Initiatives stored in TypeScript rather than Supabase to avoid migration complexity and enable static generation
+2. **Hardcoded defaults with DB override** — About page professional data is hardcoded but can be overridden if DB `content_pages` has data
+3. **Color-coded criticality** — Critical (red), High (amber), Medium (blue), Low (gray) for visual scanning
+4. **Multi-filter system** — Year, Program, Criticality, and text search all combinable

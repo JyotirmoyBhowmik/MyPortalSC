@@ -97,3 +97,33 @@ export async function getFeatureFlags(): Promise<Record<string, boolean>> {
 
     return flags;
 }
+
+export async function getSiteSettingsMap(): Promise<Record<string, unknown>> {
+    const settings = await getAllSettings();
+    const map: Record<string, unknown> = {};
+
+    settings.forEach((setting) => {
+        let val: unknown = setting.value;
+        // Normalize "true"/"false" strings to booleans if meaningful, but keep others as strings
+        if (val === "true") val = true;
+        if (val === "false") val = false;
+        map[setting.key] = val;
+    });
+
+    return map;
+}
+
+export async function getSiteSettingsMap(): Promise<Record<string, unknown>> {
+    const settings = await getAllSettings();
+    const map: Record<string, unknown> = {};
+
+    settings.forEach((setting) => {
+        let val: unknown = setting.value;
+        // Normalize "true"/"false" strings to booleans if meaningful, but keep others as strings
+        if (val === "true") val = true;
+        if (val === "false") val = false;
+        map[setting.key] = val;
+    });
+
+    return map;
+}

@@ -1,0 +1,123 @@
+# Portfolio Overhaul: IT Infrastructure & Project Management Leader
+
+Transform the portfolio site from a "Full-Stack Developer" presentation into Jyotirmoy Bhowmik's professional portfolio as an **IT Infrastructure & Project Management Leader** with 15+ years of experience. This overhaul maps all provided career data (88 initiatives, professional experience, competencies) into the site.
+
+## Proposed Changes
+
+### Global Identity & SEO
+
+#### [MODIFY] [layout.tsx](file:///c:/Users/TEST/MyPortalSC/src/app/layout.tsx)
+- Change title from `"Jyotirmoy Bhowmik — Full-Stack Developer"` → `"Jyotirmoy Bhowmik — IT Infrastructure & Project Management"`
+- Update all meta descriptions, keywords, OpenGraph tags to reflect IT Infrastructure & Network | Security | Cloud
+- Replace keywords: `Next.js, React, TypeScript, Supabase` → `IT Infrastructure, Project Management, Cloud Strategy, OT Security, Network, Data Center`
+
+#### [MODIFY] [Footer.tsx](file:///c:/Users/TEST/MyPortalSC/src/components/layout/Footer.tsx)
+- Change tagline from *"Full-Stack Developer building modern, scalable web applications"* → *"IT Infrastructure & Project Management Leader delivering secure, resilient enterprise technology programs across South Asia"*
+
+#### [MODIFY] [Navbar.tsx](file:///c:/Users/TEST/MyPortalSC/src/components/layout/Navbar.tsx)
+- Add `"Initiatives"` nav link between **Skills** and **Projects**
+
+---
+
+### Home Page
+
+#### [MODIFY] [page.tsx](file:///c:/Users/TEST/MyPortalSC/src/app/page.tsx)
+- Rewrite hero section with IT Infrastructure professional summary
+- Update stats row: `88+ Initiatives | 15+ Years | 12 Programs`
+- Update Featured Projects description: remove "modern web development" language, replace with infrastructure/enterprise context
+- Update Skills overview description
+- Update CTA section copy
+
+---
+
+### About Page
+
+#### [MODIFY] [about/page.tsx](file:///c:/Users/TEST/MyPortalSC/src/app/about/page.tsx)
+- Replace fallback texts from "Full-Stack Developer" to IT Infrastructure & PM leader
+- Add hardcoded professional summary (5 bullet points from provided data)
+- Add hardcoded vision statement
+- Add hardcoded professional experience timeline (3 roles with full details)
+- Add hardcoded education (3 entries)
+- Add hardcoded languages
+- Add new sections: **Core Roles & Responsibilities**, **Business Value Delivered**
+- Keep the existing DB-driven content as override capability (if DB has data, show that; else show hardcoded defaults)
+
+---
+
+### New Initiatives Section (Major New Feature)
+
+> [!IMPORTANT]
+> This is the largest component. All 88 initiatives will be stored as a **static TypeScript data file** (not in Supabase), keeping the site fast and avoiding migration complexity. Each initiative gets its own detail page via Next.js dynamic routing.
+
+#### [NEW] [initiatives.ts](file:///c:/Users/TEST/MyPortalSC/src/lib/data/initiatives.ts)
+- Static data file containing all 88 initiatives with full metadata
+- Each initiative has: [id](file:///c:/Users/TEST/MyPortalSC/src/middleware.ts#4-7), `title`, `program`, `programName`, `fiscalYear`, `strategicArea`, `criticality`, `deliveryFocus`, `slug`
+- Program legend mapping (A→L with descriptions)
+- Operational Activities (BAU) data
+- Improvement & Advancement themes
+
+#### [NEW] [InitiativesGrid.tsx](file:///c:/Users/TEST/MyPortalSC/src/components/initiatives/InitiativesGrid.tsx)
+- Client-side filterable grid for all 88 initiatives
+- Filters: Fiscal Year, Program (A–L), Strategic Area, Criticality
+- Search by title
+- Color-coded criticality badges (Critical=red, High=amber, Medium=blue, Low=gray)
+- Cards link to individual initiative detail pages
+
+#### [NEW] [initiatives/page.tsx](file:///c:/Users/TEST/MyPortalSC/src/app/initiatives/page.tsx)
+- Hero section with stats: 88 initiatives, 9 fiscal years, 12 programs
+- Summary stats cards by program
+- The `InitiativesGrid` component
+
+#### [NEW] [initiatives/[slug]/page.tsx](file:///c:/Users/TEST/MyPortalSC/src/app/initiatives/[slug]/page.tsx)
+- Individual initiative detail page
+- Shows: title, program, fiscal year, strategic area, criticality, delivery focus
+- Links to related initiatives in the same program
+- Back navigation to initiatives listing
+
+#### [NEW] [initiatives/programs/page.tsx](file:///c:/Users/TEST/MyPortalSC/src/app/initiatives/programs/page.tsx)
+- Programs overview page showing all 12 program categories (A–L)
+- Each program card shows count of initiatives and description
+- Links to filtered initiative views
+
+---
+
+### Projects Page
+
+#### [MODIFY] [projects/page.tsx](file:///c:/Users/TEST/MyPortalSC/src/app/projects/page.tsx)
+- Update hero description — remove "full-stack web applications, SaaS tools" references
+- Replace with IT Infrastructure & enterprise context
+
+---
+
+### Skills Page
+
+#### [MODIFY] [skills/page.tsx](file:///c:/Users/TEST/MyPortalSC/src/app/skills/page.tsx)
+- Update hero subtitle to reflect Infrastructure, Cloud, Security expertise (not "building production-ready applications")
+
+---
+
+### Contact Page
+
+#### [MODIFY] [contact/page.tsx](file:///c:/Users/TEST/MyPortalSC/src/app/contact/page.tsx)
+- Change location from "India" → "Kathmandu, Nepal"
+- Add phone numbers (+977-9801009825, +91-9774135614)
+
+---
+
+### Deployment Documentation
+
+#### [NEW] [DEPLOYMENT_V3.md](file:///c:/Users/TEST/MyPortalSC/docs/DEPLOYMENT_V3.md)
+- Document the v3 overhaul changes
+- List all new pages, routes, and data structures
+- Deployment instructions
+
+## Verification Plan
+
+### Automated Tests
+- Run `npm run build` to verify all pages compile without errors
+- Check that all 88 initiative slug routes resolve correctly
+
+### Manual Verification
+- Push to GitHub → Vercel auto-deploys
+- Verify all new pages render correctly
+- Check initiative filtering and navigation

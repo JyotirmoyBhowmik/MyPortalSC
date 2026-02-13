@@ -1,0 +1,135 @@
+# Phase 2: Database-Driven Initiatives, Multi-Theme System & Admin UI Overhaul
+
+## Goal
+
+Three enhancements:
+1. **Move all initiatives data to Supabase** — admin-manageable CRUD for initiatives & programs
+2. **Add 3-4 modern themes** — switchable via UI with localStorage persistence
+3. **Overhaul admin panel UI/UX** — modern sidebar, breadcrumbs, better layout
+
+---
+
+## User Review Required
+
+> [!IMPORTANT]
+> **Database migration**: A new SQL migration (`009_initiatives_and_programs.sql`) will create the `programs` and `initiatives` tables in Supabase. You'll need to **run this migration in the Supabase SQL Editor** before the admin panel can manage initiatives.
+
+> [!WARNING]
+> **Seed data**: A seed script will bulk-insert all 88 initiatives. Running it twice is safe (uses `ON CONFLICT DO UPDATE`).
+
+---
+
+## Proposed Changes
+
+### A. Database — Initiatives & Programs Tables
+
+#### [NEW] [009_initiatives_and_programs.sql](file:///c:/Users/TEST/MyPortalSC/supabase/migrations/009_initiatives_and_programs.sql)
+
+Creates two tables:
+
+| Table | Columns |
+|-------|---------|
+| `programs` | `id (uuid)`, `code (text A-L)`, `name`, `description`, `icon`, `order_index`, `created_at`, `updated_at` |
+| `initiatives` | `id (uuid)`, `title`, `slug (unique)`, `program_id (FK → programs)`, `fiscal_year`, `strategic_area`, `criticality (enum)`, `delivery_focus`, `status (draft/published)`, `order_index`, `created_at`, `updated_at` |
+
+Plus RLS policies (public read, admin write) and indexes.
+
+#### [NEW] [010_seed_initiatives.sql](file:///c:/Users/TEST/MyPortalSC/supabase/migrations/010_seed_initiatives.sql)
+
+Inserts 12 programs + 88 initiatives using `ON CONFLICT DO UPDATE`.
+
+---
+
+### B. Data Layer — Supabase Fetchers
+
+#### [MODIFY] [database.types.ts](file:///c:/Users/TEST/MyPortalSC/src/lib/database.types.ts)
+
+Add TypeScript types for `programs` and `initiatives` tables.
+
+#### [MODIFY] [initiatives.ts](file:///c:/Users/TEST/MyPortalSC/src/lib/data/initiatives.ts)
+
+Replace static arrays with Supabase fetch functions ([getAllInitiatives()](file:///c:/Users/TEST/MyPortalSC/src/lib/data/initiatives.ts#150-153), [getInitiativeBySlug()](file:///c:/Users/TEST/MyPortalSC/src/lib/data/initiatives.ts#154-157), etc.). Keep the same API signatures so page components need minimal changes.
+
+#### [NEW] [initiatives.ts (admin action)](file:///c:/Users/TEST/MyPortalSC/src/app/admin/actions/initiatives.ts)
+
+Server actions: `createInitiative`, `updateInitiative`, `deleteInitiative`, `createProgram`, `updateProgram`, `deleteProgram`.
+
+---
+
+### C. Admin Panel — Initiatives CRUD
+
+#### [NEW] [admin/initiatives/page.tsx](file:///c:/Users/TEST/MyPortalSC/src/app/admin/initiatives/page.tsx)
+
+Admin listing page for initiatives with inline status toggle and delete.
+
+#### [NEW] [InitiativesManager.tsx](file:///c:/Users/TEST/MyPortalSC/src/components/admin/InitiativesManager.tsx)
+
+Client component: table with search/filter, add/edit modal, bulk actions.
+
+#### [MODIFY] [AdminShell.tsx](file:///c:/Users/TEST/MyPortalSC/src/components/admin/AdminShell.tsx)
+
+- Add "Initiatives" sidebar link
+- Overhaul sidebar design (collapsible, mobile hamburger, breadcrumbs)
+- Add theme switcher in admin header
+
+---
+
+### D. Theme System (4 Themes)
+
+#### [MODIFY] [globals.css](file:///c:/Users/TEST/MyPortalSC/src/app/globals.css)
+
+Add 3 additional `:root` theme definitions selected via `[data-theme="..."]`:
+
+| Theme | Palette |
+|-------|---------|
+| `deep-navy` (default) | Current Navy/Green/Amber |
+| `midnight-purple` | Deep purple bg, violet/cyan accents |
+| `carbon` | Near-black bg, orange/white accents |
+| `emerald-forest` | Dark green bg, gold/lime accents |
+
+#### [NEW] [ThemeProvider.tsx](file:///c:/Users/TEST/MyPortalSC/src/components/ThemeProvider.tsx)
+
+Client component wrapping `<body>` — reads/writes `data-theme` attribute + localStorage.
+
+#### [NEW] [ThemeSwitcher.tsx](file:///c:/Users/TEST/MyPortalSC/src/components/ThemeSwitcher.tsx)
+
+Floating theme picker (4 color swatches) shown in site footer and admin header.
+
+#### [MODIFY] [layout.tsx](file:///c:/Users/TEST/MyPortalSC/src/app/layout.tsx)
+
+Wrap body with `<ThemeProvider>`.
+
+---
+
+### E. Admin Panel UI/UX Overhaul
+
+#### [MODIFY] [AdminShell.tsx](file:///c:/Users/TEST/MyPortalSC/src/components/admin/AdminShell.tsx)
+
+- **Collapsible sidebar** with toggle (icon-only mode)
+- **Mobile hamburger** menu (responsive)
+- **Admin header bar** with breadcrumbs, user info, theme switcher
+- **Refreshed styling**: gradient sidebar, active pill indicators, grouped sections
+
+#### [MODIFY] [admin/page.tsx](file:///c:/Users/TEST/MyPortalSC/src/app/admin/page.tsx)
+
+- Add Initiatives count to stats grid
+- Improved card design with trend indicators
+- Quick-action buttons
+
+---
+
+## Verification Plan
+
+### Automated Tests
+```bash
+npm run build    # TypeScript + route compilation
+```
+
+### Manual Verification
+1. Run migration `009` and seed `010` in Supabase SQL Editor
+2. Verify admin panel shows Initiatives sidebar link
+3. Create/edit/delete an initiative from admin
+4. Check public `/initiatives` page loads from DB
+5. Switch between all 4 themes on the public site
+6. Verify theme persists across page navigation (localStorage)
+7. Test admin sidebar collapse and mobile responsiveness

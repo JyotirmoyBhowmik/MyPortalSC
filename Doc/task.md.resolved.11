@@ -1,0 +1,31 @@
+# Phase 2: DB-Driven Initiatives, Themes & Admin Overhaul
+
+## A. Database Migration
+- [ ] Create `009_initiatives_and_programs.sql` (programs + initiatives tables, RLS, indexes)
+- [ ] Create `010_seed_initiatives.sql` (12 programs + 88 initiatives seed data)
+- [ ] Update [database.types.ts](file:///c:/Users/TEST/MyPortalSC/src/lib/database.types.ts) with new table types
+
+## B. Data Layer
+- [ ] Rewrite [initiatives.ts](file:///c:/Users/TEST/MyPortalSC/src/lib/data/initiatives.ts) — replace static arrays with Supabase queries
+- [ ] Create `admin/actions/initiatives.ts` — server actions for CRUD
+
+## C. Admin — Initiatives Management
+- [ ] Create `InitiativesManager.tsx` — table with search/filter, add/edit modal
+- [ ] Create `admin/initiatives/page.tsx` — admin listing page
+- [ ] Add "Initiatives" to AdminShell sidebar
+
+## D. Theme System (4 Themes)
+- [ ] Add 3 new themes to [globals.css](file:///c:/Users/TEST/MyPortalSC/src/app/globals.css) (midnight-purple, carbon, emerald-forest)
+- [ ] Create `ThemeProvider.tsx` (data-theme attr + localStorage)
+- [ ] Create `ThemeSwitcher.tsx` (floating picker)
+- [ ] Wrap body with ThemeProvider in [layout.tsx](file:///c:/Users/TEST/MyPortalSC/src/app/layout.tsx)
+
+## E. Admin Panel UI/UX Overhaul
+- [ ] Redesign [AdminShell.tsx](file:///c:/Users/TEST/MyPortalSC/src/components/admin/AdminShell.tsx) — collapsible sidebar, mobile menu, breadcrumbs, header
+- [ ] Update [admin/page.tsx](file:///c:/Users/TEST/MyPortalSC/src/app/admin/page.tsx) dashboard — add initiatives count, quick actions
+- [ ] Add theme switcher to admin header
+
+## F. Verification
+- [ ] `npm run build` passes
+- [ ] Public initiative pages load from DB
+- [ ] Theme switching works with persistence

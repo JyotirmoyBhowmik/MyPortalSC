@@ -1,0 +1,33 @@
+# Admin Panel & Theme Overhaul
+
+## Phase 1: Database Migration — Initiatives to Supabase
+- [x] Create [009_initiatives_and_programs.sql](file:///c:/Users/TEST/MyPortalSC/supabase/migrations/009_initiatives_and_programs.sql) (tables, RLS, indexes, triggers)
+- [x] Create [010_seed_initiatives.sql](file:///c:/Users/TEST/MyPortalSC/supabase/migrations/010_seed_initiatives.sql) (12 programs + 88 initiatives seed data)
+- [x] Add [Program](file:///c:/Users/TEST/MyPortalSC/src/lib/database.types.ts#321-331) and [Initiative](file:///c:/Users/TEST/MyPortalSC/src/lib/database.types.ts#332-346) types to [database.types.ts](file:///c:/Users/TEST/MyPortalSC/src/lib/database.types.ts)
+- [x] Rewrite [lib/data/initiatives.ts](file:///c:/Users/TEST/MyPortalSC/src/lib/data/initiatives.ts) from static arrays → Supabase queries
+- [x] Create [admin/actions/initiatives.ts](file:///c:/Users/TEST/MyPortalSC/src/app/admin/actions/initiatives.ts) (CRUD server actions)
+
+## Phase 2: Update Public Pages for Async DB Queries
+- [x] Update [initiatives/page.tsx](file:///c:/Users/TEST/MyPortalSC/src/app/initiatives/page.tsx) — force-dynamic, async queries
+- [x] Update `initiatives/[slug]/page.tsx` — DB lookup + joined program data
+- [x] Update [initiatives/programs/page.tsx](file:///c:/Users/TEST/MyPortalSC/src/app/initiatives/programs/page.tsx) — async program listing
+- [x] Rewrite [InitiativesGrid.tsx](file:///c:/Users/TEST/MyPortalSC/src/components/initiatives/InitiativesGrid.tsx) — flat props from DB query
+
+## Phase 3: Theme System
+- [x] Create [ThemeProvider.tsx](file:///c:/Users/TEST/MyPortalSC/src/components/ThemeProvider.tsx) — context + localStorage persistence
+- [x] Create [ThemeSwitcher.tsx](file:///c:/Users/TEST/MyPortalSC/src/components/ThemeSwitcher.tsx) — dropdown with swatches
+- [x] Add 3 new themes to [globals.css](file:///c:/Users/TEST/MyPortalSC/src/app/globals.css) (Midnight Purple, Carbon, Emerald Forest)
+- [x] Wrap [layout.tsx](file:///c:/Users/TEST/MyPortalSC/src/app/layout.tsx) with [ThemeProvider](file:///c:/Users/TEST/MyPortalSC/src/components/ThemeProvider.tsx#30-62)
+- [x] Add [ThemeSwitcher](file:///c:/Users/TEST/MyPortalSC/src/components/ThemeSwitcher.tsx#6-66) to Navbar
+
+## Phase 4: Admin Panel UI Overhaul
+- [x] Overhaul [AdminShell.tsx](file:///c:/Users/TEST/MyPortalSC/src/components/admin/AdminShell.tsx) — collapsible sidebar, mobile menu, breadcrumbs, section groups
+- [x] Add _Initiatives_ to sidebar (with "New" badge)
+- [x] Add [ThemeSwitcher](file:///c:/Users/TEST/MyPortalSC/src/components/ThemeSwitcher.tsx#6-66) to admin header
+- [x] Create [InitiativesManager.tsx](file:///c:/Users/TEST/MyPortalSC/src/components/admin/InitiativesManager.tsx) — CRUD table with modal form
+- [x] Create [admin/initiatives/page.tsx](file:///c:/Users/TEST/MyPortalSC/src/app/admin/initiatives/page.tsx)
+- [x] Update admin dashboard with initiatives count
+
+## Phase 5: Verification
+- [/] Run `npm run build` and fix any errors
+- [ ] Visual confirmation via dev server

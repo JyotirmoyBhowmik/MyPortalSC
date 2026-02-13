@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
+import DOMPurify from "isomorphic-dompurify";
 
 export const dynamic = "force-dynamic";
 
@@ -64,9 +65,10 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                 )}
                 <div
                     className="prose prose-invert max-w-none prose-headings:font-bold prose-a:text-primary prose-p:text-muted-foreground prose-pre:bg-surface prose-pre:rounded-xl"
-                    dangerouslySetInnerHTML={{ __html: post.content }}
+                    dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(post.content) }}
                 />
             </article>
-        </main>
+        </article>
+        </main >
     );
 }

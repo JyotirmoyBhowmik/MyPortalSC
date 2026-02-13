@@ -1,0 +1,47 @@
+# Portfolio Overhaul — IT Infrastructure & Project Management
+
+## Phase 1: Global Identity & Metadata
+- [x] Update [layout.tsx](file:///c:/Users/TEST/MyPortalSC/src/app/layout.tsx) — title, description, keywords from "Full-Stack Developer" → "IT Infrastructure & Project Management"
+- [x] Update [Footer.tsx](file:///c:/Users/TEST/MyPortalSC/src/components/layout/Footer.tsx) — tagline, social links, branding
+- [x] Update [Navbar.tsx](file:///c:/Users/TEST/MyPortalSC/src/components/layout/Navbar.tsx) — add "Initiatives" nav link
+
+## Phase 2: Home Page ([page.tsx](file:///c:/Users/TEST/MyPortalSC/src/app/page.tsx))
+- [x] Rewrite hero — title, subtitle, description with professional summary
+- [x] Update stats row (88+ Initiatives, 15+ Years, 12 Programs)
+- [x] Add 8 Core Competencies cards
+- [x] Update Featured Projects section description
+- [x] Update CTA section
+
+## Phase 3: About Page ([about/page.tsx](file:///c:/Users/TEST/MyPortalSC/src/app/about/page.tsx))
+- [x] Rewrite hero/subtitle — "IT Infrastructure & Project Management Leader"
+- [x] Add hardcoded professional summary (6 bullet points)
+- [x] Add hardcoded vision statement
+- [x] Add 12 selected programs delivered
+- [x] Add hardcoded professional experience timeline (3 roles)
+- [x] Add Core Roles & Responsibilities section
+- [x] Add Business Value Delivered section (5 themes)
+- [x] Add hardcoded education section (3 entries)
+- [x] Add hardcoded languages section
+
+## Phase 4: New Initiatives Section
+- [x] Create [src/lib/data/initiatives.ts](file:///c:/Users/TEST/MyPortalSC/src/lib/data/initiatives.ts) — static data file with all 88 initiatives
+- [x] Create [src/app/initiatives/page.tsx](file:///c:/Users/TEST/MyPortalSC/src/app/initiatives/page.tsx) — main listing with stats and filters
+- [x] Create [src/app/initiatives/[slug]/page.tsx](file:///c:/Users/TEST/MyPortalSC/src/app/initiatives/%5Bslug%5D/page.tsx) — individual initiative detail pages (88 pages)
+- [x] Create [src/components/initiatives/InitiativesGrid.tsx](file:///c:/Users/TEST/MyPortalSC/src/components/initiatives/InitiativesGrid.tsx) — client-side filterable grid
+- [x] Create [src/app/initiatives/programs/page.tsx](file:///c:/Users/TEST/MyPortalSC/src/app/initiatives/programs/page.tsx) — programs overview (A through L)
+
+## Phase 5: Projects Page Updates
+- [x] Update [projects/page.tsx](file:///c:/Users/TEST/MyPortalSC/src/app/projects/page.tsx) hero text (remove "web applications")
+
+## Phase 6: Skills Page Update
+- [x] Update [skills/page.tsx](file:///c:/Users/TEST/MyPortalSC/src/app/skills/page.tsx) hero and descriptions
+
+## Phase 7: Contact Page Update
+- [x] Update [contact/page.tsx](file:///c:/Users/TEST/MyPortalSC/src/app/contact/page.tsx) — location to "Kathmandu, Nepal", add phone numbers
+
+## Phase 8: Deployment V3 Doc
+- [x] Update [docs/DEPLOYMENT_V3.md](file:///c:/Users/TEST/MyPortalSC/docs/DEPLOYMENT_V3.md) with accurate v3 information
+
+## Phase 9: Verification
+- [x] Build the project — ✅ All 93 pages compiled successfully
+- [x] All 88 initiative static pages generated

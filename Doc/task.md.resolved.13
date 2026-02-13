@@ -1,0 +1,80 @@
+# CIO-Level Portfolio Enhancement — Tiers 1–7
+
+> **Constraint**: Do NOT modify existing pages. Create new pages/components. Admin feature toggle for enable/disable.
+
+## Foundation: Feature Toggle System + DB Schema
+- [ ] Create `site_settings` table in Supabase (feature flags + i18n config)
+- [ ] Create `011_feature_toggles.sql` migration
+- [ ] Create `lib/data/settings.ts` — read feature flags
+- [ ] Create `admin/settings/page.tsx` — Feature toggle dashboard
+- [ ] Create `FeatureGate` component — conditionally renders based on DB flag
+- [ ] Add "Settings" to AdminShell sidebar
+
+## Tier 1: Executive Presence & Branding (EN / HI / BN)
+- [ ] Create i18n system (`lib/i18n/`) with EN, HI, BN translations
+- [ ] Create `LanguageSwitcher.tsx` component
+- [ ] Create `/executive-summary` page — animated KPI counters
+- [ ] Create `/testimonials` page — testimonial carousel (DB-backed)
+- [ ] Create `/timeline` page — interactive career timeline (DB-backed)
+- [ ] Create `/video-intro` section component
+- [ ] Create PDF export utility (`/api/pdf-export`)
+- [ ] Create admin CRUD: testimonials, timeline entries
+- [ ] Create `012_tier1_tables.sql` (testimonials, timeline_entries)
+
+## Tier 2: Security & Trust
+- [ ] Create 2FA setup flow (TOTP via Supabase Auth)
+- [ ] Create `/admin/sessions` — active session viewer
+- [ ] Add rate limiting middleware (login endpoint)
+- [ ] Add CSP, HSTS, X-Frame-Options headers in `next.config`
+- [ ] Create enhanced `/admin/audit-log` page with filters + export
+- [ ] Add RBAC system (super_admin, editor, viewer)
+- [ ] Create `/admin/users` page for role management
+- [ ] Add CAPTCHA to contact form (`/contact`)
+- [ ] Create `013_tier2_security.sql` (sessions, roles)
+
+## Tier 3: Visual Excellence & Animations
+- [ ] Add Framer Motion — page transition wrapper
+- [ ] Create `ScrollReveal` component for scroll-triggered animations
+- [ ] Create `/globe` component — 3D interactive delivery map
+- [ ] Add Light Mode theme to globals.css + ThemeProvider
+- [ ] Create `ParticleBackground` component
+- [ ] Add magnetic button + custom cursor effects
+- [ ] Create skeleton/loading states for all dynamic pages
+- [ ] Create branded `/404` and `/error` pages
+
+## Tier 4: Data & Analytics
+- [ ] Create `/admin/analytics-dashboard` — charts (Recharts)
+- [ ] Create initiative heatmap component
+- [ ] Create program ROI tracker section
+- [ ] Add visitor tracking (page_analytics enhancements)
+- [ ] Create contact form analytics view
+- [ ] Create `014_tier4_analytics.sql`
+
+## Tier 5: Admin Power Features
+- [ ] Integrate TipTap rich text editor for initiative descriptions
+- [ ] Add drag-and-drop ordering (dnd-kit)
+- [ ] Add bulk operations (multi-select, bulk delete/status)
+- [ ] Create media library with Supabase Storage
+- [ ] Add content versioning system
+- [ ] Add scheduled publishing (publish_at column)
+- [ ] Create admin global search bar
+- [ ] Create real-time activity feed
+- [ ] Create `015_tier5_admin.sql`
+
+## Tier 6: SEO, Performance & Accessibility
+- [ ] Create dynamic OG image generation (`/api/og`)
+- [ ] Add JSON-LD structured data (Person, Portfolio schemas)
+- [ ] Create `sitemap.xml` and `robots.txt` generators
+- [ ] Implement image optimization + lazy loading
+- [ ] WCAG 2.1 AA audit + keyboard nav + skip links
+- [ ] Add PWA manifest + service worker
+
+## Tier 7: Enterprise Features
+- [ ] Create `/blog` section with markdown articles (DB-backed)
+- [ ] Create `/case-studies` with deep-dive pages
+- [ ] Create `/speaking` — events and conferences
+- [ ] Create `/publications` — awards and papers
+- [ ] Create `/downloads` — downloadable resources (Supabase Storage)
+- [ ] Create newsletter signup component + DB table
+- [ ] Create `/admin/contacts` — contact form CRM
+- [ ] Create `016_tier7_enterprise.sql`

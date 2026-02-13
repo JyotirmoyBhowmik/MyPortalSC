@@ -1,0 +1,53 @@
+# Dynamic Web Portfolio — Task Tracker
+
+## Phase 1: Project Setup & Foundation
+- [x] Initialize Next.js 16 project with App Router, TypeScript, Tailwind CSS
+- [x] Configure Supabase client utilities (browser, server, middleware)
+- [x] Set up environment variables and [.env.example](file:///c:/Users/TEST/MyPortalSC/.env.example)
+- [x] Configure [next.config.ts](file:///c:/Users/TEST/MyPortalSC/next.config.ts), `tailwind.css`, [tsconfig.json](file:///c:/Users/TEST/MyPortalSC/tsconfig.json)
+
+## Phase 2: Database & Authentication
+- [x] Create SQL migration files (schema, indexes, RLS, functions/triggers, seed data)
+- [x] Generate Supabase TypeScript types ([database.types.ts](file:///c:/Users/TEST/MyPortalSC/src/lib/database.types.ts))
+- [x] Implement Supabase Auth middleware for token refresh
+- [x] Build admin login page (`/admin/login`)
+- [x] Create auth guard for admin routes
+
+## Phase 3: Public-Facing Pages
+- [x] Build global layout (Navbar, Footer, theme tokens)
+- [x] Home page — hero, featured projects, skills overview, certifications
+- [x] About page — biography, professional summary
+- [x] Projects listing page — filterable/searchable grid
+- [x] Project detail page (`/projects/[slug]`)
+- [x] Contact page
+- [/] Content pages editor
+- [x] Align content with Resume
+    - [x] Update Homepage Hero to use dynamic content (added resume defaults)
+    - [x] Add Education & Languages to About page
+    - [x] Update seed data with full resume text
+
+## Phase 4: Admin Dashboard
+- [x] Admin layout (sidebar, header, protected wrapper)
+- [x] Admin home (stats)
+- [x] Manage Projects (CRUD)
+- [x] Manage Skills (CRUD)
+- [x] Manage Certifications (CRUD)
+- [x] Manage Achievements (CRUD)
+- [/] Troubleshoot deployment errors
+    - [x] Fix TypeScript build error (`experience` type mismatch)
+    - [x] Create dedicated Skills page & nav link
+    - [/] Resolve empty projects page issue (created [006_force_full_refresh.sql](file:///c:/Users/TEST/MyPortalSC/supabase/migrations/006_force_full_refresh.sql))
+- [x] Analytics view
+
+## Phase 5: Refinement & Deploy
+- [x] Error boundary / Not Found pages
+- [x] Fix deprecation warnings (middleware -> proxy) - *Deferred (not critical)*
+- [x] Final content audit (Next.js 15 compatibility check)
+- [ ] User final review & deployment
+
+## Phase 5: Polish & Documentation
+- [x] Responsive design pass (mobile, tablet, desktop)
+- [x] SEO meta tags and Open Graph support
+- [x] Error boundaries and loading states
+- [x] README.md, DEPLOYMENT.md, DATABASE.md
+- [ ] Final verification and build check

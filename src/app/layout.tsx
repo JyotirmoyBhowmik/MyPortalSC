@@ -61,7 +61,7 @@ export const metadata: Metadata = {
   },
 };
 
-import { getFeatureFlags } from "@/lib/data/settings";
+import { getSiteSettingsMap } from "@/lib/data/settings";
 
 // ... imports
 
@@ -70,7 +70,8 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const flags = await getFeatureFlags();
+  const settings = await getSiteSettingsMap();
+  const flags = settings as Record<string, boolean>; // Component compatibility
 
   return (
     <html lang="en" className="dark" suppressHydrationWarning>
@@ -79,7 +80,7 @@ export default async function RootLayout({
       >
         <ThemeProvider>
           <I18nProvider>
-            <Navbar flags={flags} />
+            <Navbar settings={settings} />
             <main className="min-h-screen pt-16">{children}</main>
             <Footer flags={flags} />
           </I18nProvider>

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import { toggleFeature } from "@/app/admin/actions/settings";
+import { toggleFeature, updateSettingValue } from "@/app/admin/actions/settings";
 import type { SiteSetting } from "@/lib/data/settings";
 
 const tierLabels: Record<string, { label: string; icon: string; color: string }> = {
@@ -12,10 +12,11 @@ const tierLabels: Record<string, { label: string; icon: string; color: string }>
     tier5: { label: "Tier 5 — Admin Power Features", icon: "🛠️", color: "from-amber-500/10 to-yellow-500/10" },
     tier6: { label: "Tier 6 — SEO & Performance", icon: "🌐", color: "from-cyan-500/10 to-teal-500/10" },
     tier7: { label: "Tier 7 — Enterprise Features", icon: "🏢", color: "from-pink-500/10 to-rose-500/10" },
+    appearance: { label: "Appearance & Theme", icon: "🖌️", color: "from-pink-500/10 to-purple-500/10" },
     general: { label: "General", icon: "⚙️", color: "from-gray-500/10 to-slate-500/10" },
 };
 
-const tierOrder = ["tier1", "tier2", "tier3", "tier4", "tier5", "tier6", "tier7", "general"];
+const tierOrder = ["appearance", "tier1", "tier2", "tier3", "tier4", "tier5", "tier6", "tier7", "general"];
 
 interface Props {
     grouped: Record<string, SiteSetting[]>;
@@ -24,27 +25,31 @@ interface Props {
 export default function SettingsManager({ grouped }: Props) {
     const [isPending, startTransition] = useTransition();
     const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
-    const [localState, setLocalState] = useState<Record<string, boolean>>(() => {
-        const state: Record<string, boolean> = {};
+    const [localState, setLocalState] = useState<Record<string, any>>(() => {
+        const state: Record<string, any> = {};
         for (const settings of Object.values(grouped)) {
             for (const s of settings) {
-                state[s.key] = s.value === true || s.value === "true";
+                // Parse value if it is a string boolean, otherwise keep as is
+                let val = s.value;
+                if (val === "true") val = true;
+                if (val === "false") val = false;
+                state[s.key] = val;
             }
         }
         return state;
     });
 
-    function handleToggle(key: string, current: boolean) {
-        const newValue = !current;
+    function handleChange(key: string, newValue: any) {
+        const oldValue = localState[key];
         setLocalState((prev) => ({ ...prev, [key]: newValue }));
 
         startTransition(async () => {
-            const result = await toggleFeature(key, newValue);
+            // Use updateSettingValue for everything (it handles booleans too)
+            const result = await updateSettingValue(key, newValue);
             if (result.success) {
-                setMessage({ type: "success", text: `Feature ${newValue ? "enabled" : "disabled"}!` });
+                setMessage({ type: "success", text: "Saved!" });
             } else {
-                // Revert
-                setLocalState((prev) => ({ ...prev, [key]: current }));
+                setLocalState((prev) => ({ ...prev, [key]: oldValue }));
                 setMessage({ type: "error", text: result.error || "Failed to update" });
             }
             setTimeout(() => setMessage(null), 2000);
@@ -75,7 +80,8 @@ export default function SettingsManager({ grouped }: Props) {
             {sortedCategories.map((category) => {
                 const tier = tierLabels[category] || tierLabels.general;
                 const settings = grouped[category];
-                const enabledCount = settings.filter((s) => localState[s.key]).length;
+                // Count enabled only for booleans
+                const enabledCount = settings.filter((s) => localState[s.key] === true).length;
 
                 return (
                     <div key={category} className={`glass rounded-xl overflow-hidden bg-gradient-to-br ${tier.color}`}>
@@ -85,9 +91,11 @@ export default function SettingsManager({ grouped }: Props) {
                                 <span className="text-xl">{tier.icon}</span>
                                 <div>
                                     <h2 className="text-base font-bold">{tier.label}</h2>
-                                    <p className="text-xs text-muted-foreground">
-                                        {enabledCount} of {settings.length} enabled
-                                    </p>
+                                    {category !== "appearance" && (
+                                        <p className="text-xs text-muted-foreground">
+                                            {enabledCount} of {settings.length} enabled
+                                        </p>
+                                    )}
                                 </div>
                             </div>
                         </div>
@@ -95,7 +103,9 @@ export default function SettingsManager({ grouped }: Props) {
                         {/* Settings list */}
                         <div className="divide-y divide-border/30">
                             {settings.map((setting) => {
-                                const enabled = localState[setting.key] ?? false;
+                                const value = localState[setting.key];
+                                const isBoolean = typeof value === "boolean" || value === "true" || value === "false";
+
                                 return (
                                     <div
                                         key={setting.key}
@@ -106,7 +116,7 @@ export default function SettingsManager({ grouped }: Props) {
                                                 <h3 className="text-sm font-semibold text-foreground">
                                                     {setting.label}
                                                 </h3>
-                                                {enabled && (
+                                                {isBoolean && value === true && (
                                                     <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-green-500/15 text-green-400">
                                                         ON
                                                     </span>
@@ -119,24 +129,48 @@ export default function SettingsManager({ grouped }: Props) {
                                             )}
                                         </div>
 
-                                        {/* Toggle switch */}
-                                        <button
-                                            onClick={() => handleToggle(setting.key, enabled)}
-                                            disabled={isPending}
-                                            className={`
-                                                relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-200 ease-in-out
-                                                focus:outline-none focus:ring-2 focus:ring-primary/50 focus:ring-offset-2 focus:ring-offset-background
-                                                ${enabled ? "bg-primary" : "bg-border"}
-                                                ${isPending ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}
-                                            `}
-                                        >
-                                            <span
+                                        {/* Control */}
+                                        {setting.key === "site_template" ? (
+                                            <select
+                                                value={String(value).replace(/"/g, "")}
+                                                onChange={(e) => handleChange(setting.key, e.target.value)}
+                                                disabled={isPending}
+                                                className="bg-surface border border-border rounded-lg text-xs px-2 py-1 focus:ring-2 focus:ring-primary/50 outline-none"
+                                            >
+                                                <option value="classic">Classic</option>
+                                                <option value="premium">Premium</option>
+                                                <option value="glass">Glass</option>
+                                            </select>
+                                        ) : setting.key === "navbar_style" ? (
+                                            <select
+                                                value={String(value).replace(/"/g, "")}
+                                                onChange={(e) => handleChange(setting.key, e.target.value)}
+                                                disabled={isPending}
+                                                className="bg-surface border border-border rounded-lg text-xs px-2 py-1 focus:ring-2 focus:ring-primary/50 outline-none"
+                                            >
+                                                <option value="solid">Solid</option>
+                                                <option value="glass">Glass</option>
+                                                <option value="floating">Floating</option>
+                                            </select>
+                                        ) : (
+                                            <button
+                                                onClick={() => handleChange(setting.key, !value)}
+                                                disabled={isPending}
                                                 className={`
-                                                    inline-block h-4 w-4 rounded-full bg-white shadow-sm transition-transform duration-200 ease-in-out
-                                                    ${enabled ? "translate-x-6" : "translate-x-1"}
+                                                    relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-200 ease-in-out
+                                                    focus:outline-none focus:ring-2 focus:ring-primary/50 focus:ring-offset-2 focus:ring-offset-background
+                                                    ${value ? "bg-primary" : "bg-border"}
+                                                    ${isPending ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}
                                                 `}
-                                            />
-                                        </button>
+                                            >
+                                                <span
+                                                    className={`
+                                                        inline-block h-4 w-4 rounded-full bg-white shadow-sm transition-transform duration-200 ease-in-out
+                                                        ${value ? "translate-x-6" : "translate-x-1"}
+                                                    `}
+                                                />
+                                            </button>
+                                        )}
                                     </div>
                                 );
                             })}

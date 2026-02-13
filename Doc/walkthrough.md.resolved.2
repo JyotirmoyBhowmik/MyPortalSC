@@ -1,0 +1,61 @@
+# Admin Panel & Theme System Overhaul — Walkthrough
+
+## Summary
+
+Migrated all initiative data from static arrays to **Supabase** with full admin CRUD, implemented a **4-theme system** with localStorage persistence, and **overhauled the admin panel UI** with a modern collapsible sidebar, breadcrumbs, and mobile-responsive layout.
+
+## What Changed
+
+### 1. Database Migration (Supabase)
+
+- [009_initiatives_and_programs.sql](file:///c:/Users/TEST/MyPortalSC/supabase/migrations/009_initiatives_and_programs.sql) — `programs` and `initiatives` tables with RLS, indexes, triggers
+- [010_seed_initiatives.sql](file:///c:/Users/TEST/MyPortalSC/supabase/migrations/010_seed_initiatives.sql) — Seed data: 12 programs + 88 initiatives
+
+### 2. Data Layer (Static → Supabase)
+
+- [initiatives.ts](file:///c:/Users/TEST/MyPortalSC/src/lib/data/initiatives.ts) — Complete rewrite from static arrays to Supabase queries
+- [database.types.ts](file:///c:/Users/TEST/MyPortalSC/src/lib/database.types.ts) — Added [Program](file:///c:/Users/TEST/MyPortalSC/src/lib/database.types.ts#321-331), [Initiative](file:///c:/Users/TEST/MyPortalSC/src/lib/database.types.ts#332-346), [InitiativeWithProgram](file:///c:/Users/TEST/MyPortalSC/src/lib/database.types.ts#347-350) types
+
+### 3. Four-Theme System
+
+| Theme | Colors |
+|-------|--------|
+| **Deep Navy** (default) | Navy/Slate/Electric Green |
+| **Midnight Purple** | Deep Violet/Purple/Cyan |
+| **Carbon** | True Black/Orange/Zinc |
+| **Emerald Forest** | Forest Green/Emerald/Gold |
+
+- [ThemeProvider.tsx](file:///c:/Users/TEST/MyPortalSC/src/components/ThemeProvider.tsx) — Context with `localStorage` persistence
+- [ThemeSwitcher.tsx](file:///c:/Users/TEST/MyPortalSC/src/components/ThemeSwitcher.tsx) — Dropdown with color swatches
+- [globals.css](file:///c:/Users/TEST/MyPortalSC/src/app/globals.css) — All theme variables via `[data-theme]` selectors
+
+### 4. Admin Panel Overhaul
+
+- [AdminShell.tsx](file:///c:/Users/TEST/MyPortalSC/src/components/admin/AdminShell.tsx) — Collapsible sidebar with section groups, active indicators, breadcrumb navigation, mobile hamburger menu, theme switcher
+- [InitiativesManager.tsx](file:///c:/Users/TEST/MyPortalSC/src/components/admin/InitiativesManager.tsx) — Full CRUD table with search, filter by program, add/edit modal, delete
+- [admin/initiatives/page.tsx](file:///c:/Users/TEST/MyPortalSC/src/app/admin/initiatives/page.tsx) — Admin initiatives listing
+- [admin/actions/initiatives.ts](file:///c:/Users/TEST/MyPortalSC/src/app/admin/actions/initiatives.ts) — Server actions for create/update/delete
+
+### 5. Public Pages Updated
+
+All public initiative pages now query Supabase instead of static data:
+- [initiatives/page.tsx](file:///c:/Users/TEST/MyPortalSC/src/app/initiatives/page.tsx), `[slug]/page.tsx`, [programs/page.tsx](file:///c:/Users/TEST/MyPortalSC/src/app/initiatives/programs/page.tsx)
+- [InitiativesGrid.tsx](file:///c:/Users/TEST/MyPortalSC/src/components/initiatives/InitiativesGrid.tsx) updated for DB-backed props
+
+## Verification
+
+```
+✓ Compiled successfully in 8.1s
+✓ Finished TypeScript in 8.0s
+✓ Collecting page data in 3.0s
+✓ Generating static pages (3/3) in 463.6ms
+
+Routes: 21 total (3 static, 18 dynamic)
+New route: /admin/initiatives ✓
+```
+
+## Deployment Notes
+
+1. **Run migrations** `009` and `010` in Supabase SQL editor before deploying
+2. Theme auto-applies from `localStorage` — no server config needed
+3. `git push` triggers Vercel auto-deploy
