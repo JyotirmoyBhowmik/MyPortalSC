@@ -1,7 +1,8 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useState, useTransition, useEffect } from "react";
 import { createCaseStudy, updateCaseStudy, deleteCaseStudy } from "@/app/admin/actions/enterprise";
+import RichTextEditor from "./RichTextEditor";
 
 interface CaseStudy {
     id: string;
@@ -46,6 +47,18 @@ export default function CaseStudiesManager({ cases }: { cases: CaseStudy[] }) {
             setTimeout(() => setMessage(null), 2000);
         });
     }
+
+    const [challengeContent, setChallengeContent] = useState("");
+    const [solutionContent, setSolutionContent] = useState("");
+    const [outcomeContent, setOutcomeContent] = useState("");
+
+    useEffect(() => {
+        if (showModal) {
+            setChallengeContent(editing?.challenge ?? "");
+            setSolutionContent(editing?.solution ?? "");
+            setOutcomeContent(editing?.outcome ?? "");
+        }
+    }, [showModal, editing]);
 
     return (
         <div>
@@ -105,9 +118,35 @@ export default function CaseStudiesManager({ cases }: { cases: CaseStudy[] }) {
                                 <input name="client" defaultValue={editing?.client ?? ""} placeholder="Client" className="px-3 py-2 bg-surface rounded-lg border border-border text-sm text-foreground" />
                                 <input name="industry" defaultValue={editing?.industry ?? ""} placeholder="Industry" className="px-3 py-2 bg-surface rounded-lg border border-border text-sm text-foreground" />
                             </div>
-                            <textarea name="challenge" defaultValue={editing?.challenge ?? ""} placeholder="Challenge" rows={2} className="w-full px-3 py-2 bg-surface rounded-lg border border-border text-sm text-foreground" />
-                            <textarea name="solution" defaultValue={editing?.solution ?? ""} placeholder="Solution" rows={2} className="w-full px-3 py-2 bg-surface rounded-lg border border-border text-sm text-foreground" />
-                            <textarea name="outcome" defaultValue={editing?.outcome ?? ""} placeholder="Outcome" rows={2} className="w-full px-3 py-2 bg-surface rounded-lg border border-border text-sm text-foreground" />
+                            <div className="space-y-4">
+                                <div className="space-y-1">
+                                    <label className="text-xs font-semibold text-muted-foreground ml-1">Challenge</label>
+                                    <RichTextEditor
+                                        content={editing ? (editing.challenge || "") : ""}
+                                        onChange={(html) => setChallengeContent(html)}
+                                        minHeight="min-h-[150px]"
+                                    />
+                                    <input type="hidden" name="challenge" value={challengeContent || (editing?.challenge ?? "")} />
+                                </div>
+                                <div className="space-y-1">
+                                    <label className="text-xs font-semibold text-muted-foreground ml-1">Solution</label>
+                                    <RichTextEditor
+                                        content={editing ? (editing.solution || "") : ""}
+                                        onChange={(html) => setSolutionContent(html)}
+                                        minHeight="min-h-[150px]"
+                                    />
+                                    <input type="hidden" name="solution" value={solutionContent || (editing?.solution ?? "")} />
+                                </div>
+                                <div className="space-y-1">
+                                    <label className="text-xs font-semibold text-muted-foreground ml-1">Outcome</label>
+                                    <RichTextEditor
+                                        content={editing ? (editing.outcome || "") : ""}
+                                        onChange={(html) => setOutcomeContent(html)}
+                                        minHeight="min-h-[150px]"
+                                    />
+                                    <input type="hidden" name="outcome" value={outcomeContent || (editing?.outcome ?? "")} />
+                                </div>
+                            </div>
                             <div className="grid grid-cols-2 gap-3">
                                 <input name="duration" defaultValue={editing?.duration ?? ""} placeholder="Duration" className="px-3 py-2 bg-surface rounded-lg border border-border text-sm text-foreground" />
                                 <input name="sort_order" type="number" defaultValue={editing?.sort_order ?? 0} placeholder="Order" className="px-3 py-2 bg-surface rounded-lg border border-border text-sm text-foreground" />

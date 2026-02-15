@@ -68,7 +68,6 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                     dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(post.content) }}
                 />
             </article>
-        </article>
         </main >
     );
 }
