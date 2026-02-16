@@ -1,19 +1,13 @@
-"use client";
+import MediaPickerModal from "./MediaPickerModal";
+import { useState } from "react";
 
-import { useEditor, EditorContent } from "@tiptap/react";
-import StarterKit from "@tiptap/starter-kit";
-import Link from "@tiptap/extension-link";
-import Image from "@tiptap/extension-image";
-import { useEffect } from "react";
-
-interface RichTextEditorProps {
-    content: string;
-    onChange: (html: string) => void;
-    minHeight?: string;
-}
+// ... imports
 
 export default function RichTextEditor({ content, onChange, minHeight = "min-h-[300px]" }: RichTextEditorProps) {
+    const [showMediaPicker, setShowMediaPicker] = useState(false);
+
     const editor = useEditor({
+        // ... (keep existing setup)
         extensions: [
             StarterKit,
             Link.configure({
@@ -39,12 +33,9 @@ export default function RichTextEditor({ content, onChange, minHeight = "min-h-[
         },
     });
 
-    // Handle external content updates (e.g. initial load)
+    // ... (keep useEffect)
     useEffect(() => {
         if (editor && content !== editor.getHTML()) {
-            // Only update if content is effectively different to avoid cursor jumps
-            // Use stricter check or just rely on initial? 
-            // For simple use case:
             if (editor.getText() === "" && content !== "") {
                 editor.commands.setContent(content);
             }
@@ -59,6 +50,7 @@ export default function RichTextEditor({ content, onChange, minHeight = "min-h-[
         <div className="border border-input rounded-lg overflow-hidden bg-background focus-within:ring-2 focus-within:ring-ring">
             {/* Toolbar */}
             <div className="bg-muted/50 border-b border-border p-2 flex flex-wrap gap-1">
+                {/* ... (Existing buttons B, I, S, H1, H2, H3, Lists) ... */}
                 <MenuButton
                     onClick={() => editor.chain().focus().toggleBold().run()}
                     isActive={editor.isActive("bold")}
@@ -122,18 +114,22 @@ export default function RichTextEditor({ content, onChange, minHeight = "min-h-[
                     title="Add Link"
                 />
                 <MenuButton
-                    onClick={() => {
-                        const url = window.prompt('Image URL');
-                        if (url) {
-                            editor.chain().focus().setImage({ src: url }).run();
-                        }
-                    }}
+                    onClick={() => setShowMediaPicker(true)}
                     isActive={editor.isActive("image")}
                     label="Image"
-                    title="Add Image URL"
+                    title="Add Image from Library"
                 />
             </div>
             <EditorContent editor={editor} />
+
+            {showMediaPicker && (
+                <MediaPickerModal
+                    onSelect={(url) => {
+                        editor.chain().focus().setImage({ src: url }).run();
+                    }}
+                    onClose={() => setShowMediaPicker(false)}
+                />
+            )}
         </div>
     );
 }
