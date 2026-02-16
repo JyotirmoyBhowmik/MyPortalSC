@@ -1,7 +1,17 @@
-import MediaPickerModal from "./MediaPickerModal";
-import { useState } from "react";
+"use client";
 
-// ... imports
+import { useEditor, EditorContent } from "@tiptap/react";
+import StarterKit from "@tiptap/starter-kit";
+import Link from "@tiptap/extension-link";
+import Image from "@tiptap/extension-image";
+import { useEffect, useState } from "react";
+import MediaPickerModal from "./MediaPickerModal";
+
+interface RichTextEditorProps {
+    content: string;
+    onChange: (html: string) => void;
+    minHeight?: string;
+}
 
 export default function RichTextEditor({ content, onChange, minHeight = "min-h-[300px]" }: RichTextEditorProps) {
     const [showMediaPicker, setShowMediaPicker] = useState(false);

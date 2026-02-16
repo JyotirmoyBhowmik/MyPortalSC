@@ -27,7 +27,29 @@ export default function BlogManager({ posts }: { posts: Post[] }) {
     const [isPending, startTransition] = useTransition();
     const [message, setMessage] = useState<{ type: string; text: string } | null>(null);
 
-    // ... (keep handleSubmit and handleDelete)
+    function handleSubmit(formData: FormData) {
+        startTransition(async () => {
+            const result = editing
+                ? await updateBlogPost(editing.id, formData)
+                : await createBlogPost(formData);
+            if (result.success) {
+                setMessage({ type: "success", text: editing ? "Updated!" : "Created!" });
+                setShowModal(false);
+            } else {
+                setMessage({ type: "error", text: result.error || "Failed" });
+            }
+            setTimeout(() => setMessage(null), 2000);
+        });
+    }
+
+    function handleDelete(id: string) {
+        if (!confirm("Delete this post?")) return;
+        startTransition(async () => {
+            await deleteBlogPost(id);
+            setMessage({ type: "success", text: "Deleted!" });
+            setTimeout(() => setMessage(null), 2000);
+        });
+    }
 
     const [editorContent, setEditorContent] = useState("");
 
@@ -87,7 +109,7 @@ export default function BlogManager({ posts }: { posts: Post[] }) {
                                 <label className="text-xs font-semibold text-muted-foreground ml-1">Content</label>
                                 <RichTextEditor
                                     content={editing ? editing.content : ""}
-                                    onChange={(html) => setEditorContent(html)}
+                                    onChange={(html: string) => setEditorContent(html)}
                                 />
                                 <input type="hidden" name="content" value={editorContent || (editing?.content ?? "")} />
                             </div>

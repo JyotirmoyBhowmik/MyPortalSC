@@ -123,7 +123,7 @@ export default function CaseStudiesManager({ cases }: { cases: CaseStudy[] }) {
                                     <label className="text-xs font-semibold text-muted-foreground ml-1">Challenge</label>
                                     <RichTextEditor
                                         content={editing ? (editing.challenge || "") : ""}
-                                        onChange={(html) => setChallengeContent(html)}
+                                        onChange={(html: string) => setChallengeContent(html)}
                                         minHeight="min-h-[150px]"
                                     />
                                     <input type="hidden" name="challenge" value={challengeContent || (editing?.challenge ?? "")} />
@@ -132,7 +132,7 @@ export default function CaseStudiesManager({ cases }: { cases: CaseStudy[] }) {
                                     <label className="text-xs font-semibold text-muted-foreground ml-1">Solution</label>
                                     <RichTextEditor
                                         content={editing ? (editing.solution || "") : ""}
-                                        onChange={(html) => setSolutionContent(html)}
+                                        onChange={(html: string) => setSolutionContent(html)}
                                         minHeight="min-h-[150px]"
                                     />
                                     <input type="hidden" name="solution" value={solutionContent || (editing?.solution ?? "")} />
@@ -141,7 +141,7 @@ export default function CaseStudiesManager({ cases }: { cases: CaseStudy[] }) {
                                     <label className="text-xs font-semibold text-muted-foreground ml-1">Outcome</label>
                                     <RichTextEditor
                                         content={editing ? (editing.outcome || "") : ""}
-                                        onChange={(html) => setOutcomeContent(html)}
+                                        onChange={(html: string) => setOutcomeContent(html)}
                                         minHeight="min-h-[150px]"
                                     />
                                     <input type="hidden" name="outcome" value={outcomeContent || (editing?.outcome ?? "")} />
