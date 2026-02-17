@@ -8,10 +8,37 @@ export const dynamic = "force-dynamic";
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
     const { slug } = await params;
     const supabase = await createClient();
-    const { data } = await supabase.from("blog_posts").select("title, excerpt").eq("slug", slug).single();
+    const { data } = await supabase.from("blog_posts").select("title, excerpt, published_at").eq("slug", slug).single();
+
+    if (!data) return { title: "Blog Post not found" };
+
+    const ogUrl = new URL(`${process.env.NEXT_PUBLIC_SITE_URL || "https://jyotirmoy.bhowmik.com"}/api/og`);
+    ogUrl.searchParams.set("title", data.title);
+    if (data.excerpt) ogUrl.searchParams.set("subtitle", data.excerpt.substring(0, 100) + "...");
+
     return {
-        title: data ? `${data.title} | Blog` : "Blog Post",
-        description: data?.excerpt || "",
+        title: `${data.title} | Blog`,
+        description: data.excerpt || "",
+        openGraph: {
+            title: data.title,
+            description: data.excerpt || "",
+            type: "article",
+            publishedTime: data.published_at,
+            images: [
+                {
+                    url: ogUrl.toString(),
+                    width: 1200,
+                    height: 630,
+                    alt: data.title,
+                },
+            ],
+        },
+        twitter: {
+            card: "summary_large_image",
+            title: data.title,
+            description: data.excerpt || "",
+            images: [ogUrl.toString()],
+        },
     };
 }
 

@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { getPageContent, getContentField } from "@/lib/data/content";
+import DeliveryGlobe from "@/components/visuals/DeliveryGlobe";
+import ContactForm from "@/components/forms/ContactForm";
 
 export const dynamic = "force-dynamic";
 
@@ -66,6 +68,17 @@ export default async function ContactPage() {
                         I&apos;m always open to new opportunities, collaborations, and
                         conversations. Feel free to reach out!
                     </p>
+                </div>
+            </section>
+
+            {/* Global Reach */}
+            <section className="py-12 px-4 bg-muted/30">
+                <div className="max-w-4xl mx-auto">
+                    <div className="text-center mb-8">
+                        <h2 className="text-2xl font-bold mb-2">Global Operations</h2>
+                        <p className="text-muted-foreground text-sm">Delivering excellence across borders.</p>
+                    </div>
+                    <DeliveryGlobe />
                 </div>
             </section>
 
@@ -177,73 +190,7 @@ export default async function ContactPage() {
                         {/* Contact Form */}
                         <div className="glass rounded-xl p-8">
                             <h2 className="text-xl font-semibold mb-6">Send a Message</h2>
-                            <form className="space-y-5">
-                                <div>
-                                    <label
-                                        htmlFor="name"
-                                        className="block text-sm font-medium mb-1.5"
-                                    >
-                                        Name
-                                    </label>
-                                    <input
-                                        id="name"
-                                        type="text"
-                                        placeholder="Your name"
-                                        className="admin-input"
-                                    />
-                                </div>
-                                <div>
-                                    <label
-                                        htmlFor="email"
-                                        className="block text-sm font-medium mb-1.5"
-                                    >
-                                        Email
-                                    </label>
-                                    <input
-                                        id="email"
-                                        type="email"
-                                        placeholder="you@example.com"
-                                        className="admin-input"
-                                    />
-                                </div>
-                                <div>
-                                    <label
-                                        htmlFor="subject"
-                                        className="block text-sm font-medium mb-1.5"
-                                    >
-                                        Subject
-                                    </label>
-                                    <input
-                                        id="subject"
-                                        type="text"
-                                        placeholder="Project collaboration"
-                                        className="admin-input"
-                                    />
-                                </div>
-                                <div>
-                                    <label
-                                        htmlFor="message"
-                                        className="block text-sm font-medium mb-1.5"
-                                    >
-                                        Message
-                                    </label>
-                                    <textarea
-                                        id="message"
-                                        rows={5}
-                                        placeholder="Tell me about your project…"
-                                        className="admin-input resize-none"
-                                    />
-                                </div>
-                                <button
-                                    type="submit"
-                                    className="w-full py-3 rounded-lg gradient-bg text-white font-medium shadow-lg shadow-primary/20 hover:shadow-primary/40 transition-shadow"
-                                >
-                                    Send Message
-                                </button>
-                                <p className="text-xs text-muted-foreground text-center">
-                                    I&apos;ll get back to you within 24-48 hours.
-                                </p>
-                            </form>
+                            <ContactForm />
                         </div>
                     </div>
                 </div>

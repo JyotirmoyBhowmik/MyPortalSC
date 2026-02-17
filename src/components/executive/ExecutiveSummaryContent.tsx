@@ -2,6 +2,12 @@
 
 import { useTranslation, type Locale } from "@/lib/i18n";
 import { useEffect, useState, useRef } from "react";
+import dynamic from "next/dynamic";
+
+const DownloadPdfButton = dynamic(() => import("@/components/pdf/DownloadPdfButton"), {
+    ssr: false,
+    loading: () => <button className="fixed bottom-8 right-8 z-50 p-4 rounded-full bg-primary/20 animate-pulse shadow-lg print:hidden"><div className="w-6 h-6" /></button>
+});
 
 interface KPI {
     key: string;
@@ -89,86 +95,94 @@ export default function ExecutiveSummaryContent({ kpis, testimonials }: Props) {
         return map[locale] || test.quote_en;
     }
 
+    const contentRef = useRef<HTMLDivElement>(null);
+
     return (
-        <div className="space-y-16">
-            {/* Hero */}
-            <section className="text-center py-16 md:py-24">
-                <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 text-primary text-sm font-medium mb-6">
-                    <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />
-                    {t.executive.title}
-                </div>
-                <h1 className="text-4xl md:text-6xl font-black text-foreground mb-4 leading-tight">
-                    Jyotirmoy <span className="text-primary">Bhowmik</span>
-                </h1>
-                <p className="text-xl md:text-2xl text-muted-foreground max-w-2xl mx-auto mb-2">
-                    {t.executive.subtitle}
-                </p>
-                <p className="text-sm text-muted-foreground/70 max-w-xl mx-auto">
-                    {t.executive.tagline}
-                </p>
-            </section>
+        <>
+            <DownloadPdfButton contentRef={contentRef} />
+            <div ref={contentRef} className="space-y-16 print:p-8 print:space-y-8">
+                {/* Hero */}
+                <section className="text-center py-16 md:py-24 print:py-8">
+                    <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 text-primary text-sm font-medium mb-6 print:hidden">
+                        <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />
+                        {t.executive.title}
+                    </div>
+                    <h1 className="text-4xl md:text-6xl font-black text-foreground mb-4 leading-tight print:text-4xl print:mb-2">
+                        Jyotirmoy <span className="text-primary">Bhowmik</span>
+                    </h1>
+                    <p className="text-xl md:text-2xl text-muted-foreground max-w-2xl mx-auto mb-2 print:text-lg">
+                        {t.executive.subtitle}
+                    </p>
+                    <p className="text-sm text-muted-foreground/70 max-w-xl mx-auto print:text-xs">
+                        {t.executive.tagline}
+                    </p>
+                    <div className="hidden print:block mt-4 text-xs text-muted-foreground">
+                        https://jyotirmoy.bhowmik.com/executive-summary
+                    </div>
+                </section>
 
-            {/* KPI Grid */}
-            <section>
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
-                    {kpis.map((kpi) => (
-                        <div key={kpi.key} className="glass rounded-2xl p-6 md:p-8 text-center group hover:scale-[1.02] transition-transform">
-                            <span className="text-3xl mb-3 block">{kpi.icon}</span>
-                            <AnimatedCounter value={kpi.value} suffix={kpi.suffix} />
-                            <p className="text-sm text-muted-foreground mt-2 font-medium">{getLabel(kpi)}</p>
-                        </div>
-                    ))}
-                </div>
-            </section>
-
-            {/* Key Competencies */}
-            <section>
-                <h2 className="text-2xl font-bold mb-6 text-center">{t.executive.sections.coreCompetencies}</h2>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    {[
-                        { icon: "🏗️", title: "IT Infrastructure", desc: "Enterprise architecture, datacenter ops, cloud migration (AWS/Azure/GCP)" },
-                        { icon: "📋", title: "Project Management", desc: "PMP-certified, Agile/Waterfall, multi-million dollar program delivery" },
-                        { icon: "🔒", title: "Security & Compliance", desc: "ISO 27001, NIST frameworks, SOC compliance, risk assessment" },
-                        { icon: "☁️", title: "Cloud & DevOps", desc: "Multi-cloud strategy, IaC, CI/CD pipelines, container orchestration" },
-                        { icon: "👥", title: "Team Leadership", desc: "150+ engineers managed, mentoring, cross-cultural team building" },
-                        { icon: "📊", title: "IT Governance", desc: "ITIL, COBIT, service management, vendor negotiation, budgeting" },
-                    ].map((item) => (
-                        <div key={item.title} className="glass rounded-xl p-5 hover:bg-surface/50 transition-colors">
-                            <span className="text-2xl mb-3 block">{item.icon}</span>
-                            <h3 className="font-bold text-foreground mb-1">{item.title}</h3>
-                            <p className="text-xs text-muted-foreground">{item.desc}</p>
-                        </div>
-                    ))}
-                </div>
-            </section>
-
-            {/* Featured Testimonials */}
-            {testimonials.length > 0 && (
-                <section>
-                    <h2 className="text-2xl font-bold mb-6 text-center">{t.testimonials.title}</h2>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        {testimonials.slice(0, 4).map((test) => (
-                            <div key={test.id} className="glass rounded-xl p-6">
-                                <svg className="w-6 h-6 text-primary/40 mb-3" fill="currentColor" viewBox="0 0 24 24">
-                                    <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z" />
-                                </svg>
-                                <p className="text-sm text-foreground leading-relaxed mb-4 italic">
-                                    &ldquo;{getQuote(test)}&rdquo;
-                                </p>
-                                <div className="flex items-center gap-3">
-                                    <div className="w-10 h-10 rounded-full gradient-bg flex items-center justify-center text-white text-sm font-bold">
-                                        {test.name.charAt(0)}
-                                    </div>
-                                    <div>
-                                        <p className="text-sm font-semibold">{test.name}</p>
-                                        <p className="text-xs text-muted-foreground">{test.role}, {test.organization}</p>
-                                    </div>
-                                </div>
+                {/* KPI Grid */}
+                <section className="print:break-inside-avoid">
+                    <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6 print:grid-cols-3 print:gap-4">
+                        {kpis.map((kpi) => (
+                            <div key={kpi.key} className="glass rounded-2xl p-6 md:p-8 text-center group hover:scale-[1.02] transition-transform print:shadow-none print:border print:border-gray-200">
+                                <span className="text-3xl mb-3 block">{kpi.icon}</span>
+                                <AnimatedCounter value={kpi.value} suffix={kpi.suffix} />
+                                <p className="text-sm text-muted-foreground mt-2 font-medium">{getLabel(kpi)}</p>
                             </div>
                         ))}
                     </div>
                 </section>
-            )}
-        </div>
+
+                {/* Key Competencies */}
+                <section className="print:break-inside-avoid">
+                    <h2 className="text-2xl font-bold mb-6 text-center print:text-xl print:mb-4">{t.executive.sections.coreCompetencies}</h2>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 print:grid-cols-2">
+                        {[
+                            { icon: "🏗️", title: "IT Infrastructure", desc: "Enterprise architecture, datacenter ops, cloud migration (AWS/Azure/GCP)" },
+                            { icon: "📋", title: "Project Management", desc: "PMP-certified, Agile/Waterfall, multi-million dollar program delivery" },
+                            { icon: "🔒", title: "Security & Compliance", desc: "ISO 27001, NIST frameworks, SOC compliance, risk assessment" },
+                            { icon: "☁️", title: "Cloud & DevOps", desc: "Multi-cloud strategy, IaC, CI/CD pipelines, container orchestration" },
+                            { icon: "👥", title: "Team Leadership", desc: "150+ engineers managed, mentoring, cross-cultural team building" },
+                            { icon: "📊", title: "IT Governance", desc: "ITIL, COBIT, service management, vendor negotiation, budgeting" },
+                        ].map((item) => (
+                            <div key={item.title} className="glass rounded-xl p-5 hover:bg-surface/50 transition-colors print:shadow-none print:border print:border-gray-200">
+                                <span className="text-2xl mb-3 block">{item.icon}</span>
+                                <h3 className="font-bold text-foreground mb-1">{item.title}</h3>
+                                <p className="text-xs text-muted-foreground">{item.desc}</p>
+                            </div>
+                        ))}
+                    </div>
+                </section>
+
+                {/* Featured Testimonials */}
+                {testimonials.length > 0 && (
+                    <section className="print:break-inside-avoid">
+                        <h2 className="text-2xl font-bold mb-6 text-center print:text-xl print:mb-4">{t.testimonials.title}</h2>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            {testimonials.slice(0, 4).map((test) => (
+                                <div key={test.id} className="glass rounded-xl p-6 print:shadow-none print:border print:border-gray-200">
+                                    <svg className="w-6 h-6 text-primary/40 mb-3" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z" />
+                                    </svg>
+                                    <p className="text-sm text-foreground leading-relaxed mb-4 italic">
+                                        &ldquo;{getQuote(test)}&rdquo;
+                                    </p>
+                                    <div className="flex items-center gap-3">
+                                        <div className="w-10 h-10 rounded-full gradient-bg flex items-center justify-center text-white text-sm font-bold print:border print:border-gray-300 print:text-black">
+                                            {test.name.charAt(0)}
+                                        </div>
+                                        <div>
+                                            <p className="text-sm font-semibold">{test.name}</p>
+                                            <p className="text-xs text-muted-foreground">{test.role}, {test.organization}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </section>
+                )}
+            </div>
+        </>
     );
 }

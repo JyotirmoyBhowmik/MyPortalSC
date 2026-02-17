@@ -7,6 +7,7 @@ import {
 import { getSkillsByCategory } from "@/lib/data/skills";
 import { getAllAchievements } from "@/lib/data/achievements";
 import Link from "next/link";
+import VideoPlayer from "@/components/visuals/VideoPlayer";
 
 export const dynamic = "force-dynamic";
 
@@ -163,6 +164,23 @@ export default async function AboutPage() {
                                         ))}
                                     </ul>
                                 )}
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Video Introduction */}
+                    <div className="mb-16">
+                        <div className="relative rounded-2xl overflow-hidden shadow-2xl border border-white/10 bg-black/50 aspect-video">
+                            <VideoPlayer
+                                src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
+                                poster="/images/video-poster.jpg"
+                                className="w-full h-full"
+                            />
+                            <div className="absolute bottom-6 left-6 right-6">
+                                <h3 className="text-white text-xl font-bold mb-2 drop-shadow-md">Leading with Purpose</h3>
+                                <p className="text-white/80 text-sm max-w-lg drop-shadow-md">
+                                    A brief introduction to my leadership philosophy and delivering value efficiently.
+                                </p>
                             </div>
                         </div>
                     </div>
