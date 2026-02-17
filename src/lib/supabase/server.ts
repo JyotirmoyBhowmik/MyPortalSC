@@ -38,7 +38,7 @@ export async function createClient() {
 
 function createDummyClient() {
     return createServerClient(
-        "https://placeholder.supabase.co",
+        "http://localhost:3000",
         "dummy-key",
         {
             cookies: {
