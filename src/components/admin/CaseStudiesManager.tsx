@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useTransition, useEffect } from "react";
+import { useTransition, useState, useEffect } from "react";
+import { DatePicker } from "./DatePicker";
 import { createCaseStudy, updateCaseStudy, deleteCaseStudy } from "@/app/admin/actions/enterprise";
 import RichTextEditor from "./RichTextEditor";
 
@@ -15,6 +16,7 @@ interface CaseStudy {
     outcome: string | null;
     duration: string | null;
     is_published: boolean;
+    published_at: string | null;
     sort_order: number;
 }
 
@@ -23,8 +25,13 @@ export default function CaseStudiesManager({ cases }: { cases: CaseStudy[] }) {
     const [editing, setEditing] = useState<CaseStudy | null>(null);
     const [isPending, startTransition] = useTransition();
     const [message, setMessage] = useState<{ type: string; text: string } | null>(null);
+    const [publishedAt, setPublishedAt] = useState<Date | undefined>(undefined);
 
     function handleSubmit(formData: FormData) {
+        if (publishedAt) {
+            formData.set("published_at", publishedAt.toISOString());
+        }
+
         startTransition(async () => {
             const result = editing
                 ? await updateCaseStudy(editing.id, formData)
@@ -57,6 +64,7 @@ export default function CaseStudiesManager({ cases }: { cases: CaseStudy[] }) {
             setChallengeContent(editing?.challenge ?? "");
             setSolutionContent(editing?.solution ?? "");
             setOutcomeContent(editing?.outcome ?? "");
+            setPublishedAt(editing?.published_at ? new Date(editing.published_at) : undefined);
         }
     }, [showModal, editing]);
 
@@ -151,11 +159,22 @@ export default function CaseStudiesManager({ cases }: { cases: CaseStudy[] }) {
                                 <input name="duration" defaultValue={editing?.duration ?? ""} placeholder="Duration" className="px-3 py-2 bg-surface rounded-lg border border-border text-sm text-foreground" />
                                 <input name="sort_order" type="number" defaultValue={editing?.sort_order ?? 0} placeholder="Order" className="px-3 py-2 bg-surface rounded-lg border border-border text-sm text-foreground" />
                             </div>
-                            <label className="flex items-center gap-2 text-sm">
-                                <input type="hidden" name="is_published" value="false" />
-                                <input type="checkbox" name="is_published" value="true" defaultChecked={editing?.is_published} />
-                                Publish
-                            </label>
+
+                            <div className="flex items-center gap-4 p-3 bg-surface/50 rounded-lg border border-border">
+                                <label className="flex items-center gap-2 text-sm font-medium cursor-pointer">
+                                    <input type="hidden" name="is_published" value="false" />
+                                    <input type="checkbox" name="is_published" value="true" defaultChecked={editing?.is_published} className="w-4 h-4 rounded border-border text-primary focus:ring-primary" />
+                                    Publish
+                                </label>
+
+                                <div className="h-4 w-px bg-border mx-2"></div>
+
+                                <div className="flex items-center gap-2 flex-1">
+                                    <span className="text-xs font-medium text-muted-foreground whitespace-nowrap">Schedule:</span>
+                                    <DatePicker date={publishedAt} setDate={setPublishedAt} className="flex-1" />
+                                </div>
+                            </div>
+
                             <div className="flex justify-end gap-3 pt-2">
                                 <button type="button" onClick={() => setShowModal(false)} className="px-4 py-2 text-sm text-muted-foreground hover:text-foreground">Cancel</button>
                                 <button type="submit" disabled={isPending} className="px-4 py-2 bg-primary text-primary-foreground rounded-lg text-sm font-medium hover:bg-primary-hover disabled:opacity-50">

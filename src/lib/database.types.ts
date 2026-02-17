@@ -49,6 +49,10 @@ export interface Database {
                     end_date: string | null;
                     featured_image_url: string | null;
                     github_url: string | null;
+                    duration: string | null;
+                    is_published: boolean;
+                    published_at: string | null;
+                    sort_order: number;
                     live_url: string | null;
                     order_index: number;
                     created_at: string;
