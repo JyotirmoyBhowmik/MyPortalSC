@@ -1,7 +1,10 @@
 "use client";
 
-import { useState, useTransition } from "react";
-import { createTimelineEntry, updateTimelineEntry, deleteTimelineEntry } from "@/app/admin/actions/testimonials";
+import { useState, useTransition, useEffect } from "react";
+import { createTimelineEntry, updateTimelineEntry, deleteTimelineEntry, updateTimelineOrder } from "@/app/admin/actions/testimonials";
+import { DndContext, closestCenter, KeyboardSensor, PointerSensor, useSensor, useSensors, DragEndEvent } from "@dnd-kit/core";
+import { arrayMove, SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable";
+import { SortableRow } from "./SortableRow";
 
 interface TimelineEntry {
     id: string;
@@ -22,10 +25,42 @@ interface TimelineEntry {
 const entryTypes = ["role", "milestone", "education", "award"];
 
 export default function TimelineManager({ entries }: { entries: TimelineEntry[] }) {
+    const [items, setItems] = useState(entries);
     const [showModal, setShowModal] = useState(false);
     const [editing, setEditing] = useState<TimelineEntry | null>(null);
     const [isPending, startTransition] = useTransition();
     const [message, setMessage] = useState<{ type: string; text: string } | null>(null);
+
+    useEffect(() => { setItems(entries); }, [entries]);
+
+    const sensors = useSensors(
+        useSensor(PointerSensor),
+        useSensor(KeyboardSensor)
+    );
+
+    function handleDragEnd(event: DragEndEvent) {
+        const { active, over } = event;
+        if (active.id !== over?.id) {
+            setItems((items) => {
+                const oldIndex = items.findIndex((i) => i.id === active.id);
+                const newIndex = items.findIndex((i) => i.id === over?.id);
+                const newItems = arrayMove(items, oldIndex, newIndex);
+
+                // Update order in backend
+                const updates = newItems.map((item, index) => ({
+                    id: item.id,
+                    sort_order: index,
+                }));
+                startTransition(async () => {
+                    await updateTimelineOrder(updates);
+                });
+
+                return newItems;
+            });
+        }
+    }
+
+    // ... (keep handleSubmit and handleDelete)
 
     function handleSubmit(formData: FormData) {
         startTransition(async () => {
@@ -73,36 +108,41 @@ export default function TimelineManager({ entries }: { entries: TimelineEntry[] 
             </div>
 
             <div className="glass rounded-xl overflow-hidden">
-                <table className="w-full">
-                    <thead className="bg-surface/50">
-                        <tr>
-                            <th className="text-left text-xs font-semibold text-muted-foreground px-4 py-3">Year</th>
-                            <th className="text-left text-xs font-semibold text-muted-foreground px-4 py-3">Title</th>
-                            <th className="text-left text-xs font-semibold text-muted-foreground px-4 py-3 hidden md:table-cell">Organization</th>
-                            <th className="text-left text-xs font-semibold text-muted-foreground px-4 py-3">Type</th>
-                            <th className="text-right text-xs font-semibold text-muted-foreground px-4 py-3">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody className="divide-y divide-border/50">
-                        {entries.map((e) => (
-                            <tr key={e.id} className="hover:bg-surface/30 transition-colors">
-                                <td className="px-4 py-3 text-sm font-mono">{e.year_start}{e.year_end ? `–${e.year_end}` : "–Now"}</td>
-                                <td className="px-4 py-3 text-sm font-medium">{e.title_en}</td>
-                                <td className="px-4 py-3 text-sm text-muted-foreground hidden md:table-cell">{e.organization}</td>
-                                <td className="px-4 py-3">
-                                    <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded ${typeColors[e.entry_type] || "bg-gray-500/15 text-gray-400"}`}>
-                                        {e.entry_type}
-                                    </span>
-                                </td>
-                                <td className="px-4 py-3 text-right">
-                                    <button onClick={() => { setEditing(e); setShowModal(true); }} className="text-xs text-primary hover:underline mr-3">Edit</button>
-                                    <button onClick={() => handleDelete(e.id)} className="text-xs text-red-400 hover:underline">Delete</button>
-                                </td>
+                <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+                    <table className="w-full">
+                        <thead className="bg-surface/50">
+                            <tr>
+                                <th className="text-left text-xs font-semibold text-muted-foreground px-4 py-3">Year</th>
+                                <th className="text-left text-xs font-semibold text-muted-foreground px-4 py-3">Title</th>
+                                <th className="text-left text-xs font-semibold text-muted-foreground px-4 py-3 hidden md:table-cell">Organization</th>
+                                <th className="text-left text-xs font-semibold text-muted-foreground px-4 py-3">Type</th>
+                                <th className="text-right text-xs font-semibold text-muted-foreground px-4 py-3">Actions</th>
+                                <th className="w-8"></th>
                             </tr>
-                        ))}
-                    </tbody>
-                </table>
-                {entries.length === 0 && <p className="text-sm text-muted-foreground text-center py-8">No timeline entries yet.</p>}
+                        </thead>
+                        <tbody className="divide-y divide-border/50">
+                            <SortableContext items={items} strategy={verticalListSortingStrategy}>
+                                {items.map((e) => (
+                                    <SortableRow key={e.id} id={e.id} className="hover:bg-surface/30 transition-colors">
+                                        <td className="px-4 py-3 text-sm font-mono">{e.year_start}{e.year_end ? `–${e.year_end}` : "–Now"}</td>
+                                        <td className="px-4 py-3 text-sm font-medium">{e.title_en}</td>
+                                        <td className="px-4 py-3 text-sm text-muted-foreground hidden md:table-cell">{e.organization}</td>
+                                        <td className="px-4 py-3">
+                                            <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded ${typeColors[e.entry_type] || "bg-gray-500/15 text-gray-400"}`}>
+                                                {e.entry_type}
+                                            </span>
+                                        </td>
+                                        <td className="px-4 py-3 text-right">
+                                            <button onClick={() => { setEditing(e); setShowModal(true); }} className="text-xs text-primary hover:underline mr-3">Edit</button>
+                                            <button onClick={() => handleDelete(e.id)} className="text-xs text-red-400 hover:underline">Delete</button>
+                                        </td>
+                                    </SortableRow>
+                                ))}
+                            </SortableContext>
+                        </tbody>
+                    </table>
+                </DndContext>
+                {items.length === 0 && <p className="text-sm text-muted-foreground text-center py-8">No timeline entries yet.</p>}
             </div>
 
             {showModal && (

@@ -105,3 +105,42 @@ export async function deleteTimelineEntry(id: string) {
     revalidatePath("/admin/timeline");
     return { success: true };
 }
+export async function updateTestimonialOrder(items: { id: string; sort_order: number }[]) {
+    const supabase = await createClient();
+
+    // Using upsert for batch updates is efficient
+    const { error } = await supabase.from("testimonials").upsert(
+        items.map((item) => ({
+            id: item.id,
+            sort_order: item.sort_order,
+            updated_at: new Date().toISOString(),
+        })),
+        { onConflict: "id", ignoreDuplicates: false }
+    );
+
+    if (error) return { success: false, error: error.message };
+
+    revalidatePath("/testimonials");
+    revalidatePath("/executive-summary");
+    revalidatePath("/admin/testimonials");
+    return { success: true };
+}
+
+export async function updateTimelineOrder(items: { id: string; sort_order: number }[]) {
+    const supabase = await createClient();
+
+    const { error } = await supabase.from("timeline_entries").upsert(
+        items.map((item) => ({
+            id: item.id,
+            sort_order: item.sort_order,
+            updated_at: new Date().toISOString(),
+        })),
+        { onConflict: "id", ignoreDuplicates: false }
+    );
+
+    if (error) return { success: false, error: error.message };
+
+    revalidatePath("/timeline");
+    revalidatePath("/admin/timeline");
+    return { success: true };
+}
