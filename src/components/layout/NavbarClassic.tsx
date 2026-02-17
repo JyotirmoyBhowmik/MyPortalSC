@@ -48,7 +48,7 @@ export default function NavbarClassic({ flags = {} }: { flags?: Record<string, b
                     </Link>
 
                     {/* Desktop Nav */}
-                    <div className="hidden xl:flex items-center gap-1 overflow-x-auto no-scrollbar">
+                    <div className="hidden lg:flex items-center gap-0.5 overflow-x-auto no-scrollbar max-w-[calc(100vw-280px)]">
                         {navLinks.map((link) => {
                             const isActive = pathname === link.href || (link.href !== "/" && pathname.startsWith(link.href));
                             return (
@@ -85,7 +85,7 @@ export default function NavbarClassic({ flags = {} }: { flags?: Record<string, b
                         {/* Mobile Hamburger */}
                         <button
                             onClick={() => setMobileOpen(!mobileOpen)}
-                            className="xl:hidden p-2 rounded-lg hover:bg-surface transition-colors text-muted-foreground"
+                            className="lg:hidden p-2 rounded-lg hover:bg-surface transition-colors text-muted-foreground"
                             aria-label="Toggle navigation"
                         >
                             <svg
@@ -116,7 +116,7 @@ export default function NavbarClassic({ flags = {} }: { flags?: Record<string, b
 
                 {/* Mobile Menu */}
                 {mobileOpen && (
-                    <div className="xl:hidden pb-4 animate-slide-down max-h-[80vh] overflow-y-auto">
+                    <div className="lg:hidden pb-4 animate-slide-down max-h-[80vh] overflow-y-auto">
                         <div className="flex flex-col gap-1 pt-2 border-t border-border">
                             {navLinks.map((link) => {
                                 const isActive = pathname === link.href || (link.href !== "/" && pathname.startsWith(link.href));

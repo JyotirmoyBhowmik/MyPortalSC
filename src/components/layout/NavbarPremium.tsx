@@ -38,7 +38,7 @@ export default function NavbarPremium({ flags = {} }: { flags?: Record<string, b
                     </Link>
 
                     {/* Desktop Nav */}
-                    <div className="hidden xl:flex items-center justify-center gap-2 flex-1 px-8">
+                    <div className="hidden lg:flex items-center justify-center gap-1 flex-1 px-4 overflow-x-auto no-scrollbar">
                         {navLinks.map((link) => {
                             const isActive = pathname === link.href || (link.href !== "/" && pathname.startsWith(link.href));
                             return (
@@ -62,7 +62,7 @@ export default function NavbarPremium({ flags = {} }: { flags?: Record<string, b
                         {/* Mobile Hamburger */}
                         <button
                             onClick={() => setMobileOpen(!mobileOpen)}
-                            className="xl:hidden p-2 rounded-full hover:bg-white/10 text-gray-300 transition-colors"
+                            className="lg:hidden p-2 rounded-full hover:bg-white/10 text-gray-300 transition-colors"
                         >
                             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 {mobileOpen ? (
@@ -77,7 +77,7 @@ export default function NavbarPremium({ flags = {} }: { flags?: Record<string, b
 
                 {/* Mobile Menu */}
                 {mobileOpen && (
-                    <div className="xl:hidden mt-4 pt-4 border-t border-white/10 animate-slide-down">
+                    <div className="lg:hidden mt-4 pt-4 border-t border-white/10 animate-slide-down">
                         <div className="grid grid-cols-2 gap-2">
                             {navLinks.map((link) => (
                                 <Link
