@@ -4,6 +4,7 @@ import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { I18nProvider } from "@/lib/i18n";
+import VisitorTracker from "@/components/VisitorTracker";
 import "./globals.css";
 
 const inter = Inter({
@@ -83,6 +84,7 @@ export default async function RootLayout({
             <Navbar settings={settings} />
             <main className="min-h-screen pt-16">{children}</main>
             <Footer flags={flags} />
+            <VisitorTracker />
           </I18nProvider>
         </ThemeProvider>
       </body>
