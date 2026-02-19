@@ -8,7 +8,18 @@ export const maxDuration = 30;
 
 export async function POST(req: Request) {
     if (!process.env.GOOGLE_GENERATIVE_AI_API_KEY) {
-        return NextResponse.json({ error: "GOOGLE_GENERATIVE_AI_API_KEY is not configured." }, { status: 501 });
+        const stream = new ReadableStream({
+            async start(controller) {
+                const text = "Hi! This is a simulated response. To activate the real AI Digital Twin, please configure GOOGLE_GENERATIVE_AI_API_KEY in your environment variables. It is completely free!";
+                const chunks = text.split(" ");
+                for (const chunk of chunks) {
+                    controller.enqueue(new TextEncoder().encode(chunk + " "));
+                    await new Promise(r => setTimeout(r, 50));
+                }
+                controller.close();
+            }
+        });
+        return new Response(stream);
     }
 
     try {
@@ -57,6 +68,14 @@ Never make up imaginary projects or skills. If you don't know the answer, polite
         return result.toTextStreamResponse();
     } catch (error: any) {
         console.error("Chat API Error:", error);
-        return NextResponse.json({ error: "Failed to process chat request." }, { status: 500 });
+
+        // Return a simulated graceful error stream instead of a hard 500 error
+        const stream = new ReadableStream({
+            start(controller) {
+                controller.enqueue(new TextEncoder().encode("I'm sorry, I encountered an internal error processing that request. Please try again later."));
+                controller.close();
+            }
+        });
+        return new Response(stream, { status: 200 });
     }
 }
