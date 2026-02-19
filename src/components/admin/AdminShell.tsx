@@ -5,6 +5,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import ThemeSwitcher from "@/components/ThemeSwitcher";
+import RealtimeNotifications from "./RealtimeNotifications";
 
 /* ─── Sidebar link definitions ─── */
 const sidebarSections = [
@@ -413,6 +414,8 @@ export default function AdminShell({
                 {/* Page content */}
                 <div className="p-4 sm:p-6 lg:p-8">{children}</div>
             </div>
+
+            <RealtimeNotifications />
         </div>
     );
 }

@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import ThemeSwitcher from "@/components/ThemeSwitcher";
+import LanguageSwitcher from "@/components/layout/LanguageSwitcher";
 
 export default function NavbarPremium({ flags = {} }: { flags?: Record<string, boolean> }) {
     const pathname = usePathname();
@@ -58,6 +59,7 @@ export default function NavbarPremium({ flags = {} }: { flags?: Record<string, b
 
                     {/* Right Actions */}
                     <div className="flex items-center gap-3 shrink-0">
+                        <LanguageSwitcher />
                         <ThemeSwitcher />
                         {/* Mobile Hamburger */}
                         <button

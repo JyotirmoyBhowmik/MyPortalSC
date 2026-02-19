@@ -5,6 +5,7 @@ import Footer from "@/components/layout/Footer";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { I18nProvider } from "@/lib/i18n";
 import VisitorTracker from "@/components/VisitorTracker";
+import ChatWidget from "@/components/chat/ChatWidget";
 import "./globals.css";
 
 const inter = Inter({
@@ -85,6 +86,7 @@ export default async function RootLayout({
             <main className="min-h-screen pt-16">{children}</main>
             <Footer flags={flags} />
             <VisitorTracker />
+            <ChatWidget />
           </I18nProvider>
         </ThemeProvider>
       </body>

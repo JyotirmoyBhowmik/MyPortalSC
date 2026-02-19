@@ -19,6 +19,7 @@ interface I18nContextValue {
     locale: Locale;
     setLocale: (l: Locale) => void;
     t: Translations;
+    tDB: (obj: any, field: string) => string;
     locales: { code: Locale; label: string }[];
 }
 
@@ -26,6 +27,7 @@ const I18nContext = createContext<I18nContextValue>({
     locale: "en",
     setLocale: () => { },
     t: en,
+    tDB: () => "",
     locales: Object.entries(localeLabels).map(([code, label]) => ({
         code: code as Locale,
         label,
@@ -62,12 +64,20 @@ export function I18nProvider({ children }: { children: ReactNode }): React.JSX.E
 
     const t = translations[locale] || en;
 
+    const tDB = (obj: any, field: string) => {
+        if (!obj) return "";
+        if (locale === "en") return obj[field] || "";
+
+        const localizedField = `${field}_${locale}`;
+        return obj[localizedField] || obj[field] || ""; // Fallback to English
+    };
+
     const locales = Object.entries(localeLabels).map(([code, label]) => ({
         code: code as Locale,
         label,
     }));
 
-    const contextValue: I18nContextValue = { locale, setLocale, t, locales };
+    const contextValue: I18nContextValue = { locale, setLocale, t, tDB, locales };
 
     return (
         <I18nContext.Provider value={contextValue}>

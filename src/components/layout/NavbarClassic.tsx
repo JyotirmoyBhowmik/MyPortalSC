@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import ThemeSwitcher from "@/components/ThemeSwitcher";
+import LanguageSwitcher from "@/components/layout/LanguageSwitcher";
 
 export default function NavbarClassic({ flags = {} }: { flags?: Record<string, boolean> }) {
     const pathname = usePathname();
@@ -72,8 +73,9 @@ export default function NavbarClassic({ flags = {} }: { flags?: Record<string, b
                         })}
                     </div>
 
-                    {/* CTA + Theme + Mobile Toggle */}
+                    {/* CTA + Language + Theme + Mobile Toggle */}
                     <div className="flex items-center gap-2 shrink-0">
+                        <LanguageSwitcher />
                         <ThemeSwitcher />
                         <Link
                             href="/contact"
