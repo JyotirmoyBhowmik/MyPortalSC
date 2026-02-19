@@ -93,7 +93,6 @@ export default function PublicationsManager({ publications }: { publications: Pu
                         <textarea name="description" rows={3} className="admin-input resize-none" defaultValue={editing?.description || ""} />
                     </div>
                     <div className="flex items-center gap-2">
-                        <input type="hidden" name="is_published" value="false" />
                         <input type="checkbox" name="is_published" value="true" id="pub_pub" defaultChecked={editing?.is_published ?? true} className="rounded" />
                         <label htmlFor="pub_pub" className="text-sm">Published</label>
                     </div>

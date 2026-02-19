@@ -167,8 +167,7 @@ export default function TimelineManager({ entries }: { entries: TimelineEntry[] 
                             <div className="flex gap-4 items-center">
                                 <input name="sort_order" type="number" defaultValue={editing?.sort_order ?? 0} className="w-20 px-3 py-2 bg-surface rounded-lg border border-border text-sm text-foreground" placeholder="Order" />
                                 <label className="flex items-center gap-2 text-sm">
-                                    <input type="hidden" name="is_published" value="false" />
-                                    <input type="checkbox" name="is_published" value="true" defaultChecked={editing?.is_published ?? true} className="rounded" />
+                                    <input type="checkbox" name="is_published" value="true" defaultChecked={editing?.is_published ?? true} className="w-4 h-4 rounded border-border text-primary focus:ring-primary" />
                                     Published
                                 </label>
                             </div>

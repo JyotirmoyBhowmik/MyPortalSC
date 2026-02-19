@@ -95,7 +95,6 @@ export default function DownloadsManager({ downloads }: { downloads: Download[] 
                         </div>
                     </div>
                     <div className="flex items-center gap-2">
-                        <input type="hidden" name="is_published" value="false" />
                         <input type="checkbox" name="is_published" value="true" id="dl_pub" defaultChecked={editing?.is_published ?? true} className="rounded" />
                         <label htmlFor="dl_pub" className="text-sm">Published</label>
                     </div>

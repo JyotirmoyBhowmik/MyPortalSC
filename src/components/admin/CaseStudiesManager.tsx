@@ -162,7 +162,6 @@ export default function CaseStudiesManager({ cases }: { cases: CaseStudy[] }) {
 
                             <div className="flex items-center gap-4 p-3 bg-surface/50 rounded-lg border border-border">
                                 <label className="flex items-center gap-2 text-sm font-medium cursor-pointer">
-                                    <input type="hidden" name="is_published" value="false" />
                                     <input type="checkbox" name="is_published" value="true" defaultChecked={editing?.is_published} className="w-4 h-4 rounded border-border text-primary focus:ring-primary" />
                                     Publish
                                 </label>

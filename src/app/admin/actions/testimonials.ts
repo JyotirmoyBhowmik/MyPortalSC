@@ -14,7 +14,7 @@ export async function createTestimonial(formData: FormData) {
         quote_bn: (formData.get("quote_bn") as string) || null,
         featured: formData.get("featured") === "true",
         sort_order: parseInt(formData.get("sort_order") as string) || 0,
-        is_published: formData.get("is_published") !== "false",
+        is_published: formData.get("is_published") === "true",
     });
     if (error) return { success: false, error: error.message };
     revalidatePath("/testimonials");
@@ -34,7 +34,7 @@ export async function updateTestimonial(id: string, formData: FormData) {
         quote_bn: (formData.get("quote_bn") as string) || null,
         featured: formData.get("featured") === "true",
         sort_order: parseInt(formData.get("sort_order") as string) || 0,
-        is_published: formData.get("is_published") !== "false",
+        is_published: formData.get("is_published") === "true",
     }).eq("id", id);
     if (error) return { success: false, error: error.message };
     revalidatePath("/testimonials");
@@ -67,7 +67,7 @@ export async function createTimelineEntry(formData: FormData) {
         description_bn: (formData.get("description_bn") as string) || null,
         entry_type: formData.get("entry_type") as string || "role",
         sort_order: parseInt(formData.get("sort_order") as string) || 0,
-        is_published: formData.get("is_published") !== "false",
+        is_published: formData.get("is_published") === "true",
     });
     if (error) return { success: false, error: error.message };
     revalidatePath("/timeline");
@@ -89,7 +89,7 @@ export async function updateTimelineEntry(id: string, formData: FormData) {
         description_bn: (formData.get("description_bn") as string) || null,
         entry_type: formData.get("entry_type") as string || "role",
         sort_order: parseInt(formData.get("sort_order") as string) || 0,
-        is_published: formData.get("is_published") !== "false",
+        is_published: formData.get("is_published") === "true",
     }).eq("id", id);
     if (error) return { success: false, error: error.message };
     revalidatePath("/timeline");

@@ -105,7 +105,6 @@ export default function SpeakingManager({ events }: { events: SpeakingEvent[] })
                         </div>
                     </div>
                     <div className="flex items-center gap-2">
-                        <input type="hidden" name="is_published" value="false" />
                         <input type="checkbox" name="is_published" value="true" id="sp_pub" defaultChecked={editing?.is_published ?? true} className="rounded" />
                         <label htmlFor="sp_pub" className="text-sm">Published</label>
                     </div>
