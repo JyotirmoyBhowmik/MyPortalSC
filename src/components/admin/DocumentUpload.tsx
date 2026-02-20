@@ -48,9 +48,12 @@ export default function DocumentUpload({
                     .from(bucketName)
                     .getPublicUrl(filePath);
 
+                // Use proxy route to hide raw Supabase URL from visitors
+                const proxyUrl = `/api/assets?path=${encodeURIComponent(filePath)}`;
+
                 uploadedDocs.push({
                     name: file.name,
-                    url: data.publicUrl,
+                    url: proxyUrl,
                     size: file.size,
                 });
             }

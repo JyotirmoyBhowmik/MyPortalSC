@@ -44,7 +44,9 @@ export default function ImageUpload({
                 .from(bucketName)
                 .getPublicUrl(filePath);
 
-            onChange(data.publicUrl);
+            // Use proxy route to hide raw Supabase URL from visitors
+            const proxyUrl = `/api/assets?path=${encodeURIComponent(filePath)}`;
+            onChange(proxyUrl);
         } catch (error) {
             console.error("Upload failed:", error);
             alert("Upload failed. Please try again.");
