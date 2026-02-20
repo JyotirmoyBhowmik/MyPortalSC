@@ -290,6 +290,39 @@ h6 {
 }
 
 /* ============================================================
+   Theme: Sunset Theme
+   ============================================================ */
+[data-theme="sunset-theme"] {
+  --background: #2a0a29;
+  --foreground: #fde0d7;
+  --surface: #3b0c34;
+  --surface-hover: #4e1144;
+  --border-color: rgba(253, 164, 175, 0.15);
+  --border-hover: rgba(253, 164, 175, 0.3);
+  --primary: #fda4af;
+  --primary-hover: #fecdd3;
+  --primary-fg: #2a0a29;
+  --accent: #f97316;
+  --accent-hover: #fb923c;
+  --muted: #3b0c34;
+  --muted-fg: #f472b6;
+  --success: #fda4af;
+  --warning: #f97316;
+  --danger: #ef4444;
+  --card-bg: rgba(59, 12, 52, 0.7);
+  --card-hover: rgba(78, 17, 68, 0.8);
+  --gradient-primary: linear-gradient(135deg, #fda4af 0%, #f97316 100%);
+  --gradient-subtle: linear-gradient(135deg, rgba(253, 164, 175, 0.1) 0%, rgba(42, 10, 41, 0) 100%);
+  --gradient-hero: radial-gradient(ellipse at 30% 0%, rgba(253, 164, 175, 0.08) 0%, transparent 60%),
+    radial-gradient(ellipse at 70% 100%, rgba(249, 115, 22, 0.05) 0%, transparent 50%);
+  --gradient-card: linear-gradient(145deg, rgba(253, 164, 175, 0.03) 0%, rgba(42, 10, 41, 0) 100%);
+  --glass-bg: rgba(59, 12, 52, 0.7);
+  --glass-border: rgba(253, 164, 175, 0.12);
+  --glass-blur: 12px;
+  --heading: #fff1f2;
+}
+
+/* ============================================================
    Base Styles
    ============================================================ */
 * {
@@ -417,6 +450,26 @@ body {
   outline: 2px solid var(--primary);
   outline-offset: 2px;
 }
+
+/* UI Manipulation Function Call animation */
+.ui-highlight-glow {
+  animation: ui-glow-pulse 2s ease-in-out 3;
+}
+
+@keyframes ui-glow-pulse {
+
+  0%,
+  100% {
+    box-shadow: 0 0 5px var(--primary), inset 0 0 5px var(--primary);
+    background-color: transparent;
+  }
+
+  50% {
+    box-shadow: 0 0 25px var(--primary), inset 0 0 10px var(--primary);
+    background-color: rgba(var(--primary-rgb), 0.1);
+  }
+}
+
 
 /* ============================================================
    Form Styles

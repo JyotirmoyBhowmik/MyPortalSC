@@ -84,7 +84,7 @@ export default function ChatWidget() {
                             <h3 className="font-bold text-sm text-foreground">Jyotirmoy AI</h3>
                             <p className="text-[10px] text-primary flex items-center gap-1">
                                 <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span>
-                                Online (Gemini 1.5)
+                                Online (Gemini 2.5)
                             </p>
                         </div>
                     </div>
