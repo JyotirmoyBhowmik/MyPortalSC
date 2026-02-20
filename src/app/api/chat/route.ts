@@ -59,12 +59,19 @@ ${contextString}
 Never make up imaginary projects or skills. If you don't know the answer, politely invite the user to contact you directly via the Contact Form.
         `;
 
+        // Clean messages strictly to Vercel AI SDK CoreMessage format to avoid stream rejection
+        const coreMessages = messages.map((m: any) => ({
+            role: m.role,
+            content: m.content
+        }));
+
         const result = streamText({
             model: google('gemini-1.5-flash'), // Extremely fast and free tier friendly
             system: systemPrompt,
-            messages,
+            messages: coreMessages,
         });
 
+        // Use toTextStreamResponse to satisfy TS. Frontend parses raw text.
         return result.toTextStreamResponse();
     } catch (error: any) {
         console.error("Chat API Error:", error);

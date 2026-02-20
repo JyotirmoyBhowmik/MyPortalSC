@@ -53,24 +53,9 @@ export default function ChatWidget() {
                 const { done, value } = await reader.read();
                 if (done) break;
 
-                // Decode chunk
+                // Decode chunk and append as raw text (since we use toTextStreamResponse)
                 let chunk = decoder.decode(value, { stream: true });
-
-                // Vercel AI SDK text streams usually prepend `0:"text"` 
-                // We'll strip that out if it exists, or just append raw text if it's plainly streamed
-                // The new SDK formatted stream format is `0:"..."\n`
-                const lines = chunk.split('\n');
-                for (const line of lines) {
-                    if (line.startsWith('0:')) {
-                        try {
-                            const text = JSON.parse(line.substring(2));
-                            setMessages((prev) => prev.map(m => m.id === assistantMsgId ? { ...m, content: m.content + text } : m));
-                        } catch (e) { }
-                    } else if (line && !line.match(/^[0-9]:/)) {
-                        // Raw text fallback
-                        setMessages((prev) => prev.map(m => m.id === assistantMsgId ? { ...m, content: m.content + line } : m));
-                    }
-                }
+                setMessages((prev) => prev.map(m => m.id === assistantMsgId ? { ...m, content: m.content + chunk } : m));
             }
         } catch (error) {
             console.error("Chat error:", error);
