@@ -47,7 +47,7 @@ Never make up imaginary projects or skills. If you don't know the answer, polite
     try {
         const responseStream = await ai.models.generateContentStream({
             // Fallback to gemini-1.5-flash to avoid 429 Quota limit 0 errors on some free tiers
-            model: "gemini-1.5-flash",
+            model: "Gemini 2.5 Flash-Lite",
             config: {
                 systemInstruction: systemPrompt,
             },
