@@ -71,15 +71,29 @@ Never make up imaginary projects or skills. If you don't know the answer, polite
             messages: coreMessages,
         });
 
-        // Use toTextStreamResponse to satisfy TS. Frontend parses raw text.
-        return result.toTextStreamResponse();
+        const response = result.toTextStreamResponse();
+
+        // Vercel AI SDK intercepts provider errors (like 404 Model Not Found or 403 API Disabled)
+        // and creates a Response with that status. We must safely check this to prevent frontend crashes.
+        if (response.status !== 200) {
+            console.error("Upstream API Error Proxied:", response.status);
+            const stream = new ReadableStream({
+                start(controller) {
+                    controller.enqueue(new TextEncoder().encode(`API Configuration Error (${response.status}): Your Google API Key is valid, but the 'Google Generative Language API' might not be enabled in your Google Cloud Console, or the model is not accessible. Please visit Google Cloud Platform > APIs & Services, search "Generative Language API", and click Enable.`));
+                    controller.close();
+                }
+            });
+            return new Response(stream, { status: 200 });
+        }
+
+        return response;
     } catch (error: any) {
         console.error("Chat API Error:", error);
 
         // Return a simulated graceful error stream instead of a hard 500 error
         const stream = new ReadableStream({
             start(controller) {
-                controller.enqueue(new TextEncoder().encode("I'm sorry, I encountered an internal error processing that request. Please try again later."));
+                controller.enqueue(new TextEncoder().encode(`I'm sorry, I encountered a backend error: ${error?.message || "Internal issue"}. Please verify your API Key and Model configuration.`));
                 controller.close();
             }
         });
