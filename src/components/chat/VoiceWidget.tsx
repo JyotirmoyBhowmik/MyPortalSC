@@ -1,13 +1,13 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
 
-// Inline AudioWorklet Processor for PCM16 conversion
+// ═══════════════════════════════════════════════════════════════
+// AudioWorklet Processor — PCM16 conversion (runs in audio thread)
+// ═══════════════════════════════════════════════════════════════
 const audioWorkletCode = `
 class PCMProcessor extends AudioWorkletProcessor {
-  constructor() {
-    super();
-  }
+  constructor() { super(); }
   process(inputs, outputs, parameters) {
     const input = inputs[0];
     if (input && input.length > 0 && input[0].length > 0) {
@@ -25,25 +25,72 @@ class PCMProcessor extends AudioWorkletProcessor {
 registerProcessor('pcm-processor', PCMProcessor);
 `;
 
+// ═══════════════════════════════════════════════════════════════
+// Quick Action Tasks — Fixed task panel (no need to speak these)
+// ═══════════════════════════════════════════════════════════════
+const QUICK_ACTIONS = [
+    { label: "🌅 Sunset Theme", action: "set_sunset_theme" },
+    { label: "🔧 Juniper Config", action: "highlight_juniper" },
+    { label: "📄 View Resume", action: "open_resume" },
+    { label: "📞 Contact", action: "scroll_contact" },
+];
+
+// ═══════════════════════════════════════════════════════════════
+// Helpers
+// ═══════════════════════════════════════════════════════════════
 function base64ToUint8Array(base64: string) {
-    const binary_string = window.atob(base64);
-    const len = binary_string.length;
-    const bytes = new Uint8Array(len);
-    for (let i = 0; i < len; i++) {
-        bytes[i] = binary_string.charCodeAt(i);
-    }
+    const binary = window.atob(base64);
+    const bytes = new Uint8Array(binary.length);
+    for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
     return bytes;
 }
 
 function uint8ArrayToBase64(bytes: Uint8Array) {
     let binary = '';
-    const len = bytes.byteLength;
-    for (let i = 0; i < len; i++) {
-        binary += String.fromCharCode(bytes[i]);
-    }
+    for (let i = 0; i < bytes.byteLength; i++) binary += String.fromCharCode(bytes[i]);
     return window.btoa(binary);
 }
 
+// ═══════════════════════════════════════════════════════════════
+// Shared Function Call Handlers (used by both Voice & Quick Actions)
+// ═══════════════════════════════════════════════════════════════
+function executeAction(actionName: string, args?: any) {
+    switch (actionName) {
+        case "set_sunset_theme":
+            document.documentElement.setAttribute('data-theme', 'sunset-theme');
+            document.documentElement.style.setProperty('--gradient-primary', 'linear-gradient(45deg, #ff512f, #dd2476)');
+            document.documentElement.style.setProperty('--heading', '#fff');
+            document.documentElement.style.setProperty('--foreground', '#fff');
+            break;
+        case "highlight_juniper":
+        case "highlight_code": {
+            const target = args?.target || "juniper";
+            const el = document.getElementById(`code-${target}`) || document.getElementById(target) || document.querySelector('[data-section="tech"]') || document.querySelector('.card:first-of-type');
+            if (el) {
+                el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                el.classList.add('glow-effect');
+                setTimeout(() => el.classList.remove('glow-effect'), 6000);
+            }
+            break;
+        }
+        case "open_resume":
+            window.open('/docs/resume.pdf', '_blank');
+            break;
+        case "scroll_contact": {
+            const contactSection = document.getElementById('contact') || document.querySelector('[data-section="contact"]');
+            if (contactSection) {
+                contactSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                contactSection.classList.add('glow-effect');
+                setTimeout(() => contactSection.classList.remove('glow-effect'), 4000);
+            }
+            break;
+        }
+    }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// VoiceWidget Component
+// ═══════════════════════════════════════════════════════════════
 export default function VoiceWidget() {
     const [isOpen, setIsOpen] = useState(false);
     const [status, setStatus] = useState<"Idle" | "Connecting" | "Listening" | "Thinking" | "Speaking">("Idle");
@@ -52,71 +99,64 @@ export default function VoiceWidget() {
     const wsRef = useRef<WebSocket | null>(null);
     const audioCtxRef = useRef<AudioContext | null>(null);
     const streamRef = useRef<MediaStream | null>(null);
+    const nextPlayTime = useRef<number>(0);
 
-    // Playback
-    let nextPlayTime = useRef<number>(0);
-
+    // ───────────────────────────────────────────────────────────
+    // Setup: Mic Permission → Fetch WSS URL from /api/audio → Connect
+    // ───────────────────────────────────────────────────────────
     const setupAudioAndWS = async () => {
         try {
             setStatus("Connecting");
 
-            // 1. Fetch API Key securely
-            const res = await fetch('/api/gemini-token');
-            const { key } = await res.json();
-            if (!key) throw new Error("No API Key");
+            // 1. Check microphone permission explicitly
+            let micStream: MediaStream;
+            try {
+                micStream = await navigator.mediaDevices.getUserMedia({ audio: { channelCount: 1, sampleRate: 16000 } });
+            } catch (err) {
+                alert("Please allow microphone access to use the Voice Assistant.");
+                setStatus("Idle");
+                setIsOpen(false);
+                return;
+            }
+            streamRef.current = micStream;
 
-            // 2. Setup WebSocket
-            const wsUrl = `wss://generativelanguage.googleapis.com/ws/google.ai.generativelanguage.v1alpha.GenerativeService.BidiGenerateContent?key=${key}`;
+            // 2. Fetch WSS URL securely from /api/audio (API key never on client)
+            const res = await fetch('/api/audio');
+            const { wsUrl, model } = await res.json();
+            if (!wsUrl) throw new Error("No WSS URL returned from /api/audio");
+
+            // 3. Open WebSocket
             const ws = new WebSocket(wsUrl);
             wsRef.current = ws;
 
             ws.onopen = async () => {
-                // Send setup message
+                // Send setup JSON with model, audio modality, system instructions, and tools
                 ws.send(JSON.stringify({
                     setup: {
-                        model: "models/gemini-2.5-flash",
-                        // Note: gemini-live-2.5-flash-native-audio endpoint alias is not strictly publicly available for all WS, usually gemini-2.5-flash or gemini-2.0-flash-exp supports bidi
+                        model: model,
                         generationConfig: {
                             responseModalities: ["AUDIO"],
                         },
                         systemInstruction: {
                             parts: [{
-                                text: "You are the Digital Representative for Jyotirmoy Bhowmik. You are an expert in IT Infrastructure and Cloud Architecture. Your voice is your primary interface—be articulate, professional, and helpful. You have control over the portfolio's UI. When discussing Juniper switches or SAP deployments, use your tools to highlight the code on the user's screen. If the user wants a 'vibe change,' trigger the Sunset Theme. Start by introducing yourself professionally as Jyotirmoy's AI Representative."
+                                text: "You are Jyotirmoy's Digital Voice Twin. Respond in high-fidelity audio. If asked to change the theme, call the set_sunset_theme tool. If discussing Juniper switches, call highlight_code('juniper'). Start by introducing yourself professionally."
                             }]
                         },
                         tools: [{
                             functionDeclarations: [
                                 {
-                                    name: "change_site_theme",
-                                    description: "Changes the website theme. Use 'sunset-theme' for a warm, sunset vibe.",
-                                    parameters: {
-                                        type: "OBJECT",
-                                        properties: {
-                                            theme_name: { type: "STRING" }
-                                        },
-                                        required: ["theme_name"]
-                                    }
+                                    name: "set_sunset_theme",
+                                    description: "Changes the website theme to a warm sunset vibe with orange-pink gradients.",
                                 },
                                 {
-                                    name: "ui_scroll_and_highlight",
-                                    description: "Scrolls to and highlights a specific UI element on the screen.",
+                                    name: "highlight_code",
+                                    description: "Scrolls to and highlights a specific code snippet on the portfolio screen.",
                                     parameters: {
                                         type: "OBJECT",
                                         properties: {
-                                            element_id: { type: "STRING" }
+                                            target: { type: "STRING" }
                                         },
-                                        required: ["element_id"]
-                                    }
-                                },
-                                {
-                                    name: "open_technical_document",
-                                    description: "Opens a technical document or PDF by name.",
-                                    parameters: {
-                                        type: "OBJECT",
-                                        properties: {
-                                            doc_name: { type: "STRING" }
-                                        },
-                                        required: ["doc_name"]
+                                        required: ["target"]
                                     }
                                 }
                             ]
@@ -126,7 +166,7 @@ export default function VoiceWidget() {
 
                 setStatus("Listening");
 
-                // 3. Audio Capture Setup
+                // 4. Audio Capture via AudioWorklet
                 const audioCtx = new (window.AudioContext || (window as any).webkitAudioContext)({ sampleRate: 16000 });
                 audioCtxRef.current = audioCtx;
                 nextPlayTime.current = audioCtx.currentTime;
@@ -135,10 +175,7 @@ export default function VoiceWidget() {
                 const workletUrl = URL.createObjectURL(blob);
                 await audioCtx.audioWorklet.addModule(workletUrl);
 
-                const stream = await navigator.mediaDevices.getUserMedia({ audio: { channelCount: 1, sampleRate: 16000 } });
-                streamRef.current = stream;
-
-                const source = audioCtx.createMediaStreamSource(stream);
+                const source = audioCtx.createMediaStreamSource(micStream);
                 const processor = new AudioWorkletNode(audioCtx, 'pcm-processor');
 
                 processor.port.onmessage = (e) => {
@@ -154,14 +191,14 @@ export default function VoiceWidget() {
                             }
                         }));
 
-                        // Simple Visualizer update from mic input
+                        // Visualizer update (throttled)
                         if (Math.random() > 0.8) {
                             const sum = pcm16.reduce((acc, val) => acc + Math.abs(val), 0);
                             const avg = sum / pcm16.length;
                             setFrequencies(prev => {
                                 const next = [...prev];
                                 next.shift();
-                                next.push(Math.min(100, avg / 100)); // Normalize somewhat
+                                next.push(Math.min(100, avg / 100));
                                 return next;
                             });
                         }
@@ -169,9 +206,12 @@ export default function VoiceWidget() {
                 };
 
                 source.connect(processor);
-                // We don't connect processor to destination otherwise we hear ourselves
+                // Don't connect to destination — prevents echo/feedback
             };
 
+            // ───────────────────────────────────────────────────
+            // Handle incoming messages from Gemini
+            // ───────────────────────────────────────────────────
             ws.onmessage = (event) => {
                 const data = JSON.parse(event.data);
 
@@ -180,50 +220,47 @@ export default function VoiceWidget() {
                     const parts = data.serverContent.modelTurn.parts;
 
                     for (const part of parts) {
-                        // Handle Audio
-                        if (part.inlineData && part.inlineData.data) {
+                        // Audio playback
+                        if (part.inlineData?.data) {
                             const audioBytes = base64ToUint8Array(part.inlineData.data);
                             const pcm16 = new Int16Array(audioBytes.buffer);
 
                             if (audioCtxRef.current) {
-                                const float32Array = new Float32Array(pcm16.length);
+                                const float32 = new Float32Array(pcm16.length);
                                 for (let i = 0; i < pcm16.length; i++) {
-                                    float32Array[i] = pcm16[i] / 0x8000;
+                                    float32[i] = pcm16[i] / 0x8000;
                                 }
 
-                                // Gemini Live Server audio is 24kHz
-                                const audioBuffer = audioCtxRef.current.createBuffer(1, float32Array.length, 24000);
-                                audioBuffer.getChannelData(0).set(float32Array);
+                                // Gemini Live audio is 24kHz
+                                const audioBuffer = audioCtxRef.current.createBuffer(1, float32.length, 24000);
+                                audioBuffer.getChannelData(0).set(float32);
 
-                                const source = audioCtxRef.current.createBufferSource();
-                                source.buffer = audioBuffer;
-                                source.connect(audioCtxRef.current.destination);
+                                const bufferSource = audioCtxRef.current.createBufferSource();
+                                bufferSource.buffer = audioBuffer;
+                                bufferSource.connect(audioCtxRef.current.destination);
 
                                 const playTime = Math.max(audioCtxRef.current.currentTime, nextPlayTime.current);
-                                source.start(playTime);
+                                bufferSource.start(playTime);
                                 nextPlayTime.current = playTime + audioBuffer.duration;
 
-                                // Reset status to listening after speaking duration
                                 setTimeout(() => {
-                                    // Make sure it doesn't overwrite if more audio is queueing
                                     setStatus(prev => prev === "Speaking" ? "Listening" : prev);
                                 }, audioBuffer.duration * 1000);
                             }
                         }
 
-                        // Handle Function Calling
+                        // Function calling
                         if (part.functionCall) {
                             const { name, args } = part.functionCall;
-                            handleFunctionCall(name, args);
+                            executeAction(name, args);
 
-                            // Send function response
+                            // Respond to the model
                             ws.send(JSON.stringify({
-                                clientContent: {
-                                    turnComplete: true,
-                                    functionResponse: {
+                                toolResponse: {
+                                    functionResponses: [{
                                         name: name,
                                         response: { result: "success" }
-                                    }
+                                    }]
                                 }
                             }));
                         }
@@ -231,50 +268,22 @@ export default function VoiceWidget() {
                 }
             };
 
-            ws.onclose = () => {
-                stopAll();
-            };
-
-            ws.onerror = (e) => {
-                console.error("WebSocket Error: ", e);
-                stopAll();
-            };
+            ws.onclose = () => stopAll();
+            ws.onerror = (e) => { console.error("WebSocket Error:", e); stopAll(); };
 
         } catch (error) {
-            console.error("Setup Error:", error);
+            console.error("Voice Setup Error:", error);
             stopAll();
         }
     };
 
-    const handleFunctionCall = (name: string, args: any) => {
-        if (name === "change_site_theme") {
-            document.documentElement.setAttribute('data-theme', args.theme_name);
-        } else if (name === "ui_scroll_and_highlight") {
-            // Attempt to find something or just glow the body as a demo
-            const el = document.getElementById(args.element_id) || document.querySelector('.card:first-of-type') || document.body;
-            if (el) {
-                el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                el.classList.add('ui-highlight-glow');
-                setTimeout(() => el.classList.remove('ui-highlight-glow'), 6000);
-            }
-        } else if (name === "open_technical_document") {
-            window.open('/docs/architecture.pdf', '_blank'); // Placeholder path
-        }
-    };
-
+    // ───────────────────────────────────────────────────────────
+    // Cleanup
+    // ───────────────────────────────────────────────────────────
     const stopAll = () => {
-        if (wsRef.current) {
-            wsRef.current.close();
-            wsRef.current = null;
-        }
-        if (streamRef.current) {
-            streamRef.current.getTracks().forEach(t => t.stop());
-            streamRef.current = null;
-        }
-        if (audioCtxRef.current) {
-            audioCtxRef.current.close();
-            audioCtxRef.current = null;
-        }
+        if (wsRef.current) { wsRef.current.close(); wsRef.current = null; }
+        if (streamRef.current) { streamRef.current.getTracks().forEach(t => t.stop()); streamRef.current = null; }
+        if (audioCtxRef.current) { audioCtxRef.current.close(); audioCtxRef.current = null; }
         setStatus("Idle");
         setIsOpen(false);
     };
@@ -288,58 +297,96 @@ export default function VoiceWidget() {
         }
     };
 
+    // ───────────────────────────────────────────────────────────
+    // Render
+    // ───────────────────────────────────────────────────────────
     return (
-        <div className="fixed bottom-24 right-6 z-50 flex flex-col items-end print:hidden">
-            {/* Drawer */}
+        <div className="fixed bottom-[110px] right-6 z-50 flex flex-col items-end print:hidden">
+            {/* ═══ Expanded Drawer ═══ */}
             <div
                 className={`
                     bg-surface/95 backdrop-blur-xl border border-border shadow-2xl rounded-2xl w-[300px] flex flex-col transition-all duration-300 transform origin-bottom-right mb-4 overflow-hidden
-                    ${isOpen ? "opacity-100 scale-100 h-[180px]" : "opacity-0 scale-95 h-0 pointer-events-none"}
+                    ${isOpen ? "opacity-100 scale-100" : "opacity-0 scale-95 h-0 pointer-events-none"}
                 `}
+                style={isOpen ? { height: 'auto', maxHeight: '340px' } : {}}
             >
-                <div className="p-4 flex-1 flex flex-col items-center justify-center relative">
-                    <h3 className="text-sm font-bold gradient-text mb-1">Live Representation</h3>
-                    <p className="text-xs text-muted-foreground mb-4">
-                        {status === "Connecting" && "Establishing neural link..."}
-                        {status === "Listening" && "Listening to you..."}
-                        {status === "Thinking" && "Analyzing..."}
-                        {status === "Speaking" && "Jyotirmoy AI is speaking..."}
+                {/* Header & Status */}
+                <div className="p-4 flex flex-col items-center justify-center relative">
+                    <h3 className="text-sm font-bold gradient-text mb-1">Live Voice Assistant</h3>
+                    <p className="text-xs text-muted-foreground mb-3">
+                        {status === "Connecting" && "🔗 Establishing neural link..."}
+                        {status === "Listening" && "🎙️ Listening to you..."}
+                        {status === "Thinking" && "🧠 Analyzing..."}
+                        {status === "Speaking" && "🔊 Jyotirmoy AI is speaking..."}
+                        {status === "Idle" && "Click to connect"}
                     </p>
 
                     {/* Visualizer */}
-                    <div className="flex items-end gap-1 h-12 w-full justify-center">
+                    <div className="flex items-end gap-1 h-10 w-full justify-center mb-3">
                         {frequencies.map((f, i) => (
                             <div
                                 key={i}
-                                className={`w-2 rounded-t-sm transition-all duration-100 ease-linear ${status === 'Speaking' ? 'bg-primary' : 'bg-accent/50'}`}
-                                style={{ height: `${Math.max(10, status === 'Idle' ? 10 : (status === 'Speaking' ? Math.random() * 100 : f))}%` }}
+                                className={`w-2 rounded-t-sm transition-all duration-100 ease-linear ${status === 'Speaking' ? 'bg-primary' : status === 'Listening' ? 'bg-accent/60' : 'bg-muted'}`}
+                                style={{ height: `${Math.max(8, status === 'Idle' ? 8 : (status === 'Speaking' ? Math.random() * 100 : f))}%` }}
                             />
                         ))}
                     </div>
 
                     {/* Pulse Effect */}
                     {status === "Listening" && (
-                        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-32 h-32 rounded-full border border-primary/30 animate-ping opacity-50" />
+                        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-28 h-28 rounded-full border border-primary/20 animate-ping opacity-30 pointer-events-none" />
                     )}
+                </div>
+
+                {/* ═══ Fixed Quick-Action Task Panel ═══ */}
+                <div className="border-t border-border px-3 py-3">
+                    <p className="text-[10px] text-muted-foreground font-semibold uppercase tracking-wider mb-2 text-center">Quick Actions</p>
+                    <div className="grid grid-cols-2 gap-2">
+                        {QUICK_ACTIONS.map((qa) => (
+                            <button
+                                key={qa.action}
+                                onClick={(e) => { e.stopPropagation(); executeAction(qa.action); }}
+                                className="text-xs px-3 py-2 rounded-lg bg-surface hover:bg-surface-hover border border-border hover:border-primary/30 text-foreground transition-all duration-200 hover:scale-[1.02] active:scale-95 text-center"
+                            >
+                                {qa.label}
+                            </button>
+                        ))}
+                    </div>
+                </div>
+
+                {/* Ask Option */}
+                <div className="border-t border-border px-3 py-2 text-center">
+                    <p className="text-[9px] text-muted-foreground opacity-60">
+                        Or just <span className="text-primary font-medium">ask me anything</span> by voice
+                    </p>
                 </div>
             </div>
 
-            {/* Icon Stack (Placed above standard ChatWidget) */}
+            {/* ═══ Icon (Stacked 30px above ChatWidget) ═══ */}
             <button
-                onClick={toggleAssistant}
+                onClick={(e) => { e.nativeEvent.stopImmediatePropagation(); toggleAssistant(); }}
                 className={`
                     relative flex items-center justify-center w-14 h-14 rounded-full shadow-2xl transition-all duration-300 hover:scale-105 active:scale-95 z-50
-                    ${status === 'Listening' || status === 'Speaking' ? "bg-surface border-2 border-primary animate-pulse" : "bg-surface border border-border"}
+                    ${status === 'Listening' || status === 'Speaking'
+                        ? "bg-surface border-2 border-primary animate-pulse"
+                        : "bg-surface border border-border hover:border-primary/40"}
                 `}
                 aria-label="Toggle Voice Assistant"
             >
+                {/* Mic / Waves Icon */}
                 <svg className={`w-6 h-6 ${status !== 'Idle' ? 'text-primary' : 'text-foreground'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
                 </svg>
 
+                {/* Close badge */}
                 {isOpen && (
-                    <div className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-danger flex items-center justify-center cursor-pointer pointer-events-auto shadow-md" onClick={(e) => { e.stopPropagation(); stopAll(); }}>
-                        <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M6 18L18 6M6 6l12 12" /></svg>
+                    <div
+                        className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-danger flex items-center justify-center cursor-pointer shadow-md"
+                        onClick={(e) => { e.stopPropagation(); stopAll(); }}
+                    >
+                        <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M6 18L18 6M6 6l12 12" />
+                        </svg>
                     </div>
                 )}
             </button>

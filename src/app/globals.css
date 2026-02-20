@@ -452,7 +452,7 @@ body {
 }
 
 /* UI Manipulation Function Call animation */
-.ui-highlight-glow {
+.glow-effect {
   animation: ui-glow-pulse 2s ease-in-out 3;
 }
 

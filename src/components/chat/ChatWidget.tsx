@@ -169,7 +169,7 @@ export default function ChatWidget() {
 
             {/* Toggle Button */}
             <button
-                onClick={() => setIsOpen(!isOpen)}
+                onClick={(e) => { e.nativeEvent.stopImmediatePropagation(); setIsOpen(!isOpen) }}
                 className={`
                     flex items-center justify-center w-14 h-14 rounded-full shadow-2xl transition-all duration-300 hover:scale-105 active:scale-95 z-50
                     ${isOpen ? "bg-surface border border-border text-foreground" : "gradient-bg text-white shadow-primary/30"}
