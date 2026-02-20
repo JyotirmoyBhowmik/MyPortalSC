@@ -66,7 +66,7 @@ Never make up imaginary projects or skills. If you don't know the answer, polite
         }));
 
         const result = streamText({
-            model: google('gemini-1.5-flash'), // Extremely fast and free tier friendly
+            model: google('gemini-1.5-flash-latest'), // Use explicit -latest tag for better v1beta compatibility
             system: systemPrompt,
             messages: coreMessages,
         });
