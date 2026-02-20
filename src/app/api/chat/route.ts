@@ -46,8 +46,8 @@ Never make up imaginary projects or skills. If you don't know the answer, polite
 
     try {
         const responseStream = await ai.models.generateContentStream({
-            // Using gemini-2.5-flash as the latest stable flash model (fixes the 1.5 404 error)
-            model: "gemini-2.0-flash",
+            // Fallback to gemini-1.5-flash to avoid 429 Quota limit 0 errors on some free tiers
+            model: "gemini-1.5-flash",
             config: {
                 systemInstruction: systemPrompt,
             },
