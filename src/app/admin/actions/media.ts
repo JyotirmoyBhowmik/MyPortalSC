@@ -25,16 +25,25 @@ export async function uploadMedia(formData: FormData) {
         return { success: false, error: "Failed to upload file to storage" };
     }
 
-    // 2. Get Public URL
-    const { data: { publicUrl } } = supabase.storage
-        .from("media")
-        .getPublicUrl(filePath);
+    // 2. Determine correct Public URL based on Feature Toggles
+    const { data: settings } = await supabase.from("site_settings").select("feature_secure_storage").single();
+    const useProxy = settings?.feature_secure_storage ?? false;
+
+    let finalPublicUrl = "";
+    if (useProxy) {
+        finalPublicUrl = `/api/media/${filePath}`;
+    } else {
+        const { data: { publicUrl } } = supabase.storage
+            .from("media")
+            .getPublicUrl(filePath);
+        finalPublicUrl = publicUrl;
+    }
 
     // 3. Insert into Database
     const { error: dbError } = await supabase.from("media_library").insert({
         original_name: file.name,
         storage_path: filePath,
-        public_url: publicUrl,
+        public_url: finalPublicUrl,
         mime_type: file.type,
         size_bytes: file.size,
         folder: "uploads", // Default folder for now
@@ -46,7 +55,50 @@ export async function uploadMedia(formData: FormData) {
     }
 
     revalidatePath("/admin/media");
-    return { success: true, publicUrl };
+    return { success: true, publicUrl: finalPublicUrl };
+}
+
+export async function registerMedia(formData: FormData) {
+    const supabase = await createClient();
+
+    // Auth Check
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) {
+        return { success: false, error: "Unauthorized" };
+    }
+
+    const { data: adminUser } = await supabase
+        .from("admin_users")
+        .select("role")
+        .eq("id", user.id)
+        .single();
+
+    if (!adminUser || !["super_admin", "admin", "editor"].includes(adminUser.role)) {
+        return { success: false, error: "Insufficient permissions to register media" };
+    }
+
+    const original_name = formData.get("file_name") as string;
+    const storage_path = formData.get("storage_path") as string;
+    const public_url = formData.get("public_url") as string;
+    const mime_type = formData.get("mime_type") as string;
+    const size_bytes = parseInt(formData.get("size_bytes") as string, 10);
+
+    const { error: dbError } = await supabase.from("media_library").insert({
+        original_name,
+        storage_path,
+        public_url,
+        mime_type,
+        size_bytes,
+        folder: "uploads", // Default folder
+    });
+
+    if (dbError) {
+        console.error("DB error:", dbError);
+        return { success: false, error: "Failed to save file metadata" };
+    }
+
+    revalidatePath("/admin/media");
+    return { success: true };
 }
 
 export async function deleteMedia(id: string, storagePath: string) {

@@ -6,7 +6,25 @@ import {
     createInitiative,
     updateInitiative,
     deleteInitiative,
+    reorderInitiatives,
 } from "@/app/admin/actions/initiatives";
+import { useEffect } from "react";
+import {
+    DndContext,
+    closestCenter,
+    KeyboardSensor,
+    PointerSensor,
+    useSensor,
+    useSensors,
+    type DragEndEvent,
+} from "@dnd-kit/core";
+import {
+    arrayMove,
+    SortableContext,
+    sortableKeyboardCoordinates,
+    verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
+import { SortableRow } from "@/components/admin/SortableRow";
 
 interface InitiativesManagerProps {
     initiatives: InitiativeWithProgram[];
@@ -50,7 +68,45 @@ export default function InitiativesManager({
         order_index: "0",
     });
 
-    const filtered = initiatives.filter((i) => {
+    const [items, setItems] = useState(initiatives);
+
+    // Sync state when props change
+    useEffect(() => {
+        setItems(initiatives);
+    }, [initiatives]);
+
+    const sensors = useSensors(
+        useSensor(PointerSensor),
+        useSensor(KeyboardSensor, {
+            coordinateGetter: sortableKeyboardCoordinates,
+        })
+    );
+
+    async function handleDragEnd(event: DragEndEvent) {
+        const { active, over } = event;
+
+        if (over && active.id !== over.id) {
+            const oldIndex = items.findIndex((i) => i.id === active.id);
+            const newIndex = items.findIndex((i) => i.id === over.id);
+
+            const newItems = arrayMove(items, oldIndex, newIndex);
+            setItems(newItems);
+
+            const orderedPayload = newItems.map((item: InitiativeWithProgram, index: number) => ({
+                id: item.id,
+                sort_order: index + 1,
+            }));
+
+            try {
+                await reorderInitiatives(orderedPayload);
+            } catch (err) {
+                console.error("Failed to reorder initiatives:", err);
+                setItems(initiatives);
+            }
+        }
+    }
+
+    const filtered = items.filter((i) => {
         const matchesSearch = !search ||
             i.title.toLowerCase().includes(search.toLowerCase()) ||
             i.strategic_area.toLowerCase().includes(search.toLowerCase());
@@ -176,7 +232,7 @@ export default function InitiativesManager({
 
             {/* Summary */}
             <p className="text-sm text-muted-foreground mb-4">
-                {filtered.length} of {initiatives.length} initiatives
+                {filtered.length} of {items.length} initiatives
             </p>
 
             {/* Table */}
@@ -185,6 +241,7 @@ export default function InitiativesManager({
                     <table className="w-full text-sm">
                         <thead>
                             <tr className="border-b border-border text-left">
+                                <th className="px-4 py-3 font-semibold text-muted-foreground w-8"></th>
                                 <th className="px-4 py-3 font-semibold text-muted-foreground">#</th>
                                 <th className="px-4 py-3 font-semibold text-muted-foreground">Title</th>
                                 <th className="px-4 py-3 font-semibold text-muted-foreground">Program</th>
@@ -195,40 +252,48 @@ export default function InitiativesManager({
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-border/50">
-                            {filtered.map((init, idx) => (
-                                <tr key={init.id} className="hover:bg-surface/50 transition-colors">
-                                    <td className="px-4 py-3 text-muted-foreground">{idx + 1}</td>
-                                    <td className="px-4 py-3 font-medium text-foreground max-w-xs truncate">{init.title}</td>
-                                    <td className="px-4 py-3">
-                                        <span className="text-xs px-2 py-0.5 rounded bg-primary/10 text-primary font-medium">
-                                            {init.programs?.code ?? "–"}
-                                        </span>
-                                    </td>
-                                    <td className="px-4 py-3 text-muted-foreground">{init.fiscal_year}</td>
-                                    <td className="px-4 py-3">
-                                        <span className={`text-xs px-2 py-0.5 rounded font-medium ${criticalityColors[init.criticality]}`}>
-                                            {init.criticality}
-                                        </span>
-                                    </td>
-                                    <td className="px-4 py-3">
-                                        <span className={`text-xs px-2 py-0.5 rounded font-medium ${statusColors[init.status]}`}>
-                                            {init.status}
-                                        </span>
-                                    </td>
-                                    <td className="px-4 py-3 text-right">
-                                        <button onClick={() => openEdit(init)} className="text-muted-foreground hover:text-primary transition-colors mr-3" title="Edit">
-                                            <svg className="w-4 h-4 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                                            </svg>
-                                        </button>
-                                        <button onClick={() => handleDelete(init.id, init.title)} className="text-muted-foreground hover:text-danger transition-colors" title="Delete">
-                                            <svg className="w-4 h-4 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                                            </svg>
-                                        </button>
-                                    </td>
-                                </tr>
-                            ))}
+                            <DndContext
+                                sensors={sensors}
+                                collisionDetection={closestCenter}
+                                onDragEnd={handleDragEnd}
+                            >
+                                <SortableContext items={filtered} strategy={verticalListSortingStrategy}>
+                                    {filtered.map((init, idx) => (
+                                        <SortableRow key={init.id} id={init.id} className="hover:bg-surface/50 transition-colors">
+                                            <td className="px-4 py-3 text-muted-foreground">{idx + 1}</td>
+                                            <td className="px-4 py-3 font-medium text-foreground max-w-xs truncate">{init.title}</td>
+                                            <td className="px-4 py-3">
+                                                <span className="text-xs px-2 py-0.5 rounded bg-primary/10 text-primary font-medium">
+                                                    {init.programs?.code ?? "–"}
+                                                </span>
+                                            </td>
+                                            <td className="px-4 py-3 text-muted-foreground">{init.fiscal_year}</td>
+                                            <td className="px-4 py-3">
+                                                <span className={`text-xs px-2 py-0.5 rounded font-medium ${criticalityColors[init.criticality]}`}>
+                                                    {init.criticality}
+                                                </span>
+                                            </td>
+                                            <td className="px-4 py-3">
+                                                <span className={`text-xs px-2 py-0.5 rounded font-medium ${statusColors[init.status]}`}>
+                                                    {init.status}
+                                                </span>
+                                            </td>
+                                            <td className="px-4 py-3 text-right whitespace-nowrap">
+                                                <button onClick={() => openEdit(init)} className="text-muted-foreground hover:text-primary transition-colors mr-3" title="Edit">
+                                                    <svg className="w-4 h-4 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                                    </svg>
+                                                </button>
+                                                <button onClick={() => handleDelete(init.id, init.title)} className="text-muted-foreground hover:text-danger transition-colors" title="Delete">
+                                                    <svg className="w-4 h-4 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                                    </svg>
+                                                </button>
+                                            </td>
+                                        </SortableRow>
+                                    ))}
+                                </SortableContext>
+                            </DndContext>
                         </tbody>
                     </table>
                 </div>

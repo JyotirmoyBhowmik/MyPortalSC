@@ -61,3 +61,25 @@ export async function toggleProjectStatus(
     const newStatus = currentStatus === "published" ? "draft" : "published";
     await updateProject(id, { status: newStatus as "draft" | "published" });
 }
+
+export async function reorderProjects(
+    orderedIds: { id: string; sort_order: number }[]
+) {
+    const supabase = await createClient();
+
+    // Auth check
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) throw new Error("Unauthorized");
+
+    // Supabase JS doesn't have a single-query batch update via REST nicely without an RPC. 
+    // For small arrays (like projects), a Promise.all over single updates is acceptable.
+    const updates = orderedIds.map((item) =>
+        supabase.from("projects").update({ sort_order: item.sort_order }).eq("id", item.id)
+    );
+
+    await Promise.all(updates);
+
+    revalidatePath("/admin/projects");
+    revalidatePath("/projects");
+    revalidatePath("/");
+}

@@ -1,7 +1,6 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
   async headers() {
     return [
       {
@@ -17,7 +16,7 @@ const nextConfig: NextConfig = {
           },
           {
             key: 'X-XSS-Protection',
-            value: '1; mode=block'
+            value: '0' // Modern browsers use CSP; 0 prevents rare XSS-leak bugs
           },
           {
             key: 'X-Frame-Options',
@@ -29,15 +28,27 @@ const nextConfig: NextConfig = {
           },
           {
             key: 'Content-Security-Policy',
-            value: "default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline' https://vercel.live; style-src 'self' 'unsafe-inline'; img-src 'self' data: https: blob:; font-src 'self' data:; worker-src 'self' blob:; connect-src 'self' https://vercel.live https://*.supabase.co wss://*.googleapis.com https://*.googleapis.com;"
+            value:
+              "default-src 'self'; " +
+              "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://vercel.live https://static.cloudflareinsights.com; " +
+              "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; " +
+              "img-src 'self' data: https: blob:; " +
+              "font-src 'self' data: https://fonts.gstatic.com; " +
+              "worker-src 'self' blob:; " +
+              // Added Supabase & MediaStream for your AI audio modules
+              "media-src 'self' blob: https://cqtluudfmigefqphmfbb.supabase.co mediastream:; " +
+              // connect-src allows the AI to "talk" to the servers
+              "connect-src 'self' https://vercel.live https://*.supabase.co wss://*.supabase.co wss://*.googleapis.com https://*.googleapis.com;"
           },
           {
             key: 'Referrer-Policy',
-            value: 'origin-when-cross-origin'
+            value: 'strict-origin-when-cross-origin'
           },
           {
             key: 'Permissions-Policy',
-            value: 'camera=(), microphone=(self), geolocation=(), browsing-topics=()'
+            // ENABLED: microphone and speaker-selection for AI interaction
+            // ENABLED: autoplay so AI can speak back to the user
+            value: 'camera=(), microphone=(self), speaker-selection=(self), autoplay=(self), geolocation=(), browsing-topics=()'
           }
         ]
       }

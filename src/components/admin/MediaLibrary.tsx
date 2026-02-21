@@ -2,7 +2,7 @@
 
 import { useState, useTransition, useCallback } from "react";
 import { useDropzone } from "react-dropzone";
-import { uploadMedia, deleteMedia } from "@/app/admin/actions/media";
+import { uploadMedia, deleteMedia, registerMedia } from "@/app/admin/actions/media";
 
 export interface MediaItem {
     id: string;
@@ -26,36 +26,57 @@ export default function MediaLibrary({ initialMedia, onSelect, selectable = fals
 
     const onDrop = useCallback(async (acceptedFiles: File[]) => {
         setUploading(true);
-        // Sequential upload to avoid overwhelming server/connection
-        // Ideally parallel with Promise.all but let's keep it simple for now
-        for (const file of acceptedFiles) {
-            const formData = new FormData();
-            formData.append("file", file);
+        try {
+            for (const file of acceptedFiles) {
+                // 1. Request a presigned URL from our secure proxy route
+                const req = await fetch("/api/storage/sign-upload", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        filename: file.name,
+                        contentType: file.type,
+                    })
+                });
 
-            // We rely on revalidatePath in the server action to update the data,
-            // but since this is a client component receiving props, we might need to manually update local state
-            // or refresh the page. For a smoother experience, let's just refresh via router or optimistic update?
-            // Actually, revalidatePath refreshes server components. If this is used in a client component that gets data from parent server component,
-            // we need to trigger a refresh.
-            // For the modal case (client-side invocation), we might not have the fresh data instantly unless we refetch.
-            // Let's implement a simple optimistic update or callback.
+                if (!req.ok) {
+                    // Fallback to the old server action behavior if the route is unavailable or user lacks permissions
+                    const formData = new FormData();
+                    formData.append("file", file);
+                    await uploadMedia(formData);
+                    continue; // Skip the rest of the proxy flow
+                }
 
-            // Wait, server actions return the result.
-            await uploadMedia(formData);
+                // 2. Parse the Secure Payload
+                const { uploadUrl, path, publicUrl } = await req.json();
+
+                // 3. Perform a direct PUT upload to the cloud bucket using the short-lived presigned URL
+                await fetch(uploadUrl, {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": file.type,
+                    },
+                    body: file,
+                });
+
+                // 4. Register the securely uploaded file metadata in the DB via Server Action
+                const formData = new FormData();
+                formData.append("file_name", file.name);
+                formData.append("storage_path", path);
+                formData.append("public_url", publicUrl);
+                formData.append("mime_type", file.type);
+                formData.append("size_bytes", file.size.toString());
+
+                await registerMedia(formData);
+            }
+        } catch (err) {
+            console.error("Upload failed", err);
+        } finally {
+            setUploading(false);
+            if (typeof window !== "undefined") {
+                window.location.reload();
+            }
         }
-
-        // Trigger a router refresh to fetch new data if we are on the page
-        // For now, let's just reload the window or use router.refresh() if we had the router
-        // But since we are passing initialMedia, we rely on parent to refresh or we need a way to fetch fresh data here.
-        // For simplicity in this iteration, I'll recommend the user refreshes or I'll implement a fetch here.
-        // Actually, let's just use `location.reload()` for the standalone page, but that's bad for the modal.
-        // Let's rely on the parent or a refresh button for now, or use `router.refresh()`.
-
-        setUploading(false);
-        if (typeof window !== "undefined") {
-            window.location.reload();
-        }
-    }, [media]); // We'll improve the refresh logic later
+    }, [media]);
 
     const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop, accept: { 'image/*': [] } });
 

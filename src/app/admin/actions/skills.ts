@@ -35,3 +35,23 @@ export async function deleteSkill(id: string) {
     revalidatePath("/about");
     revalidatePath("/");
 }
+
+export async function reorderSkills(
+    orderedIds: { id: string; sort_order: number }[]
+) {
+    const supabase = await createClient();
+
+    // Auth check
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) throw new Error("Unauthorized");
+
+    const updates = orderedIds.map((item) =>
+        supabase.from("skills").update({ sort_order: item.sort_order }).eq("id", item.id)
+    );
+
+    await Promise.all(updates);
+
+    revalidatePath("/admin/skills");
+    revalidatePath("/about");
+    revalidatePath("/");
+}

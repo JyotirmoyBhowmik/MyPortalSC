@@ -154,3 +154,41 @@ export async function deleteProgram(id: string) {
     revalidatePath("/admin/initiatives");
     return { success: true };
 }
+
+export async function reorderInitiatives(
+    orderedIds: { id: string; sort_order: number }[]
+) {
+    const supabase = await createClient();
+
+    // Auth check
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) throw new Error("Unauthorized");
+
+    const updates = orderedIds.map((item) =>
+        supabase.from("initiatives").update({ order_index: item.sort_order }).eq("id", item.id)
+    );
+
+    await Promise.all(updates);
+
+    revalidatePath("/admin/initiatives");
+    revalidatePath("/initiatives");
+}
+
+export async function reorderPrograms(
+    orderedIds: { id: string; sort_order: number }[]
+) {
+    const supabase = await createClient();
+
+    // Auth check
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) throw new Error("Unauthorized");
+
+    const updates = orderedIds.map((item) =>
+        supabase.from("programs").update({ order_index: item.sort_order }).eq("id", item.id)
+    );
+
+    await Promise.all(updates);
+
+    revalidatePath("/admin/initiatives");
+    revalidatePath("/initiatives");
+}

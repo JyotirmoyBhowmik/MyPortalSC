@@ -3,7 +3,24 @@
 import { useState } from "react";
 import Button from "@/components/ui/Button";
 import type { Skill } from "@/lib/database.types";
-import { createSkill, updateSkill, deleteSkill } from "@/app/admin/actions/skills";
+import { createSkill, updateSkill, deleteSkill, reorderSkills } from "@/app/admin/actions/skills";
+import { useEffect } from "react";
+import {
+    DndContext,
+    closestCenter,
+    KeyboardSensor,
+    PointerSensor,
+    useSensor,
+    useSensors,
+    type DragEndEvent,
+} from "@dnd-kit/core";
+import {
+    arrayMove,
+    SortableContext,
+    sortableKeyboardCoordinates,
+    verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
+import { SortableRow } from "@/components/admin/SortableRow";
 
 export default function SkillsManager({ skills }: { skills: Skill[] }) {
     const [editing, setEditing] = useState<string | null>(null);
@@ -57,6 +74,45 @@ export default function SkillsManager({ skills }: { skills: Skill[] }) {
         }
     }
 
+    const [items, setItems] = useState(skills);
+
+    useEffect(() => {
+        setItems(skills);
+    }, [skills]);
+
+    const sensors = useSensors(
+        useSensor(PointerSensor),
+        useSensor(KeyboardSensor, {
+            coordinateGetter: sortableKeyboardCoordinates,
+        })
+    );
+
+    async function handleDragEnd(event: DragEndEvent) {
+        const { active, over } = event;
+
+        if (over && active.id !== over.id) {
+            const oldIndex = items.findIndex((i) => i.id === active.id);
+            const newIndex = items.findIndex((i) => i.id === over.id);
+
+            const newItems = arrayMove(items, oldIndex, newIndex);
+
+            // Optimistic update
+            setItems(newItems);
+
+            const orderedPayload = newItems.map((item: Skill, index: number) => ({
+                id: item.id,
+                sort_order: index + 1,
+            }));
+
+            try {
+                await reorderSkills(orderedPayload);
+            } catch (err) {
+                console.error("Failed to reorder skills:", err);
+                setItems(skills);
+            }
+        }
+    }
+
     return (
         <div>
             <div className="flex items-center justify-between mb-8">
@@ -94,6 +150,7 @@ export default function SkillsManager({ skills }: { skills: Skill[] }) {
                 <table className="w-full text-sm">
                     <thead>
                         <tr className="border-b border-border">
+                            <th className="text-left p-4 font-medium text-muted-foreground w-8"></th>
                             <th className="text-left p-4 font-medium text-muted-foreground">Name</th>
                             <th className="text-left p-4 font-medium text-muted-foreground">Category</th>
                             <th className="text-left p-4 font-medium text-muted-foreground">Level</th>
@@ -102,48 +159,56 @@ export default function SkillsManager({ skills }: { skills: Skill[] }) {
                         </tr>
                     </thead>
                     <tbody>
-                        {skills.map((skill) =>
-                            editing === skill.id ? (
-                                <tr key={skill.id} className="border-b border-border/50">
-                                    <td colSpan={5} className="p-3">
-                                        <form
-                                            onSubmit={(e) => handleUpdate(e, skill.id)}
-                                            className="grid grid-cols-2 sm:grid-cols-6 gap-3 items-end"
-                                        >
-                                            <input name="name" className="admin-input" defaultValue={skill.name} required />
-                                            <input name="category" className="admin-input" defaultValue={skill.category} required />
-                                            <input name="proficiency_level" type="number" min="1" max="5" className="admin-input" defaultValue={skill.proficiency_level ?? 3} />
-                                            <input name="years_of_experience" type="number" step="0.5" className="admin-input" defaultValue={skill.years_of_experience ?? 0} />
-                                            <input name="order_index" type="number" className="admin-input" defaultValue={skill.order_index} />
-                                            <div className="flex gap-2">
-                                                <Button type="submit" variant="primary" size="sm" isLoading={loading}>Save</Button>
-                                                <Button type="button" variant="ghost" size="sm" onClick={() => setEditing(null)}>Cancel</Button>
-                                            </div>
-                                        </form>
-                                    </td>
-                                </tr>
-                            ) : (
-                                <tr key={skill.id} className="border-b border-border/50 hover:bg-surface/50 transition-colors">
-                                    <td className="p-4 font-medium">{skill.name}</td>
-                                    <td className="p-4 text-muted-foreground">{skill.category}</td>
-                                    <td className="p-4">
-                                        <div className="flex items-center gap-2">
-                                            <div className="w-16 h-1.5 rounded-full bg-muted overflow-hidden">
-                                                <div className="h-full rounded-full bg-primary" style={{ width: `${((skill.proficiency_level ?? 0) / 5) * 100}%` }} />
-                                            </div>
-                                            <span className="text-xs text-muted-foreground">{skill.proficiency_level}/5</span>
-                                        </div>
-                                    </td>
-                                    <td className="p-4 text-muted-foreground hidden sm:table-cell">{skill.years_of_experience}y</td>
-                                    <td className="p-4">
-                                        <div className="flex items-center justify-end gap-2">
-                                            <button onClick={() => setEditing(skill.id)} className="text-xs px-2 py-1 rounded bg-primary/10 text-primary hover:bg-primary/20 transition-colors">Edit</button>
-                                            <button onClick={() => handleDelete(skill.id)} className="text-xs px-2 py-1 rounded bg-danger/10 text-danger hover:bg-danger/20 transition-colors">Delete</button>
-                                        </div>
-                                    </td>
-                                </tr>
-                            )
-                        )}
+                        <DndContext
+                            sensors={sensors}
+                            collisionDetection={closestCenter}
+                            onDragEnd={handleDragEnd}
+                        >
+                            <SortableContext items={items} strategy={verticalListSortingStrategy}>
+                                {items.map((skill) =>
+                                    editing === skill.id ? (
+                                        <tr key={skill.id} className="border-b border-border/50">
+                                            <td colSpan={6} className="p-3">
+                                                <form
+                                                    onSubmit={(e) => handleUpdate(e, skill.id)}
+                                                    className="grid grid-cols-2 sm:grid-cols-6 gap-3 items-end"
+                                                >
+                                                    <input name="name" className="admin-input" defaultValue={skill.name} required />
+                                                    <input name="category" className="admin-input" defaultValue={skill.category} required />
+                                                    <input name="proficiency_level" type="number" min="1" max="5" className="admin-input" defaultValue={skill.proficiency_level ?? 3} />
+                                                    <input name="years_of_experience" type="number" step="0.5" className="admin-input" defaultValue={skill.years_of_experience ?? 0} />
+                                                    <input name="order_index" type="number" className="admin-input" defaultValue={skill.order_index} />
+                                                    <div className="flex gap-2">
+                                                        <Button type="submit" variant="primary" size="sm" isLoading={loading}>Save</Button>
+                                                        <Button type="button" variant="ghost" size="sm" onClick={() => setEditing(null)}>Cancel</Button>
+                                                    </div>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                    ) : (
+                                        <SortableRow key={skill.id} id={skill.id} className="border-b border-border/50 hover:bg-surface/50 transition-colors">
+                                            <td className="p-4 font-medium">{skill.name}</td>
+                                            <td className="p-4 text-muted-foreground">{skill.category}</td>
+                                            <td className="p-4">
+                                                <div className="flex items-center gap-2">
+                                                    <div className="w-16 h-1.5 rounded-full bg-muted overflow-hidden">
+                                                        <div className="h-full rounded-full bg-primary" style={{ width: `${((skill.proficiency_level ?? 0) / 5) * 100}%` }} />
+                                                    </div>
+                                                    <span className="text-xs text-muted-foreground">{skill.proficiency_level}/5</span>
+                                                </div>
+                                            </td>
+                                            <td className="p-4 text-muted-foreground hidden sm:table-cell">{skill.years_of_experience}y</td>
+                                            <td className="p-4">
+                                                <div className="flex items-center justify-end gap-2">
+                                                    <button onClick={() => setEditing(skill.id)} className="text-xs px-2 py-1 rounded bg-primary/10 text-primary hover:bg-primary/20 transition-colors">Edit</button>
+                                                    <button onClick={() => handleDelete(skill.id)} className="text-xs px-2 py-1 rounded bg-danger/10 text-danger hover:bg-danger/20 transition-colors">Delete</button>
+                                                </div>
+                                            </td>
+                                        </SortableRow>
+                                    )
+                                )}
+                            </SortableContext>
+                        </DndContext>
                     </tbody>
                 </table>
             </div>
