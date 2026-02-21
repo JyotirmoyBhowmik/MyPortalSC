@@ -2,6 +2,7 @@
 
 import { useState, useRef, useCallback } from "react";
 import { GoogleGenAI, Modality } from "@google/genai";
+import { useRouter } from "next/navigation";
 
 const QUICK_ACTIONS = [
     { label: "🌅 Sunset Theme", action: "set_sunset_theme" },
@@ -62,6 +63,15 @@ function executeAction(actionName: string, args?: any) {
             }
             break;
         }
+        case "redirect_to_page": {
+            const path = args?.path || "/";
+            if (args?._router) {
+                args._router.push(path);
+            } else {
+                window.location.href = path; // Fallback
+            }
+            break;
+        }
         default:
             console.warn("Unknown action:", actionName);
     }
@@ -70,6 +80,7 @@ function executeAction(actionName: string, args?: any) {
 type VoiceStatus = "Idle" | "Connecting" | "Listening" | "Thinking" | "Speaking" | "Error" | "Disconnected";
 
 export default function VoiceWidget() {
+    const router = useRouter();
     const [isOpen, setIsOpen] = useState(false);
     const [status, setStatus] = useState<VoiceStatus>("Idle");
     const [errorMsg, setErrorMsg] = useState("");
@@ -165,7 +176,7 @@ export default function VoiceWidget() {
                 setErrorMsg("Failed to get auth token from server.");
                 return;
             }
-            const { token, model } = await res.json();
+            const { token, model, siteContext } = await res.json();
             if (!token) {
                 setStatus("Error");
                 setErrorMsg("Server returned no token. Check API key configuration.");
@@ -191,13 +202,22 @@ export default function VoiceWidget() {
                 config: {
                     responseModalities: [Modality.AUDIO],
                     // TOKEN SAVING INSTRUCTION: Act as a router/agent, not a writer.
-                    systemInstruction: "You are Jyotirmoy's Representative. Your goal is to help users navigate this site. Be extremely concise. Use tools to highlight code, scroll, or change themes immediately when requested. Do not explain your process, just act.",
+                    systemInstruction: `You are Jyotirmoy's Representative. Your goal is to help users navigate this site and answer questions based ONLY on the provided context. Be extremely concise. Use tools to highlight code, scroll to sections, or change themes when requested. Do not explain your process, just act.\n\n${siteContext || ''}`,
                     tools: [{
                         functionDeclarations: [
                             { name: "set_sunset_theme", description: "Changes theme to sunset gradients." },
                             { name: "scroll_initiatives", description: "Scrolls to the user's initiatives and AI projects." },
                             { name: "open_resume", description: "Opens the user's resume PDF in a new window." },
                             { name: "scroll_contact", description: "Scrolls down to the contact form section." },
+                            {
+                                name: "redirect_to_page",
+                                description: "Redirects the user to a different page based on the SITEMAP provided in context.",
+                                parameters: {
+                                    type: "OBJECT" as any,
+                                    properties: { path: { type: "STRING" as any, description: "The exact path to redirect to, e.g., '/projects', '/about', etc." } },
+                                    required: ["path"]
+                                }
+                            },
                             {
                                 name: "highlight_code",
                                 description: "Scrolls to Juniper or Cloud code snippets.",
@@ -252,7 +272,11 @@ export default function VoiceWidget() {
                             });
                         }
                         if (msg.toolCall) {
-                            msg.toolCall.functionCalls.forEach((fc: any) => executeAction(fc.name, fc.args));
+                            msg.toolCall.functionCalls.forEach((fc: any) => {
+                                // Inject router for client-side navigation
+                                const enhancedArgs = { ...fc.args, _router: router };
+                                executeAction(fc.name, enhancedArgs);
+                            });
 
                             try {
                                 sessionRef.current.sendToolResponse({

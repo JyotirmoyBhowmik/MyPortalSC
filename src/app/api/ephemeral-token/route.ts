@@ -37,9 +37,31 @@ export async function GET() {
             },
         });
 
+        const siteContext = `
+CONTEXT (CACHED DATA ABOUT JYOTIRMOY'S PORTAL):
+Name: Jyotirmoy Bhowmik
+Role: Lead – IT Infrastructure at Surya Nepal Pvt. Ltd. (JTI Group)
+Focus Areas: 
+- IT/OT Convergence & SCADA Security (IEC 62443 compliance)
+- Cloud Migrations & Architecture (AWS/Azure/M365)
+- AI Initiatives & Enterprise Digital Transformation
+- Data Centers (Tier III+) & Disaster Recovery (RPO < 15 min)
+
+SITEMAP (Use these exact paths when redirecting users):
+- "/" (Home / Overview)
+- "/about" (My professional journey and background)
+- "/initiatives" (Strategic IT & Cloud initiatives, AI projects)
+- "/projects" (Detailed case studies and technical projects)
+- "/skills" (Technical competencies, Cloud/OT/AI certifications)
+- "/contact" (Get in touch, email: jyotirmoy.bhowmik@gmail.com)
+- "/executive-summary" (High-level professional summary)
+- "/sitemap" (Full Site Map)
+`;
+
         return NextResponse.json({
             token: token.name,
             model: MODEL,
+            siteContext: siteContext,
         });
     } catch (error: any) {
         console.error('Ephemeral token error:', error.message || error);
@@ -49,6 +71,7 @@ export async function GET() {
         return NextResponse.json({
             token: apiKey,
             model: MODEL,
+            siteContext: `Name: Jyotirmoy Bhowmik. Role: Lead IT Infrastructure. Experience: 15+ years. Key focus: Juniper, Cloud, Data Centers, OT/SCADA Security.`,
             fallback: true,
         });
     }

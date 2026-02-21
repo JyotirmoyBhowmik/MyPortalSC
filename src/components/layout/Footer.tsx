@@ -57,8 +57,9 @@ export default function Footer({ flags = {} }: { flags?: Record<string, boolean>
         { href: "/speaking", label: "Speaking", visible: flags["feature_speaking"] },
         { href: "/publications", label: "Publications", visible: flags["feature_publications"] },
         { href: "/downloads", label: "Downloads", visible: flags["feature_downloads"] },
-        // Contact
+        // Contact & Misc
         { href: "/contact", label: "Contact", visible: true },
+        { href: "/sitemap", label: "Site Map", visible: true },
     ].filter(link => link.visible);
 
     return (
