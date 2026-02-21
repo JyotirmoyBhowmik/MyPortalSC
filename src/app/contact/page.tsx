@@ -49,6 +49,10 @@ export default async function ContactPage() {
     const linkedin = getContentField(pageContent?.content, "linkedin") || "https://www.linkedin.com/in/jyotirmoybhowmik/";
     const twitter = getContentField(pageContent?.content, "twitter") || "https://x.com/jyotu_b";
 
+    // Global Operations Overrides
+    const globalOpsTitle = getContentField(pageContent?.content, "global_ops_title") || "Global Operations";
+    const globalOpsDesc = getContentField(pageContent?.content, "global_ops_desc") || "Delivering excellence across borders.";
+
     const socialUrls: Record<string, string> = { github, linkedin, twitter };
 
     return (
@@ -75,8 +79,8 @@ export default async function ContactPage() {
             <section className="py-12 px-4 bg-muted/30">
                 <div className="max-w-4xl mx-auto">
                     <div className="text-center mb-8">
-                        <h2 className="text-2xl font-bold mb-2">Global Operations</h2>
-                        <p className="text-muted-foreground text-sm">Delivering excellence across borders.</p>
+                        <h2 className="text-2xl font-bold mb-2">{globalOpsTitle}</h2>
+                        <p className="text-muted-foreground text-sm">{globalOpsDesc}</p>
                     </div>
                     <DeliveryGlobe />
                 </div>

@@ -110,10 +110,12 @@ export default async function AboutPage() {
     const dbVision = getContentField(pageContent?.content, "vision_statement");
     const dbExperience = getContentData(pageContent?.content, "experience");
     const dbEducation = getContentData(pageContent?.content, "education");
+    const dbVideoLink = getContentField(pageContent?.content, "videoLink");
 
     const displayVision = dbVision || visionStatement;
     const displayExperience = dbExperience || experience;
     const displayEducation = dbEducation || education;
+    const displayVideoLink = dbVideoLink || "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4";
 
     return (
         <>
@@ -172,7 +174,7 @@ export default async function AboutPage() {
                     <div className="mb-16">
                         <div className="relative rounded-2xl overflow-hidden shadow-2xl border border-white/10 bg-black/50 aspect-video">
                             <VideoPlayer
-                                src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
+                                src={displayVideoLink}
                                 poster="/images/video-poster.jpg"
                                 className="w-full h-full"
                             />
