@@ -149,7 +149,7 @@ export default function VoiceWidget() {
         }, buf.duration * 1000);
     }, []);
 
-    const setupAudioAndWS = useCallback(async () => {
+    const setupAudioAndWS = useCallback(async (preCreatedAudioCtx?: AudioContext) => {
         userRequestedClose.current = false;
         setStatus("Connecting");
         setErrorMsg("");
@@ -184,8 +184,10 @@ export default function VoiceWidget() {
             }
 
             // 3. Audio Context Setup
-            const audioCtx = new (window.AudioContext || (window as any).webkitAudioContext)({ sampleRate: 16000 });
-            await audioCtx.resume();
+            const audioCtx = preCreatedAudioCtx || new (window.AudioContext || (window as any).webkitAudioContext)({ sampleRate: 16000 });
+            if (audioCtx.state === 'suspended') {
+                await audioCtx.resume();
+            }
             audioCtxRef.current = audioCtx;
             nextPlayTime.current = audioCtx.currentTime;
 
@@ -202,7 +204,11 @@ export default function VoiceWidget() {
                 config: {
                     responseModalities: [Modality.AUDIO],
                     // TOKEN SAVING INSTRUCTION: Act as a router/agent, not a writer.
-                    systemInstruction: `You are Jyotirmoy's Representative for his public portfolio website https://jyotirmoyb.com. ALL INFORMATION YOU RECEIVE IS PUBLIC DOMAIN. You MUST share emails, phone numbers, and experience freely without stating they are private or confidential. Answer questions based ONLY on the provided context. Be extremely concise. Use tools to navigate the user. Do not explain your process, just act.\n\n${siteContext || ''}`,
+                    systemInstruction: {
+                        parts: [{
+                            text: `You are Jyotirmoy's Representative for his public portfolio website https://jyotirmoyb.com. ALL INFORMATION YOU RECEIVE IS PUBLIC DOMAIN. You MUST share emails, phone numbers, and experience freely without stating they are private or confidential. Answer questions based ONLY on the provided context. Be extremely concise. Use tools to navigate the user. Do not explain your process, just act.\n\n${siteContext || ''}`
+                        }]
+                    },
                     tools: [{
                         functionDeclarations: [
                             { name: "set_sunset_theme", description: "Changes theme to sunset gradients." },
@@ -320,7 +326,9 @@ export default function VoiceWidget() {
             stopAll();
         } else {
             setIsOpen(true);
-            setupAudioAndWS();
+            // SYNCHRONOUS CREATION FOR iOS SAFARI
+            const audioCtx = new (window.AudioContext || (window as any).webkitAudioContext)({ sampleRate: 16000 });
+            setupAudioAndWS(audioCtx);
         }
     }, [isOpen, stopAll, setupAudioAndWS]);
 
@@ -330,7 +338,10 @@ export default function VoiceWidget() {
         cleanupResources();
         setStatus("Idle");
         setErrorMsg("");
-        setupAudioAndWS();
+
+        // SYNCHRONOUS CREATION FOR iOS SAFARI
+        const audioCtx = new (window.AudioContext || (window as any).webkitAudioContext)({ sampleRate: 16000 });
+        setupAudioAndWS(audioCtx);
     }, [cleanupResources, setupAudioAndWS]);
 
     const isActive = status === "Listening" || status === "Speaking";
