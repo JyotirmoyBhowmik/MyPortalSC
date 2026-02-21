@@ -55,7 +55,7 @@ SITEMAP (Use these exact paths when redirecting users):
 - "/skills" (Technical competencies, Cloud/OT/AI certifications)
 - "/contact" (Get in touch, email: jyotirmoy.bhowmik@gmail.com)
 - "/executive-summary" (High-level professional summary)
-- "/sitemap" (Full Site Map)
+- "/site-map" (Full Site Map)
 `;
 
         return NextResponse.json({

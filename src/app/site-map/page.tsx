@@ -35,23 +35,23 @@ const sitemapStructure = [
 
 export default function SitemapPage() {
     return (
-        <div className="min-h-screen pt-24 pb-16">
+        <div className="min-h-screen pt-20 md:pt-24 pb-12 md:pb-16">
             <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
                 {/* Header */}
-                <div className="mb-12">
-                    <h1 className="text-4xl md:text-5xl font-bold mb-4 tracking-tight">
+                <div className="mb-8 md:mb-12">
+                    <h1 className="text-3xl md:text-5xl font-bold mb-3 md:mb-4 tracking-tight">
                         Site <span className="gradient-text">Map</span>
                     </h1>
-                    <p className="text-xl text-muted-foreground w-full md:w-2/3">
+                    <p className="text-lg md:text-xl text-muted-foreground w-full md:w-2/3">
                         A complete overview of all sections and pages available on the portal.
                     </p>
                 </div>
 
                 {/* Sitemap Sections */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
                     {sitemapStructure.map((section, idx) => (
-                        <div key={idx} className="bg-surface border border-border rounded-xl p-8 hover:border-primary/50 transition-colors">
-                            <h2 className="text-2xl font-semibold mb-6 pb-2 border-b border-border/50">
+                        <div key={idx} className="bg-surface border border-border rounded-xl p-6 md:p-8 hover:border-primary/50 transition-colors">
+                            <h2 className="text-xl md:text-2xl font-semibold mb-4 md:mb-6 pb-2 border-b border-border/50">
                                 {section.title}
                             </h2>
                             <ul className="space-y-4">
