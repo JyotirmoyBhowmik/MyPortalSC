@@ -45,9 +45,9 @@ export default async function ContactPage() {
     const pageContent = await getPageContent("contact");
 
     const email = getContentField(pageContent?.content, "email");
-    const github = getContentField(pageContent?.content, "github");
-    const linkedin = getContentField(pageContent?.content, "linkedin");
-    const twitter = getContentField(pageContent?.content, "twitter");
+    const github = getContentField(pageContent?.content, "github") || "https://github.com/JyotirmoyBhowmik";
+    const linkedin = getContentField(pageContent?.content, "linkedin") || "https://www.linkedin.com/in/jyotirmoybhowmik/";
+    const twitter = getContentField(pageContent?.content, "twitter") || "https://x.com/jyotu_b";
 
     const socialUrls: Record<string, string> = { github, linkedin, twitter };
 
