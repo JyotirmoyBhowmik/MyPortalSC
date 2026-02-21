@@ -64,7 +64,28 @@ export async function inviteUser(email: string, role: string) {
 
 export async function updateUserRole(userId: string, role: string) {
     const supabase = await createClient();
-    const { error } = await supabase
+
+    // Validate caller is authorized
+    const { data: { user: caller } } = await supabase.auth.getUser();
+    if (!caller) return { success: false, error: "Unauthorized" };
+
+    const { data: callerRecord } = await supabase.from("admin_users").select("role").eq("user_id", caller.id).single();
+    if (!callerRecord || (callerRecord.role !== "super_admin" && callerRecord.role !== "admin")) {
+        return { success: false, error: "Insufficient permissions to change roles." };
+    }
+
+    const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+    if (!serviceRoleKey || !process.env.NEXT_PUBLIC_SUPABASE_URL) {
+        return { success: false, error: "Service configuration missing." };
+    }
+
+    const adminClient = createSupabaseClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL,
+        serviceRoleKey,
+        { auth: { autoRefreshToken: false, persistSession: false } }
+    );
+
+    const { error } = await adminClient
         .from("admin_users")
         .update({ role })
         .eq("user_id", userId);
@@ -77,7 +98,15 @@ export async function updateUserRole(userId: string, role: string) {
 export async function removeUser(userId: string) {
     const supabase = await createClient();
 
-    // Check if we have service role to also delete from Auth
+    // Validate caller is authorized
+    const { data: { user: caller } } = await supabase.auth.getUser();
+    if (!caller) return { success: false, error: "Unauthorized" };
+
+    const { data: callerRecord } = await supabase.from("admin_users").select("role").eq("user_id", caller.id).single();
+    if (!callerRecord || (callerRecord.role !== "super_admin" && callerRecord.role !== "admin")) {
+        return { success: false, error: "Insufficient permissions to remove users." };
+    }
+
     const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
     if (serviceRoleKey && process.env.NEXT_PUBLIC_SUPABASE_URL) {
         const adminAuthClient = createSupabaseClient(
@@ -85,19 +114,19 @@ export async function removeUser(userId: string) {
             serviceRoleKey,
             { auth: { autoRefreshToken: false, persistSession: false } }
         );
-        // Optionally delete the auth user so they can't login at all
-        // Only do this if they shouldn't have ANY access. If they can still be a normal user, skip this.
-        // For an admin portal, usually we want to delete them.
+
         await adminAuthClient.auth.admin.deleteUser(userId);
+
+        const { error } = await adminAuthClient
+            .from("admin_users")
+            .delete()
+            .eq("user_id", userId);
+
+        if (error) return { success: false, error: error.message };
+    } else {
+        return { success: false, error: "Service configuration missing." };
     }
 
-    // Delete from admin_users
-    const { error } = await supabase
-        .from("admin_users")
-        .delete()
-        .eq("user_id", userId);
-
-    if (error) return { success: false, error: error.message };
     revalidatePath("/admin/users");
     return { success: true };
 }

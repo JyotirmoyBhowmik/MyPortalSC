@@ -7,7 +7,7 @@ export default async function AdminAuditPage() {
     const { data: logs } = await supabase
         .from("audit_log")
         .select("*")
-        .order("created_at", { ascending: false })
+        .order("timestamp", { ascending: false })
         .limit(100);
 
     return (
@@ -32,22 +32,22 @@ export default async function AdminAuditPage() {
                     <tbody className="divide-y divide-border/50">
                         {logs?.map((log) => {
                             const actionColors: Record<string, string> = {
-                                create: "bg-green-500/15 text-green-400",
-                                update: "bg-blue-500/15 text-blue-400",
-                                delete: "bg-red-500/15 text-red-400",
+                                INSERT: "bg-green-500/15 text-green-400",
+                                UPDATE: "bg-blue-500/15 text-blue-400",
+                                DELETE: "bg-red-500/15 text-red-400",
                             };
                             return (
                                 <tr key={log.id} className="hover:bg-surface/30 transition-colors">
                                     <td className="px-4 py-2">
-                                        <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded uppercase ${actionColors[log.action] || "bg-gray-500/15 text-gray-400"}`}>
-                                            {log.action}
+                                        <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded uppercase ${actionColors[log.operation] || "bg-gray-500/15 text-gray-400"}`}>
+                                            {log.operation}
                                         </span>
                                     </td>
                                     <td className="px-4 py-2 text-sm text-muted-foreground hidden md:table-cell">{log.table_name}</td>
                                     <td className="px-4 py-2 text-xs text-muted-foreground hidden lg:table-cell truncate max-w-xs">
                                         {log.record_id ? `ID: ${log.record_id}` : "—"}
                                     </td>
-                                    <td className="px-4 py-2 text-xs text-muted-foreground">{new Date(log.created_at).toLocaleString()}</td>
+                                    <td className="px-4 py-2 text-xs text-muted-foreground">{new Date(log.timestamp).toLocaleString()}</td>
                                 </tr>
                             );
                         })}

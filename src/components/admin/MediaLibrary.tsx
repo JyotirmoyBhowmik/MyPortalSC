@@ -72,8 +72,40 @@ export default function MediaLibrary({ initialMedia, onSelect, selectable = fals
         });
     }
 
+    const [copiedId, setCopiedId] = useState<string | null>(null);
+
+    async function handleCopy(item: MediaItem) {
+        if (selectable && onSelect) {
+            onSelect(item.public_url);
+            return;
+        }
+
+        const markdownTag = `![${item.original_name}](${item.public_url})`;
+        try {
+            await navigator.clipboard.writeText(markdownTag);
+            setCopiedId(item.id);
+            setTimeout(() => setCopiedId(null), 2000);
+        } catch (err) {
+            console.error("Failed to copy:", err);
+            prompt("Copy this markdown tag manually:", markdownTag);
+        }
+    }
+
     return (
         <div className="space-y-6">
+            {!selectable && (
+                <div className="glass p-4 rounded-xl border border-primary/20 bg-primary/5">
+                    <h3 className="font-semibold text-primary mb-1 text-sm flex items-center gap-2">
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                        How to use this library
+                    </h3>
+                    <p className="text-xs text-muted-foreground leading-relaxed">
+                        Files uploaded here are stored securely in your public cloud bucket.
+                        To use an image in your Projects or Blog posts, simply <strong className="text-foreground">Click</strong> on any file below to automatically copy its Markdown embed code to your clipboard.
+                    </p>
+                </div>
+            )}
+
             {/* Dropzone */}
             <div
                 {...getRootProps()}
@@ -82,7 +114,7 @@ export default function MediaLibrary({ initialMedia, onSelect, selectable = fals
             >
                 <input {...getInputProps()} />
                 {uploading ? (
-                    <p className="text-sm font-medium animate-pulse">Uploading...</p>
+                    <p className="text-sm font-medium animate-pulse">Uploading to Cloud Storage...</p>
                 ) : isDragActive ? (
                     <p className="text-sm font-medium text-primary">Drop files here...</p>
                 ) : (
@@ -100,15 +132,22 @@ export default function MediaLibrary({ initialMedia, onSelect, selectable = fals
                     {media.map((item) => (
                         <div
                             key={item.id}
-                            className={`glass rounded-xl overflow-hidden group relative border transition-all ${selectable ? "cursor-pointer hover:ring-2 hover:ring-primary" : ""
-                                }`}
-                            onClick={() => selectable && onSelect && onSelect(item.public_url)}
+                            className={`glass rounded-xl overflow-hidden group relative border transition-all cursor-pointer hover:ring-2 hover:ring-primary`}
+                            onClick={() => handleCopy(item)}
+                            title={selectable ? "Select image" : "Click to copy markdown snippet"}
                         >
+                            {/* Copy Success Overlay */}
+                            {copiedId === item.id && (
+                                <div className="absolute inset-0 bg-primary/80 z-20 flex items-center justify-center backdrop-blur-sm">
+                                    <span className="text-primary-foreground text-xs font-bold text-center px-2">Copied!</span>
+                                </div>
+                            )}
+
                             {/* Actions (Delete) */}
                             {!selectable && (
                                 <button
                                     onClick={(e) => { e.stopPropagation(); handleDelete(item.id, item.storage_path); }}
-                                    className="absolute top-1 right-1 z-10 p-1 bg-red-500 text-white rounded opacity-0 group-hover:opacity-100 transition-opacity"
+                                    className="absolute top-1 right-1 z-10 p-1 bg-red-500/90 text-white rounded opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-600"
                                     title="Delete"
                                 >
                                     <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 6h18" /><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" /><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" /></svg>
@@ -124,9 +163,8 @@ export default function MediaLibrary({ initialMedia, onSelect, selectable = fals
                                     <span className="text-3xl">📄</span>
                                 </div>
                             )}
-                            <div className="p-2">
-                                <p className="text-[10px] font-medium truncate" title={item.original_name}>{item.original_name}</p>
-                                {/* <p className="text-[9px] text-muted-foreground">{item.folder}</p> */}
+                            <div className="p-2 border-t border-border bg-surface/30">
+                                <p className="text-[10px] font-medium text-muted-foreground truncate" title={item.original_name}>{item.original_name}</p>
                             </div>
                         </div>
                     ))}

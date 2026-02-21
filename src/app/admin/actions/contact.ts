@@ -57,3 +57,31 @@ export async function submitContactForm(formData: FormData) {
         return { success: false, error: "Failed to send message. Please try again." };
     }
 }
+
+export async function replyToContact(id: string, email: string, name: string, replyMessage: string) {
+    const supabase = await createClient();
+
+    try {
+        if (process.env.RESEND_API_KEY) {
+            const resend = new Resend(process.env.RESEND_API_KEY);
+            const adminEmail = process.env.ADMIN_EMAIL || "admin@jyotirmoyb.com";
+
+            await resend.emails.send({
+                from: `Jyotirmoy Bhowmik <contact@jyotirmoyb.com>`,
+                to: email,
+                replyTo: adminEmail,
+                subject: `Re: Your message to Jyotirmoy`,
+                html: `<p>Hi ${name},</p><p>${replyMessage.replace(/\n/g, '<br/>')}</p><br><p>Best regards,<br>Jyotirmoy Bhowmik</p>`,
+            });
+        }
+
+        // Update status in DB
+        await supabase.from("contact_submissions").update({ status: 'replied' }).eq("id", id);
+
+        revalidatePath("/admin/contacts");
+        return { success: true };
+    } catch (error: any) {
+        console.error("Reply error:", error);
+        return { success: false, error: "Failed to send reply." };
+    }
+}

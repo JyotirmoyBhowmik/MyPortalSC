@@ -22,6 +22,16 @@ const sidebarSections = [
                 ),
             },
             {
+                href: "/admin/timeline",
+                label: "Timeline",
+                icon: (
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                        <circle cx="12" cy="12" r="9" strokeWidth="1.5" />
+                    </svg>
+                ),
+            },
+            {
                 href: "/admin/projects",
                 label: "Projects",
                 icon: (
