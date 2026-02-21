@@ -37,7 +37,7 @@ function executeAction(actionName: string, args?: any) {
             document.documentElement.style.setProperty('--foreground', '#fff');
             break;
         case "highlight_code": {
-            const target = args?.target || "juniper";
+            const target = args?.target || "infrastructure";
             const el = document.getElementById(`code-${target}`) || document.getElementById(target) || document.querySelector('[data-section="tech"]') || document.querySelector('.card:first-of-type');
             if (el) {
                 el.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -226,7 +226,7 @@ export default function VoiceWidget() {
                 model: model,
                 config: {
                     responseModalities: [Modality.AUDIO],
-                    systemInstruction: "You are Jyotirmoy's Digital Voice Twin. Respond in high-fidelity audio. If asked to change the theme, call the set_sunset_theme tool. If discussing Juniper switches, call highlight_code with target 'juniper'. Start by briefly introducing yourself as Jyotirmoy's AI representative.",
+                    systemInstruction: "You are Jyotirmoy's Digital Voice Twin. Respond in high-fidelity audio. If asked to change the theme, call the set_sunset_theme tool. If discussing Cloud or SCADA architecture, call highlight_code with target 'infrastructure'. Start by briefly introducing yourself as Jyotirmoy's AI representative.",
                     tools: [{
                         functionDeclarations: [
                             {

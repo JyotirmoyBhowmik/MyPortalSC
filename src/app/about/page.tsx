@@ -39,7 +39,7 @@ const experience = [
         period: "Sep 2016 – Present",
         description:
             "Lead infrastructure operations and project delivery for enterprise Data Center, Disaster Recovery, ICS/SCADA and SAP ERP environments; manage vendors and coordinate global project teams to align technology outcomes with business objectives.\n\n• Own end-to-end infrastructure delivery and operations across data center, DR, server platforms, and network/security services.\n• Drive cloud modernization—migrated enterprise productivity to Microsoft 365 (E3/E5) with SharePoint/OneDrive.\n• Modernized security posture with Zscaler SASE, replacing legacy proxy/VPN.\n• Led DR migration from traditional to hybrid virtual design with landing-zone approach.\n• Deployed 30+ RPA bots across IT service desk and finance/reporting processes.\n• Built Tableau/Power BI dashboards for sales, inventory, and performance reporting.\n• Delivered IT/OT connectivity improvements for SCADA environments and sustainability initiatives.",
-        techEnv: "AWS; Azure; Microsoft 365; VMware; Hyper-V; RHEL; Windows Server; Cisco/Juniper; Palo Alto/Fortinet/Check Point; Zscaler; Commvault; HPE StoreOnce; Tableau; Power BI; UiPath; Zabbix",
+        techEnv: "AWS; Azure; Microsoft 365; VMware; Hyper-V; RHEL; Windows Server; Cisco; Palo Alto/Fortinet/Check Point; Zscaler SASE; Commvault; HPE StoreOnce; Tableau; Power BI; UiPath; Zabbix",
     },
     {
         role: "Senior Engineer – IT Infrastructure & System Integration",

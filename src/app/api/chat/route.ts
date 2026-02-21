@@ -23,8 +23,8 @@ const MY_REPLIES: Record<string, string> = {
     // SKILLS — Technical competencies
     "SKILLS":
         "My core skills include:\n" +
-        "• Data Center Design & Management (Tier III+)\n" +
-        "• Network Architecture — Juniper EX/SRX, Cisco, Palo Alto\n" +
+        "• Data Center Design & Management (Tier III+, HPE StoreOnce)\n" +
+        "• Network Architecture — Cisco, Palo Alto, Zscaler SASE\n" +
         "• Cloud Platforms — AWS, Azure, Microsoft 365\n" +
         "• OT/SCADA Security — IEC 62443 compliance\n" +
         "• Disaster Recovery & Business Continuity\n" +
@@ -43,18 +43,18 @@ const MY_REPLIES: Record<string, string> = {
 
     // PROJECTS — Key initiatives
     "PROJECTS":
-        "Key Projects:\n" +
-        "🚀 Juniper EX2300 Network Rollout — Enterprise-wide L2/L3 switching deployment\n" +
-        "🚀 SCADA/OT Security Implementation — IEC 62443 compliant segmentation\n" +
-        "🚀 Azure Landing Zone — Cloud migration program for hybrid workloads\n" +
-        "🚀 SAP Infrastructure Deployment — High-availability SAP Basis setup\n" +
-        "🚀 Disaster Recovery — Multi-site DR architecture with RPO < 15 min",
+        "Key Projects Showcase from my 88+ Strategic Initiatives:\n" +
+        "🚀 Cloud Landing Zone Architecture Design\n" +
+        "🚀 Industrial OT Network Segmentation (IEC 62443)\n" +
+        "🚀 AI-Driven Energy Analytics & Automation\n" +
+        "🚀 Disaster Recovery Geo-Redundancy Migration\n" +
+        "🚀 Unified Enterprise Wi-Fi 6 Rollout",
 
-    // TECH — Deep-dive Juniper / infrastructure specifics
+    // TECH — Deep-dive infrastructure specifics
     "TECH":
-        "On the networking side, I specialize in Juniper EX2300/EX4300 configurations — from VLAN trunking, LACP aggregation, " +
-        "to OSPF/BGP routing policies. I also design Palo Alto firewall rule sets for OT network segmentation (Purdue Model). " +
-        "Ask me about specific CLI configs and I can walk you through them!",
+        "I specialize in enterprise architecture—from Cloud workloads (AWS/Azure ExpressRoute), Microsoft 365 migrations, " +
+        "to OSPF/BGP routing policies and SASE solutions like Zscaler. I also design Palo Alto firewall rule sets for OT network segmentation (Purdue Model). " +
+        "Ask me about specific enterprise infrastructure or security configurations!",
 
     // CONTACT — How to reach me
     "CONTACT":
@@ -77,9 +77,9 @@ CONTEXT (CACHED):
 Name: Jyotirmoy Bhowmik
 Role: Lead – IT Infrastructure at Surya Nepal Pvt. Ltd. (JTI Group)
 Experience: 15+ years across India and Nepal
-Specialties: Data Centers, Cloud (AWS/Azure/M365), OT/SCADA Security (IEC 62443), Enterprise IT, Juniper networking, SAP infrastructure
+Specialties: Data Centers, Cloud (AWS/Azure/M365), OT/SCADA Security (IEC 62443), Enterprise IT, Cisco/Zscaler networking, SAP infrastructure
 Certifications: PMP-aligned, various cloud and networking certifications
-Key Projects: Juniper EX2300 rollout, SCADA/OT security, Azure Landing Zones, SAP HA deployment, multi-site DR
+Key Projects: Cloud Landing Zone Architecture Design, Industrial OT Network Segmentation, Disaster Recovery Geo-Redundancy
 
 TASK:
 Analyze the user query. Classify it into exactly ONE of these categories:
@@ -90,8 +90,8 @@ PRIORITY RULES:
 2. If asking about who Jyotirmoy is, bio, background → ABOUT
 3. If asking about technical skills, certifications, competencies → SKILLS
 4. If asking about work history, career, companies, years → EXPERIENCE
-5. If asking about specific projects, initiatives, deployments → PROJECTS
-6. If asking about Juniper configs, networking details, infrastructure specifics → TECH
+5. If asking about specific projects, initiatives, deployments, or the 88 initiatives → PROJECTS
+6. If asking about networking details, cloud specs, or infrastructure design → TECH
 7. If asking how to reach, contact, connect → CONTACT
 8. Everything else → OTHER
 

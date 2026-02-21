@@ -33,7 +33,7 @@ function executeAction(actionName: string, args?: any) {
             document.documentElement.style.setProperty('--foreground', '#fff');
             break;
         case "highlight_code": {
-            const target = args?.target || "juniper";
+            const target = args?.target || "infrastructure";
             const el = document.getElementById(`code-${target}`) || document.getElementById(target) || document.querySelector('[data-section="tech"]');
             if (el) {
                 el.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -226,7 +226,7 @@ export default function VoiceWidget() {
                             },
                             {
                                 name: "highlight_code",
-                                description: "Scrolls to Juniper or Cloud code snippets.",
+                                description: "Scrolls to Cloud or SCADA architecture code snippets.",
                                 parameters: {
                                     type: "OBJECT" as any,
                                     properties: { target: { type: "STRING" as any } },
