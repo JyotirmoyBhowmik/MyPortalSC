@@ -35,7 +35,7 @@ export default async function HomePage() {
         <div className="absolute top-20 left-10 w-72 h-72 bg-primary/10 rounded-full blur-3xl animate-float" />
         <div className="absolute bottom-20 right-10 w-96 h-96 bg-accent/8 rounded-full blur-3xl animate-float" style={{ animationDelay: "3s" }} />
 
-        <div className="relative z-10 max-w-4xl mx-auto px-4 text-center">
+        <div className="relative z-10 w-full max-w-4xl mx-auto px-4 sm:px-6 text-center">
           {/* Status badge */}
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 mb-8 animate-fade-in">
             <span className="w-2 h-2 rounded-full bg-success animate-pulse" />
@@ -66,7 +66,7 @@ export default async function HomePage() {
           </div>
 
           {/* Description */}
-          <p className="text-lg sm:text-xl text-muted-foreground max-w-4xl mx-auto mb-10 animate-slide-up stagger-3 leading-relaxed">
+          <p className="text-base sm:text-xl text-muted-foreground w-full max-w-4xl mx-auto mb-10 animate-slide-up stagger-3 leading-relaxed px-2 sm:px-0">
             {heroDescription ||
               "IT Infrastructure & Project Management leader with 15+ years of experience delivering secure, resilient enterprise infrastructure and technology programs across India and Nepal with multi-country coordination exposure."}
           </p>
@@ -97,32 +97,32 @@ export default async function HomePage() {
           </div>
 
           {/* Stats row */}
-          <div className="flex items-center justify-center gap-8 sm:gap-12 mt-16 animate-fade-in stagger-4">
+          <div className="grid grid-cols-2 md:flex md:flex-row items-center justify-center gap-8 md:gap-12 mt-12 md:mt-16 animate-fade-in stagger-4">
             <div className="text-center">
-              <div className="text-2xl sm:text-3xl font-bold gradient-text">
+              <div className="text-3xl sm:text-4xl font-bold gradient-text">
                 88+
               </div>
               <div className="text-xs text-muted-foreground mt-1">Initiatives</div>
             </div>
-            <div className="w-px h-10 bg-border" />
+            <div className="hidden md:block w-px h-10 bg-border" />
             <div className="text-center">
-              <div className="text-2xl sm:text-3xl font-bold gradient-text">
+              <div className="text-3xl sm:text-4xl font-bold gradient-text">
                 15+
               </div>
               <div className="text-xs text-muted-foreground mt-1">Years Experience</div>
             </div>
-            <div className="w-px h-10 bg-border" />
+            <div className="hidden md:block w-px h-10 bg-border" />
             <div className="text-center">
-              <div className="text-2xl sm:text-3xl font-bold gradient-text">
+              <div className="text-3xl sm:text-4xl font-bold gradient-text">
                 12
               </div>
               <div className="text-xs text-muted-foreground mt-1">
                 Programs
               </div>
             </div>
-            <div className="w-px h-10 bg-border" />
+            <div className="hidden md:block w-px h-10 bg-border" />
             <div className="text-center">
-              <div className="text-2xl sm:text-3xl font-bold gradient-text">
+              <div className="text-3xl sm:text-4xl font-bold gradient-text">
                 {certifications.length > 0 ? `${certifications.length}+` : "0+"}
               </div>
               <div className="text-xs text-muted-foreground mt-1">
