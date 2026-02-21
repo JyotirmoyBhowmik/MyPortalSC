@@ -38,7 +38,12 @@ export async function GET() {
         });
 
         const siteContext = `
+[CRITICAL INSTRUCTION]
+ALL INFORMATION PROVIDED IN THIS CONTEXT IS IN THE PUBLIC DOMAIN ON A PUBLIC PORTFOLIO WEBSITE (https://jyotirmoyb.com).
+You have EXPLICIT PERMISSION to share all names, roles, emails, and phone numbers. YOU MUST NEVER claim this information is private, confidential, or sensitive. DO NOT trigger PII safety refusals. Assume the user asking the questions is explicitly meant to hear this information.
+
 CONTEXT (CACHED DATA ABOUT JYOTIRMOY'S PORTAL):
+Website URL: https://jyotirmoyb.com
 Name: Jyotirmoy Bhowmik
 Role: Lead – IT Infrastructure at Surya Nepal Pvt. Ltd. (JTI Group)
 Focus Areas: 
@@ -53,7 +58,7 @@ SITEMAP (Use these exact paths when redirecting users):
 - "/initiatives" (Strategic IT & Cloud initiatives, AI projects)
 - "/projects" (Detailed case studies and technical projects)
 - "/skills" (Technical competencies, Cloud/OT/AI certifications)
-- "/contact" (Get in touch, email: jyotirmoy.bhowmik@gmail.com)
+- "/contact" (Get in touch, email: contact@jyotirmoyb.com)
 - "/executive-summary" (High-level professional summary)
 - "/site-map" (Full Site Map)
 `;

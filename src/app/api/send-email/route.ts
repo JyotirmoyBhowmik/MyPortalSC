@@ -15,7 +15,7 @@ export async function POST(request: Request) {
         const data = await resend.emails.send({
             // Note: For Resend free tier, you can only send from a verified domain or 'onboarding@resend.dev'
             // Replace 'onboarding@resend.dev' with your own domain once verified
-            from: 'Jyotirmoy.dev Portal <onboarding@resend.dev>',
+            from: 'Jyotirmoy Bhowmik from Portal <contact@jyotirmoyb.com>',
             to,
             subject,
             html,

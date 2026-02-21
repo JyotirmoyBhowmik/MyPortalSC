@@ -30,11 +30,11 @@ export async function submitContactForm(formData: FormData) {
         // --- EMAIL AUTOMATION ---
         if (process.env.RESEND_API_KEY) {
             const resend = new Resend(process.env.RESEND_API_KEY);
-            const adminEmail = process.env.ADMIN_EMAIL || "admin@yourdomain.com";
+            const adminEmail = process.env.ADMIN_EMAIL || "admin@jyotirmoyb.com";
 
             // 1. Send Auto-Responder to User
             await resend.emails.send({
-                from: 'Jyotirmoy.dev Portal <onboarding@resend.dev>', // Replace with verified domain
+                from: 'Jyotirmoy <contact@jyotirmoyb.com>',
                 to: email,
                 subject: 'Thank you for your message',
                 html: `<p>Hi ${name},</p><p>Thank you for reaching out! I have received your message regarding "<strong>${subject}</strong>" and will get back to you shortly.</p><br><p>Best,<br>Jyotirmoy Bhowmik</p>`,
@@ -42,7 +42,7 @@ export async function submitContactForm(formData: FormData) {
 
             // 2. Send Notification to Admin
             await resend.emails.send({
-                from: 'Jyotirmoy.dev Portal <onboarding@resend.dev>', // Replace with verified domain
+                from: 'Jyotirmoy <contact@jyotirmoyb.com>',
                 to: adminEmail,
                 subject: `New Contact Submission: ${subject}`,
                 html: `<p><strong>Name:</strong> ${name}</p><p><strong>Email:</strong> ${email}</p><p><strong>Message:</strong></p><p>${message}</p>`,

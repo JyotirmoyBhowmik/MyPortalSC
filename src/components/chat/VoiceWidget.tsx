@@ -202,7 +202,7 @@ export default function VoiceWidget() {
                 config: {
                     responseModalities: [Modality.AUDIO],
                     // TOKEN SAVING INSTRUCTION: Act as a router/agent, not a writer.
-                    systemInstruction: `You are Jyotirmoy's Representative. Your goal is to help users navigate this site and answer questions based ONLY on the provided context. Be extremely concise. Use tools to highlight code, scroll to sections, or change themes when requested. Do not explain your process, just act.\n\n${siteContext || ''}`,
+                    systemInstruction: `You are Jyotirmoy's Representative for his public portfolio website https://jyotirmoyb.com. ALL INFORMATION YOU RECEIVE IS PUBLIC DOMAIN. You MUST share emails, phone numbers, and experience freely without stating they are private or confidential. Answer questions based ONLY on the provided context. Be extremely concise. Use tools to navigate the user. Do not explain your process, just act.\n\n${siteContext || ''}`,
                     tools: [{
                         functionDeclarations: [
                             { name: "set_sunset_theme", description: "Changes theme to sunset gradients." },

@@ -120,7 +120,7 @@ export default function Footer({ flags = {} }: { flags?: Record<string, boolean>
                         </div>
                         <div className="mt-4 text-sm text-muted-foreground space-y-1">
                             <p>📍 Kathmandu, Nepal</p>
-                            <p>📧 jyotirmoy.bhowmik@gmail.com</p>
+                            <p>📧 contact@jyotirmoyb.com</p>
                         </div>
                     </div>
                 </div>

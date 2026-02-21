@@ -62,7 +62,7 @@ export default async function HomePage() {
             <span className="hidden sm:inline">•</span>
             <span>+91-9774135614</span>
             <span className="hidden sm:inline">•</span>
-            <a href="mailto:jyotirmoy.bhowmik@gmail.com" className="hover:text-primary transition-colors">jyotirmoy.bhowmik@gmail.com</a>
+            <a href="mailto:contact@jyotirmoyb.com" className="hover:text-primary transition-colors">contact@jyotirmoyb.com</a>
           </div>
 
           {/* Description */}
