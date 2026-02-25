@@ -2,10 +2,37 @@
 
 import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
+import { headers } from "next/headers";
 import { Resend } from "resend";
 import { getFeatureFlag } from "@/lib/data/settings";
 
+// --- Simple in-memory rate limiter (per-instance) ---
+const rateLimitMap = new Map<string, { count: number; resetTime: number }>();
+
+function checkRateLimit(ip: string): boolean {
+    const now = Date.now();
+    const limit = 5; // Max 5 submissions
+    const windowMs = 15 * 60 * 1000; // 15 minutes window
+
+    const record = rateLimitMap.get(ip);
+    if (!record || record.resetTime < now) {
+        rateLimitMap.set(ip, { count: 1, resetTime: now + windowMs });
+        return true;
+    }
+    if (record.count >= limit) return false;
+    record.count++;
+    return true;
+}
+// ----------------------------------------------------
+
 export async function submitContactForm(formData: FormData) {
+    const headersList = await headers();
+    const ip = headersList.get("x-forwarded-for") || "unknown";
+
+    if (!checkRateLimit(ip)) {
+        return { success: false, error: "Too many submissions. Please try again later." };
+    }
+
     const isContactEnabled = await getFeatureFlag("feature_contact_crm");
     if (!isContactEnabled) {
         return { success: false, error: "Contact submissions are currently disabled." };
@@ -56,30 +83,35 @@ export async function submitContactForm(formData: FormData) {
 
         // --- EMAIL AUTOMATION ---
         if (process.env.RESEND_API_KEY) {
-            const resend = new Resend(process.env.RESEND_API_KEY);
-            const adminEmail = process.env.ADMIN_EMAIL || "admin@jyotirmoyb.com";
+            try {
+                const resend = new Resend(process.env.RESEND_API_KEY);
+                const adminEmail = process.env.ADMIN_EMAIL || "admin@jyotirmoyb.com";
 
-            // 1. Send Auto-Responder to User
-            await resend.emails.send({
-                from: 'Jyotirmoy <contact@jyotirmoyb.com>',
-                to: email,
-                subject: 'Thank you for your message',
-                html: `<p>Hi ${name},</p><p>Thank you for reaching out! I have received your message regarding "<strong>${subject}</strong>" and will get back to you shortly.</p><br><p>Best,<br>Jyotirmoy Bhowmik</p>`,
-            });
+                // 1. Send Auto-Responder to User
+                await resend.emails.send({
+                    from: 'Jyotirmoy <onboarding@resend.dev>', // Use onboarding@resend.dev for free tier testing
+                    to: email,
+                    subject: 'Thank you for your message',
+                    html: `<p>Hi ${name},</p><p>Thank you for reaching out! I have received your message regarding "<strong>${subject}</strong>" and will get back to you shortly.</p><br><p>Best,<br>Jyotirmoy Bhowmik</p>`,
+                });
 
-            // 2. Send Notification to Admin
-            await resend.emails.send({
-                from: 'Jyotirmoy <contact@jyotirmoyb.com>',
-                to: adminEmail,
-                subject: `New Contact Submission: ${subject}`,
-                html: `<p><strong>Name:</strong> ${name}</p><p><strong>Email:</strong> ${email}</p><p><strong>Message:</strong></p><p>${message}</p>`,
-            });
+                // 2. Send Notification to Admin
+                await resend.emails.send({
+                    from: 'Jyotirmoy <onboarding@resend.dev>',
+                    to: adminEmail,
+                    subject: `New Contact Submission: ${subject}`,
+                    html: `<p><strong>Name:</strong> ${name}</p><p><strong>Email:</strong> ${email}</p><p><strong>Message:</strong></p><p>${message}</p>`,
+                });
+            } catch (emailError) {
+                console.error("Non-fatal: Failed to send automated emails:", emailError);
+                // Do not throw; we still want to save the submission to the database!
+            }
         }
         // ------------------------
 
         revalidatePath("/admin/contacts");
         return { success: true, message: "Message sent successfully!" };
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error("Contact submission error:", error);
         return { success: false, error: "Failed to send message. Please try again." };
     }
@@ -95,16 +127,23 @@ export async function replyToContact(id: string, email: string, name: string, re
 
     try {
         if (process.env.RESEND_API_KEY) {
-            const resend = new Resend(process.env.RESEND_API_KEY);
-            const adminEmail = process.env.ADMIN_EMAIL || "admin@jyotirmoyb.com";
+            try {
+                const resend = new Resend(process.env.RESEND_API_KEY);
+                const adminEmail = process.env.ADMIN_EMAIL || "admin@jyotirmoyb.com";
 
-            await resend.emails.send({
-                from: `Jyotirmoy Bhowmik <contact@jyotirmoyb.com>`,
-                to: email,
-                replyTo: adminEmail,
-                subject: `Re: Your message to Jyotirmoy`,
-                html: `<p>Hi ${name},</p><p>${replyMessage.replace(/\n/g, '<br/>')}</p><br><p>Best regards,<br>Jyotirmoy Bhowmik</p>`,
-            });
+                await resend.emails.send({
+                    from: `Jyotirmoy Bhowmik <onboarding@resend.dev>`, // Use onboarding@resend.dev for free tier
+                    to: email,
+                    replyTo: adminEmail,
+                    subject: `Re: Your message to Jyotirmoy`,
+                    html: `<p>Hi ${name},</p><p>${replyMessage.replace(/\n/g, '<br/>')}</p><br><p>Best regards,<br>Jyotirmoy Bhowmik</p>`,
+                });
+            } catch (emailError) {
+                console.error("Non-fatal: Failed to send reply email:", emailError);
+                // Still update the DB status even if email fails, or maybe we SHOULD fail if it's an explicit reply?
+                // Let's allow it to fail the reply action if the email didn't actually send, so the admin knows.
+                return { success: false, error: "Failed to send reply email (Check Resend API key or domain limits)." };
+            }
         }
 
         // Update status in DB
@@ -112,7 +151,7 @@ export async function replyToContact(id: string, email: string, name: string, re
 
         revalidatePath("/admin/contacts");
         return { success: true };
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error("Reply error:", error);
         return { success: false, error: "Failed to send reply." };
     }

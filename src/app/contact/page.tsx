@@ -1,6 +1,10 @@
 import type { Metadata } from "next";
 import { getPageContent, getContentField } from "@/lib/data/content";
-import DeliveryGlobe from "@/components/visuals/DeliveryGlobe";
+import dynamic from "next/dynamic";
+
+const DeliveryGlobe = dynamic(() => import("@/components/visuals/DeliveryGlobe"), {
+    loading: () => <div className="w-full h-[300px] animate-pulse bg-surface/20 rounded-full blur-2xl" />
+});
 import ContactForm from "@/components/forms/ContactForm";
 
 export const revalidate = 60;

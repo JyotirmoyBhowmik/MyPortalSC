@@ -2,6 +2,7 @@
    Site Settings / Feature Flags — Supabase-backed
    ───────────────────────────────────────────────────── */
 import { createClient } from "@/lib/supabase/server";
+import { cache } from "react";
 
 export interface SiteSetting {
     id: string;
@@ -16,7 +17,7 @@ export interface SiteSetting {
 
 /* ─── Read ─── */
 
-export async function getAllSettings(): Promise<SiteSetting[]> {
+export const getAllSettings = cache(async function getAllSettings(): Promise<SiteSetting[]> {
     try {
         const supabase = await createClient();
         const { data, error } = await supabase
@@ -33,18 +34,12 @@ export async function getAllSettings(): Promise<SiteSetting[]> {
         console.error("Critical error in getAllSettings:", e);
         return [];
     }
-}
+});
 
 export async function getSettingsByCategory(category: string): Promise<SiteSetting[]> {
     try {
-        const supabase = await createClient();
-        const { data, error } = await supabase
-            .from("site_settings")
-            .select("*")
-            .eq("category", category)
-            .order("key", { ascending: true });
-        if (error) return [];
-        return (data ?? []) as SiteSetting[];
+        const allSettings = await getAllSettings();
+        return allSettings.filter(s => s.category === category);
     } catch (e) {
         return [];
     }
@@ -52,18 +47,8 @@ export async function getSettingsByCategory(category: string): Promise<SiteSetti
 
 export async function getFeatureFlag(key: string): Promise<boolean> {
     try {
-        const supabase = await createClient();
-        const { data, error } = await supabase
-            .from("site_settings")
-            .select("value")
-            .eq("key", key)
-            .single();
-        if (error || !data) return false;
-        // value is stored as JSONB — could be boolean true/false or string "true"/"false"
-        const val = data.value;
-        if (typeof val === "boolean") return val;
-        if (val === "true" || val === true) return true;
-        return false;
+        const flags = await getFeatureFlags();
+        return !!flags[key];
     } catch (e) {
         return false;
     }
@@ -71,14 +56,8 @@ export async function getFeatureFlag(key: string): Promise<boolean> {
 
 export async function getSetting(key: string): Promise<unknown> {
     try {
-        const supabase = await createClient();
-        const { data, error } = await supabase
-            .from("site_settings")
-            .select("value")
-            .eq("key", key)
-            .single();
-        if (error || !data) return null;
-        return data.value;
+        const settingsMap = await getSiteSettingsMap();
+        return settingsMap[key] ?? null;
     } catch (e) {
         return null;
     }

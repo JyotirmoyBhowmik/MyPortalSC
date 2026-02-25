@@ -5,7 +5,9 @@ import { getActiveCertifications } from "@/lib/data/certifications";
 import { getPageContent, getContentField } from "@/lib/data/content";
 import { getFeatureFlag } from "@/lib/data/settings";
 import Badge from "@/components/ui/Badge";
-import ParticleBackground from "@/components/animations/ParticleBackground";
+import dynamic from "next/dynamic";
+
+const ParticleBackground = dynamic(() => import("@/components/animations/ParticleBackground"));
 
 
 export const revalidate = 60;
