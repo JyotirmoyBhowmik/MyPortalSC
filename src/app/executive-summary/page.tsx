@@ -1,7 +1,9 @@
 import { createClient } from "@/lib/supabase/server";
 import ExecutiveSummaryContent from "@/components/executive/ExecutiveSummaryContent";
+import { getFeatureFlag } from "@/lib/data/settings";
+import { notFound } from "next/navigation";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 60;
 
 export const metadata = {
     title: "Executive Summary | Jyotirmoy Bhowmik",
@@ -9,6 +11,11 @@ export const metadata = {
 };
 
 export default async function ExecutiveSummaryPage() {
+    const isEnabled = await getFeatureFlag("feature_executive_summary");
+    if (!isEnabled) notFound();
+
+    const allowPdf = await getFeatureFlag("feature_pdf_export");
+
     const supabase = await createClient();
 
     const [kpisRes, testimonialsRes] = await Promise.all([
@@ -22,6 +29,7 @@ export default async function ExecutiveSummaryPage() {
                 <ExecutiveSummaryContent
                     kpis={kpisRes.data ?? []}
                     testimonials={testimonialsRes.data ?? []}
+                    allowPdf={allowPdf}
                 />
             </div>
         </main>

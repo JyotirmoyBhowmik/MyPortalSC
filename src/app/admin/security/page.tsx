@@ -1,14 +1,19 @@
 import { createClient } from "@/lib/supabase/server";
+import { getFeatureFlag } from "@/lib/data/settings";
 
 export const dynamic = "force-dynamic";
 
 export default async function AdminSecurityPage() {
     const supabase = await createClient();
-    const { data: sessions } = await supabase
-        .from("user_sessions")
-        .select("*")
-        .order("last_active", { ascending: false })
-        .limit(20);
+    const showSessions = await getFeatureFlag("feature_session_management");
+
+    const { data: sessions } = showSessions
+        ? await supabase
+            .from("user_sessions")
+            .select("*")
+            .order("last_active", { ascending: false })
+            .limit(20)
+        : { data: null };
 
     return (
         <div>
@@ -51,38 +56,40 @@ export default async function AdminSecurityPage() {
             </div>
 
             {/* Active Sessions */}
-            <div className="glass rounded-xl overflow-hidden">
-                <div className="px-4 py-3 bg-surface/50">
-                    <h2 className="text-sm font-bold">Active Sessions</h2>
-                </div>
-                <table className="w-full">
-                    <thead className="bg-surface/30">
-                        <tr>
-                            <th className="text-left text-xs font-semibold text-muted-foreground px-4 py-2">User</th>
-                            <th className="text-left text-xs font-semibold text-muted-foreground px-4 py-2 hidden md:table-cell">Device</th>
-                            <th className="text-left text-xs font-semibold text-muted-foreground px-4 py-2">Last Active</th>
-                            <th className="text-left text-xs font-semibold text-muted-foreground px-4 py-2">Status</th>
-                        </tr>
-                    </thead>
-                    <tbody className="divide-y divide-border/50">
-                        {sessions?.map((s) => (
-                            <tr key={s.id} className="hover:bg-surface/30 transition-colors">
-                                <td className="px-4 py-2 text-sm">{s.user_id}</td>
-                                <td className="px-4 py-2 text-xs text-muted-foreground hidden md:table-cell truncate max-w-xs">{s.device_info || s.user_agent || "—"}</td>
-                                <td className="px-4 py-2 text-xs text-muted-foreground">{new Date(s.last_active).toLocaleString()}</td>
-                                <td className="px-4 py-2">
-                                    <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded ${s.is_active ? "bg-green-500/15 text-green-400" : "bg-gray-500/15 text-gray-400"}`}>
-                                        {s.is_active ? "Active" : "Expired"}
-                                    </span>
-                                </td>
+            {showSessions && (
+                <div className="glass rounded-xl overflow-hidden">
+                    <div className="px-4 py-3 bg-surface/50">
+                        <h2 className="text-sm font-bold">Active Sessions</h2>
+                    </div>
+                    <table className="w-full">
+                        <thead className="bg-surface/30">
+                            <tr>
+                                <th className="text-left text-xs font-semibold text-muted-foreground px-4 py-2">User</th>
+                                <th className="text-left text-xs font-semibold text-muted-foreground px-4 py-2 hidden md:table-cell">Device</th>
+                                <th className="text-left text-xs font-semibold text-muted-foreground px-4 py-2">Last Active</th>
+                                <th className="text-left text-xs font-semibold text-muted-foreground px-4 py-2">Status</th>
                             </tr>
-                        ))}
-                    </tbody>
-                </table>
-                {(!sessions || sessions.length === 0) && (
-                    <p className="text-sm text-muted-foreground text-center py-8">No active sessions.</p>
-                )}
-            </div>
+                        </thead>
+                        <tbody className="divide-y divide-border/50">
+                            {sessions?.map((s) => (
+                                <tr key={s.id} className="hover:bg-surface/30 transition-colors">
+                                    <td className="px-4 py-2 text-sm">{s.user_id}</td>
+                                    <td className="px-4 py-2 text-xs text-muted-foreground hidden md:table-cell truncate max-w-xs">{s.device_info || s.user_agent || "—"}</td>
+                                    <td className="px-4 py-2 text-xs text-muted-foreground">{new Date(s.last_active).toLocaleString()}</td>
+                                    <td className="px-4 py-2">
+                                        <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded ${s.is_active ? "bg-green-500/15 text-green-400" : "bg-gray-500/15 text-gray-400"}`}>
+                                            {s.is_active ? "Active" : "Expired"}
+                                        </span>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                    {(!sessions || sessions.length === 0) && (
+                        <p className="text-sm text-muted-foreground text-center py-8">No active sessions.</p>
+                    )}
+                </div>
+            )}
         </div>
     );
 }

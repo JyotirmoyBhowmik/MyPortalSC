@@ -75,8 +75,8 @@ export default function NavbarClassic({ flags = {} }: { flags?: Record<string, b
 
                     {/* CTA + Language + Theme + Mobile Toggle */}
                     <div className="flex items-center gap-2 shrink-0">
-                        <LanguageSwitcher />
-                        <ThemeSwitcher />
+                        {flags["feature_i18n"] !== false && <LanguageSwitcher />}
+                        {flags["feature_light_theme"] !== false && <ThemeSwitcher />}
                         <Link
                             href="/contact"
                             className="hidden sm:inline-flex items-center px-4 py-2 text-sm font-medium rounded-lg bg-primary text-primary-foreground hover:bg-primary-hover transition-all shadow-lg shadow-primary/20"

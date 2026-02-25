@@ -1,9 +1,14 @@
 import { createClient } from "@/lib/supabase/server";
 import AnalyticsCharts from "@/components/admin/AnalyticsCharts";
+import { getFeatureFlag } from "@/lib/data/settings";
+import { notFound } from "next/navigation";
 
 export const dynamic = "force-dynamic";
 
 export default async function AdminAnalyticsPage() {
+    const isEnabled = await getFeatureFlag("feature_analytics_dashboard");
+    if (!isEnabled) notFound();
+
     const supabase = await createClient();
 
     // Fetch up to 1000 recent events for charting (approx 30 days if low traffic)

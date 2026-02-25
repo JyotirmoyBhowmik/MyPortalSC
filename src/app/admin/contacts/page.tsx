@@ -1,9 +1,16 @@
 import { createClient } from "@/lib/supabase/server";
 import ContactsManager from "@/components/admin/ContactsManager";
+import { getFeatureFlag } from "@/lib/data/settings";
+import { notFound } from "next/navigation";
 
 export const dynamic = "force-dynamic";
 
 export default async function AdminContactsPage() {
+    const isEnabled = await getFeatureFlag("feature_contact_crm");
+    if (!isEnabled) notFound();
+
+    const showAnalytics = await getFeatureFlag("feature_contact_analytics");
+
     const supabase = await createClient();
     const { data: contacts } = await supabase
         .from("contact_submissions")
@@ -26,7 +33,7 @@ export default async function AdminContactsPage() {
                 </p>
             </div>
 
-            <ContactsManager contacts={contacts || []} />
+            <ContactsManager contacts={contacts || []} showAnalytics={showAnalytics} />
         </div>
     );
 }

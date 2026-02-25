@@ -1,10 +1,13 @@
 import InitiativesManager from "@/components/admin/InitiativesManager";
 import { getAllInitiativesAdmin, getAllPrograms } from "@/lib/data/initiatives";
+import { getFeatureFlag } from "@/lib/data/settings";
 
 export default async function AdminInitiativesPage() {
-    const [initiatives, programs] = await Promise.all([
+    const [initiatives, programs, allowDragDrop, showHeatmap] = await Promise.all([
         getAllInitiativesAdmin(),
         getAllPrograms(),
+        getFeatureFlag("feature_drag_drop"),
+        getFeatureFlag("feature_initiative_heatmap"),
     ]);
 
     return (
@@ -16,7 +19,7 @@ export default async function AdminInitiativesPage() {
                     initiatives across {programs.length} programs.
                 </p>
             </div>
-            <InitiativesManager initiatives={initiatives} programs={programs} />
+            <InitiativesManager initiatives={initiatives} programs={programs} allowDragDrop={allowDragDrop} showHeatmap={showHeatmap} />
         </div>
     );
 }

@@ -34,6 +34,7 @@ interface Testimonial {
 interface Props {
     kpis: KPI[];
     testimonials: Testimonial[];
+    allowPdf?: boolean;
 }
 
 /* ─── Animated Counter ─── */
@@ -81,7 +82,7 @@ function AnimatedCounter({ value, suffix }: { value: string; suffix: string | nu
 }
 
 /* ─── Main Component ─── */
-export default function ExecutiveSummaryContent({ kpis, testimonials }: Props) {
+export default function ExecutiveSummaryContent({ kpis, testimonials, allowPdf }: Props) {
     const { locale, t } = useTranslation();
 
     function getLabel(kpi: KPI): string {
@@ -99,7 +100,7 @@ export default function ExecutiveSummaryContent({ kpis, testimonials }: Props) {
 
     return (
         <>
-            <DownloadPdfButton contentRef={contentRef} />
+            {allowPdf && <DownloadPdfButton contentRef={contentRef} />}
             <div ref={contentRef} className="space-y-16 print:p-8 print:space-y-8">
                 {/* Hero */}
                 <section className="text-center py-16 md:py-24 print:py-8">

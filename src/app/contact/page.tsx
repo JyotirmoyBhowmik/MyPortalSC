@@ -3,7 +3,7 @@ import { getPageContent, getContentField } from "@/lib/data/content";
 import DeliveryGlobe from "@/components/visuals/DeliveryGlobe";
 import ContactForm from "@/components/forms/ContactForm";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 60;
 
 export const metadata: Metadata = {
     title: "Contact",

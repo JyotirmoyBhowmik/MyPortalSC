@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import { getProjectBySlug } from "@/lib/data/projects";
 import Badge from "@/components/ui/Badge";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 60;
 
 interface Props {
     params: Promise<{ slug: string }>;

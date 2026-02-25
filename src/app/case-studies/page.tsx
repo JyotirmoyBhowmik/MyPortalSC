@@ -1,7 +1,9 @@
 import { createClient } from "@/lib/supabase/server";
 import Link from "next/link";
+import { getFeatureFlag } from "@/lib/data/settings";
+import { notFound } from "next/navigation";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 60;
 
 export const metadata = {
     title: "Case Studies | Jyotirmoy Bhowmik",
@@ -9,6 +11,9 @@ export const metadata = {
 };
 
 export default async function CaseStudiesPage() {
+    const isEnabled = await getFeatureFlag("feature_case_studies");
+    if (!isEnabled) notFound();
+
     const supabase = await createClient();
     const { data: cases } = await supabase
         .from("case_studies")

@@ -6,6 +6,7 @@ import Badge from "@/components/ui/Badge";
 import Button from "@/components/ui/Button";
 import type { Project } from "@/lib/database.types";
 import { deleteProject, toggleProjectStatus, reorderProjects } from "@/app/admin/actions/projects";
+import { useConfirmDialog } from "@/components/ui/ConfirmDialog";
 
 import {
     DndContext,
@@ -24,9 +25,18 @@ import {
 } from "@dnd-kit/sortable";
 import { SortableRow } from "@/components/admin/SortableRow";
 
-export default function ProjectsTable({ projects: initialProjects }: { projects: Project[] }) {
+export default function ProjectsTable({
+    projects: initialProjects,
+    allowDragDrop = true,
+    allowBulkActions = false,
+}: {
+    projects: Project[];
+    allowDragDrop?: boolean;
+    allowBulkActions?: boolean;
+}) {
     const [deleting, setDeleting] = useState<string | null>(null);
     const [items, setItems] = useState(initialProjects);
+    const { dialog, confirm: confirmDelete } = useConfirmDialog();
 
     useEffect(() => {
         setItems(initialProjects);
@@ -40,6 +50,7 @@ export default function ProjectsTable({ projects: initialProjects }: { projects:
     );
 
     async function handleDragEnd(event: DragEndEvent) {
+        if (!allowDragDrop) return;
         const { active, over } = event;
 
         if (over && active.id !== over.id) {
@@ -67,15 +78,20 @@ export default function ProjectsTable({ projects: initialProjects }: { projects:
         }
     }
 
-    async function handleDelete(id: string) {
-        if (!confirm("Are you sure you want to delete this project?")) return;
-        setDeleting(id);
-        try {
-            await deleteProject(id);
-        } catch (err) {
-            alert(err instanceof Error ? err.message : "Failed to delete");
-        }
-        setDeleting(null);
+    function handleDelete(id: string) {
+        confirmDelete(
+            "This project will be permanently deleted. This action cannot be undone.",
+            async () => {
+                setDeleting(id);
+                try {
+                    await deleteProject(id);
+                } catch (err) {
+                    alert(err instanceof Error ? err.message : "Failed to delete");
+                }
+                setDeleting(null);
+            },
+            { title: "Delete Project?" }
+        );
     }
 
     async function handleToggleStatus(id: string, currentStatus: string) {
@@ -87,126 +103,140 @@ export default function ProjectsTable({ projects: initialProjects }: { projects:
     }
 
     return (
-        <div className="glass rounded-xl overflow-hidden">
-            <div className="overflow-x-auto">
-                <table className="w-full text-sm">
-                    <thead>
-                        <tr className="border-b border-border">
-                            <th className="text-left p-4 font-medium text-muted-foreground w-8"></th>
-                            <th className="text-left p-4 font-medium text-muted-foreground">
-                                Title
-                            </th>
-                            <th className="text-left p-4 font-medium text-muted-foreground">
-                                Status
-                            </th>
-                            <th className="text-left p-4 font-medium text-muted-foreground hidden md:table-cell">
-                                Technologies
-                            </th>
-                            <th className="text-left p-4 font-medium text-muted-foreground hidden lg:table-cell">
-                                Created
-                            </th>
-                            <th className="text-right p-4 font-medium text-muted-foreground">
-                                Actions
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <DndContext
-                            sensors={sensors}
-                            collisionDetection={closestCenter}
-                            onDragEnd={handleDragEnd}
-                        >
-                            <SortableContext items={items} strategy={verticalListSortingStrategy}>
-                                {items.map((project) => (
-                                    <SortableRow
-                                        key={project.id}
-                                        id={project.id}
-                                        className="border-b border-border/50 hover:bg-surface/50 transition-colors"
-                                    >
-                                        <td className="p-4">
-                                            <div>
-                                                <div className="font-medium">{project.title}</div>
-                                                <div className="text-xs text-muted-foreground">
-                                                    /{project.slug}
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td className="p-4">
-                                            <Badge
-                                                variant={
-                                                    project.status === "published"
-                                                        ? "success"
-                                                        : project.status === "draft"
-                                                            ? "warning"
-                                                            : "outline"
-                                                }
-                                            >
-                                                {project.status}
-                                            </Badge>
-                                        </td>
-                                        <td className="p-4 hidden md:table-cell">
-                                            <div className="flex flex-wrap gap-1">
-                                                {project.technologies?.slice(0, 3).map((t) => (
-                                                    <span
-                                                        key={t}
-                                                        className="text-xs px-1.5 py-0.5 rounded bg-muted text-muted-foreground"
-                                                    >
-                                                        {t}
-                                                    </span>
-                                                ))}
-                                            </div>
-                                        </td>
-                                        <td className="p-4 hidden lg:table-cell text-muted-foreground">
-                                            {new Date(project.created_at).toLocaleDateString()}
-                                        </td>
-                                        <td className="p-4">
-                                            <div className="flex items-center justify-end gap-2">
-                                                <button
-                                                    onClick={() =>
-                                                        handleToggleStatus(project.id, project.status)
-                                                    }
-                                                    className="text-xs px-2 py-1 rounded bg-surface hover:bg-surface-hover border border-border transition-colors"
-                                                    title={
-                                                        project.status === "published"
-                                                            ? "Unpublish"
-                                                            : "Publish"
-                                                    }
-                                                >
-                                                    {project.status === "published" ? "Unpublish" : "Publish"}
-                                                </button>
-                                                <Link
-                                                    href={`/admin/projects/${project.id}/edit`}
-                                                    className="text-xs px-2 py-1 rounded bg-primary/10 text-primary hover:bg-primary/20 transition-colors"
-                                                >
-                                                    Edit
-                                                </Link>
-                                                <Button
-                                                    variant="danger"
-                                                    size="sm"
-                                                    onClick={() => handleDelete(project.id)}
-                                                    isLoading={deleting === project.id}
-                                                >
-                                                    Delete
-                                                </Button>
-                                            </div>
-                                        </td>
-                                    </SortableRow>
-                                ))}
-                                {items.length === 0 && (
-                                    <tr>
-                                        <td
-                                            colSpan={6}
-                                            className="p-8 text-center text-muted-foreground"
-                                        >
-                                            No projects yet. Create your first one!
-                                        </td>
-                                    </tr>
+        <>
+            {dialog}
+            <div className="glass rounded-xl overflow-hidden">
+                <div className="overflow-x-auto">
+                    <table className="w-full text-sm">
+                        <thead>
+                            <tr className="border-b border-border">
+                                {allowBulkActions && (
+                                    <th className="text-left p-4 font-medium text-muted-foreground w-8">
+                                        <input type="checkbox" className="rounded border-border text-primary focus:ring-primary" />
+                                    </th>
                                 )}
-                            </SortableContext>
-                        </DndContext>
-                    </tbody>
-                </table>
+                                <th className="text-left p-4 font-medium text-muted-foreground">
+                                    Title
+                                </th>
+                                <th className="text-left p-4 font-medium text-muted-foreground">
+                                    Status
+                                </th>
+                                <th className="text-left p-4 font-medium text-muted-foreground hidden md:table-cell">
+                                    Technologies
+                                </th>
+                                <th className="text-left p-4 font-medium text-muted-foreground hidden lg:table-cell">
+                                    Created
+                                </th>
+                                <th className="text-right p-4 font-medium text-muted-foreground">
+                                    Actions
+                                </th>
+                                {allowDragDrop && <th className="text-left p-4 font-medium text-muted-foreground w-8"></th>}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <DndContext
+                                sensors={sensors}
+                                collisionDetection={closestCenter}
+                                onDragEnd={handleDragEnd}
+                            >
+                                <SortableContext items={items} strategy={verticalListSortingStrategy}>
+                                    {items.map((project) => (
+                                        <SortableRow
+                                            key={project.id}
+                                            id={project.id}
+                                            className="border-b border-border/50 hover:bg-surface/50 transition-colors"
+                                            disabled={!allowDragDrop}
+                                        >
+                                            {allowBulkActions && (
+                                                <td className="p-4">
+                                                    <input type="checkbox" className="rounded border-border text-primary focus:ring-primary" />
+                                                </td>
+                                            )}
+                                            <td className="p-4">
+                                                <div>
+                                                    <div className="font-medium">{project.title}</div>
+                                                    <div className="text-xs text-muted-foreground">
+                                                        /{project.slug}
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td className="p-4">
+                                                <Badge
+                                                    variant={
+                                                        project.status === "published"
+                                                            ? "success"
+                                                            : project.status === "draft"
+                                                                ? "warning"
+                                                                : "outline"
+                                                    }
+                                                >
+                                                    {project.status}
+                                                </Badge>
+                                            </td>
+                                            <td className="p-4 hidden md:table-cell">
+                                                <div className="flex flex-wrap gap-1">
+                                                    {project.technologies?.slice(0, 3).map((t) => (
+                                                        <span
+                                                            key={t}
+                                                            className="text-xs px-1.5 py-0.5 rounded bg-muted text-muted-foreground"
+                                                        >
+                                                            {t}
+                                                        </span>
+                                                    ))}
+                                                </div>
+                                            </td>
+                                            <td className="p-4 hidden lg:table-cell text-muted-foreground">
+                                                {new Date(project.created_at).toLocaleDateString()}
+                                            </td>
+                                            <td className="p-4">
+                                                <div className="flex items-center justify-end gap-2">
+                                                    <button
+                                                        onClick={() =>
+                                                            handleToggleStatus(project.id, project.status)
+                                                        }
+                                                        className="text-xs px-2 py-1 rounded bg-surface hover:bg-surface-hover border border-border transition-colors"
+                                                        title={
+                                                            project.status === "published"
+                                                                ? "Unpublish"
+                                                                : "Publish"
+                                                        }
+                                                    >
+                                                        {project.status === "published" ? "Unpublish" : "Publish"}
+                                                    </button>
+                                                    <Link
+                                                        href={`/admin/projects/${project.id}/edit`}
+                                                        className="text-xs px-2 py-1 rounded bg-primary/10 text-primary hover:bg-primary/20 transition-colors"
+                                                    >
+                                                        Edit
+                                                    </Link>
+                                                    <Button
+                                                        variant="danger"
+                                                        size="sm"
+                                                        onClick={() => handleDelete(project.id)}
+                                                        isLoading={deleting === project.id}
+                                                    >
+                                                        Delete
+                                                    </Button>
+                                                </div>
+                                            </td>
+                                        </SortableRow>
+                                    ))}
+                                    {items.length === 0 && (
+                                        <tr>
+                                            <td
+                                                colSpan={6}
+                                                className="p-8 text-center text-muted-foreground"
+                                            >
+                                                No projects yet. Create your first one!
+                                            </td>
+                                        </tr>
+                                    )}
+                                </SortableContext>
+                            </DndContext>
+                        </tbody>
+                    </table>
+                </div>
             </div>
-        </div>
+        </>
     );
 }

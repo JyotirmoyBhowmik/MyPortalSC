@@ -9,7 +9,7 @@ import { getAllAchievements } from "@/lib/data/achievements";
 import Link from "next/link";
 import VideoPlayer from "@/components/visuals/VideoPlayer";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 60;
 
 export const metadata: Metadata = {
     title: "About",

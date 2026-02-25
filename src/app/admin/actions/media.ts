@@ -2,8 +2,14 @@
 
 import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
+import { getFeatureFlag } from "@/lib/data/settings";
 
 export async function uploadMedia(formData: FormData) {
+    const isLibraryEnabled = await getFeatureFlag("feature_media_library");
+    if (!isLibraryEnabled) {
+        return { success: false, error: "Media Library is currently disabled." };
+    }
+
     const supabase = await createClient();
     const file = formData.get("file") as File;
 
@@ -59,6 +65,11 @@ export async function uploadMedia(formData: FormData) {
 }
 
 export async function registerMedia(formData: FormData) {
+    const isLibraryEnabled = await getFeatureFlag("feature_media_library");
+    if (!isLibraryEnabled) {
+        return { success: false, error: "Media Library is currently disabled." };
+    }
+
     const supabase = await createClient();
 
     // Auth Check
@@ -102,6 +113,11 @@ export async function registerMedia(formData: FormData) {
 }
 
 export async function deleteMedia(id: string, storagePath: string) {
+    const isLibraryEnabled = await getFeatureFlag("feature_media_library");
+    if (!isLibraryEnabled) {
+        return { success: false, error: "Media Library is currently disabled." };
+    }
+
     const supabase = await createClient();
 
     // 1. Delete from Storage

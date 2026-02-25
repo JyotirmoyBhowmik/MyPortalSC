@@ -191,6 +191,65 @@ h6 {
 }
 
 /* ============================================================
+   Template: Minimal (Clean, Light)
+   ============================================================ */
+[data-template="minimal"] {
+  --background: #fafafa;
+  --foreground: #374151;
+  --surface: #ffffff;
+  --surface-hover: #f3f4f6;
+  --border-color: #e5e7eb;
+  --border-hover: #d1d5db;
+  --primary: #2563eb;
+  --primary-hover: #1d4ed8;
+  --primary-fg: #ffffff;
+  --accent: #f59e0b;
+  --accent-hover: #d97706;
+  --muted: #f3f4f6;
+  --muted-fg: #6b7280;
+  --success: #10b981;
+  --warning: #f59e0b;
+  --danger: #ef4444;
+  --card-bg: rgba(255, 255, 255, 0.9);
+  --card-hover: rgba(249, 250, 251, 0.95);
+  --glass-bg: rgba(255, 255, 255, 0.8);
+  --glass-border: rgba(0, 0, 0, 0.06);
+  --heading: #111827;
+  --gradient-hero: radial-gradient(ellipse at 30% 0%, rgba(37, 99, 235, 0.05) 0%, transparent 60%);
+  --gradient-card: linear-gradient(145deg, rgba(37, 99, 235, 0.02) 0%, transparent 100%);
+}
+
+/* ============================================================
+   Template: Executive (Navy & Gold, Corporate)
+   ============================================================ */
+[data-template="executive"] {
+  --background: #0f172a;
+  --foreground: #94a3b8;
+  --surface: #1e293b;
+  --surface-hover: #334155;
+  --border-color: rgba(234, 179, 8, 0.15);
+  --border-hover: rgba(234, 179, 8, 0.25);
+  --primary: #eab308;
+  --primary-hover: #facc15;
+  --primary-fg: #0f172a;
+  --accent: #3b82f6;
+  --accent-hover: #60a5fa;
+  --muted: #1e293b;
+  --muted-fg: #94a3b8;
+  --success: #22c55e;
+  --warning: #eab308;
+  --danger: #ef4444;
+  --card-bg: rgba(30, 41, 59, 0.8);
+  --card-hover: rgba(51, 65, 85, 0.9);
+  --glass-bg: rgba(30, 41, 59, 0.7);
+  --glass-border: rgba(234, 179, 8, 0.1);
+  --heading: #f1f5f9;
+  --gradient-hero: radial-gradient(ellipse at 30% 0%, rgba(234, 179, 8, 0.08) 0%, transparent 60%),
+    radial-gradient(ellipse at 70% 100%, rgba(59, 130, 246, 0.05) 0%, transparent 50%);
+  --gradient-card: linear-gradient(145deg, rgba(234, 179, 8, 0.03) 0%, transparent 100%);
+}
+
+/* ============================================================
    Theme: Midnight Purple (deep-navy is default in :root)
    ============================================================ */
 [data-theme="midnight-purple"] {

@@ -1,6 +1,8 @@
 import { createClient } from "@/lib/supabase/server";
+import { getFeatureFlag } from "@/lib/data/settings";
+import { notFound } from "next/navigation";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 60;
 
 export const metadata = {
     title: "Speaking | Jyotirmoy Bhowmik",
@@ -8,6 +10,9 @@ export const metadata = {
 };
 
 export default async function SpeakingPage() {
+    const isEnabled = await getFeatureFlag("feature_speaking");
+    if (!isEnabled) notFound();
+
     const supabase = await createClient();
     const { data: events } = await supabase
         .from("speaking_events")

@@ -1,9 +1,14 @@
 import Link from "next/link";
 import { getAllProjects } from "@/lib/data/projects";
 import ProjectsTable from "@/components/admin/ProjectsTable";
+import { getFeatureFlag } from "@/lib/data/settings";
 
 export default async function AdminProjectsPage() {
-    const projects = await getAllProjects();
+    const [projects, allowDragDrop, allowBulkActions] = await Promise.all([
+        getAllProjects(),
+        getFeatureFlag("feature_drag_drop"),
+        getFeatureFlag("feature_bulk_actions"),
+    ]);
 
     return (
         <div>
@@ -25,7 +30,7 @@ export default async function AdminProjectsPage() {
                 </Link>
             </div>
 
-            <ProjectsTable projects={projects} />
+            <ProjectsTable projects={projects} allowDragDrop={allowDragDrop} allowBulkActions={allowBulkActions} />
         </div>
     );
 }

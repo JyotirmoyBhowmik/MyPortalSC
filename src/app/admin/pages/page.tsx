@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import PagesManager from "@/components/admin/PagesManager";
+import { getFeatureFlag } from "@/lib/data/settings";
 
 export default async function PagesAdminHub() {
     const supabase = await createClient();
@@ -22,10 +23,12 @@ export default async function PagesAdminHub() {
         redirect("/");
     }
 
-    // Fetch existing settings
-    const [aboutRes, contactRes] = await Promise.all([
+    // Fetch existing settings & feature flags
+    const [aboutRes, contactRes, allowVersioning, allowScheduledPublish] = await Promise.all([
         supabase.from("content_pages").select("content").eq("page_key", "about").single(),
-        supabase.from("content_pages").select("content").eq("page_key", "contact").single()
+        supabase.from("content_pages").select("content").eq("page_key", "contact").single(),
+        getFeatureFlag("feature_content_versioning"),
+        getFeatureFlag("feature_scheduled_publish"),
     ]);
 
     const initialAbout = (aboutRes.data?.content || {}) as Record<string, any>;
@@ -42,7 +45,12 @@ export default async function PagesAdminHub() {
                 </p>
             </div>
 
-            <PagesManager initialAbout={initialAbout} initialContact={initialContact} />
+            <PagesManager
+                initialAbout={initialAbout}
+                initialContact={initialContact}
+                allowVersioning={allowVersioning}
+                allowScheduledPublish={allowScheduledPublish}
+            />
         </div>
     );
 }

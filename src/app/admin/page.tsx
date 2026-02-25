@@ -1,7 +1,9 @@
 import { createClient } from "@/lib/supabase/server";
+import { getFeatureFlag } from "@/lib/data/settings";
 
 export default async function AdminDashboardPage() {
     const supabase = await createClient();
+    const allowActivityFeed = await getFeatureFlag("feature_activity_feed");
 
     // Fetch counts
     const [projectsRes, skillsRes, certsRes, achievementsRes, analyticsRes, auditRes, initiativesRes] =
@@ -83,51 +85,53 @@ export default async function AdminDashboardPage() {
             </div>
 
             {/* Recent Activity */}
-            <div className="glass rounded-xl p-6">
-                <h2 className="text-lg font-semibold mb-4">Recent Activity</h2>
-                {auditRes.data && auditRes.data.length > 0 ? (
-                    <div className="space-y-3">
-                        {auditRes.data.map((log) => (
-                            <div
-                                key={log.id}
-                                className="flex items-center gap-4 p-3 rounded-lg bg-surface/50"
-                            >
+            {allowActivityFeed && (
+                <div className="glass rounded-xl p-6">
+                    <h2 className="text-lg font-semibold mb-4">Recent Activity</h2>
+                    {auditRes.data && auditRes.data.length > 0 ? (
+                        <div className="space-y-3">
+                            {auditRes.data.map((log) => (
                                 <div
-                                    className={`w-2 h-2 rounded-full ${log.operation === "INSERT"
-                                        ? "bg-success"
-                                        : log.operation === "UPDATE"
-                                            ? "bg-warning"
-                                            : "bg-danger"
-                                        }`}
-                                />
-                                <div className="flex-1 min-w-0">
-                                    <span className="text-sm font-medium">
-                                        {log.operation}
-                                    </span>
-                                    <span className="text-sm text-muted-foreground mx-2">
-                                        on
-                                    </span>
-                                    <span className="text-sm font-medium text-primary">
-                                        {log.table_name}
+                                    key={log.id}
+                                    className="flex items-center gap-4 p-3 rounded-lg bg-surface/50"
+                                >
+                                    <div
+                                        className={`w-2 h-2 rounded-full ${log.operation === "INSERT"
+                                            ? "bg-success"
+                                            : log.operation === "UPDATE"
+                                                ? "bg-warning"
+                                                : "bg-danger"
+                                            }`}
+                                    />
+                                    <div className="flex-1 min-w-0">
+                                        <span className="text-sm font-medium">
+                                            {log.operation}
+                                        </span>
+                                        <span className="text-sm text-muted-foreground mx-2">
+                                            on
+                                        </span>
+                                        <span className="text-sm font-medium text-primary">
+                                            {log.table_name}
+                                        </span>
+                                    </div>
+                                    <span className="text-xs text-muted-foreground flex-shrink-0">
+                                        {new Date(log.timestamp).toLocaleDateString("en-US", {
+                                            month: "short",
+                                            day: "numeric",
+                                            hour: "2-digit",
+                                            minute: "2-digit",
+                                        })}
                                     </span>
                                 </div>
-                                <span className="text-xs text-muted-foreground flex-shrink-0">
-                                    {new Date(log.timestamp).toLocaleDateString("en-US", {
-                                        month: "short",
-                                        day: "numeric",
-                                        hour: "2-digit",
-                                        minute: "2-digit",
-                                    })}
-                                </span>
-                            </div>
-                        ))}
-                    </div>
-                ) : (
-                    <p className="text-sm text-muted-foreground py-4 text-center">
-                        No recent activity yet. Start managing your content!
-                    </p>
-                )}
-            </div>
+                            ))}
+                        </div>
+                    ) : (
+                        <p className="text-sm text-muted-foreground py-4 text-center">
+                            No recent activity yet. Start managing your content!
+                        </p>
+                    )}
+                </div>
+            )}
         </div>
     );
 }

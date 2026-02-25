@@ -3,7 +3,7 @@
 import { useState, useTransition } from "react";
 import { replyToContact } from "@/app/admin/actions/contact";
 
-export default function ContactsManager({ contacts }: { contacts: any[] }) {
+export default function ContactsManager({ contacts, showAnalytics = false }: { contacts: any[]; showAnalytics?: boolean }) {
     const [selectedContact, setSelectedContact] = useState<any | null>(null);
     const [isPending, startTransition] = useTransition();
     const [message, setMessage] = useState<{ type: string; text: string } | null>(null);

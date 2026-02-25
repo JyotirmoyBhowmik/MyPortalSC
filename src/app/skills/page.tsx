@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { getSkillsByCategory } from "@/lib/data/skills";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 60;
 
 export const metadata: Metadata = {
     title: "Skills",

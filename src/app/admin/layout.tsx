@@ -1,13 +1,18 @@
 import AdminShell from "@/components/admin/AdminShell";
+import { getFeatureFlag } from "@/lib/data/settings";
 
 // Force all admin routes to be server-rendered on demand (never prerendered)
 // This prevents build errors when Supabase env vars aren't available at build time
 export const dynamic = "force-dynamic";
 
-export default function AdminLayout({
+export default async function AdminLayout({
     children,
 }: {
     children: React.ReactNode;
 }) {
-    return <AdminShell>{children}</AdminShell>;
+    const [allowAdminSearch, enableRbac] = await Promise.all([
+        getFeatureFlag("feature_admin_search"),
+        getFeatureFlag("feature_rbac"),
+    ]);
+    return <AdminShell allowAdminSearch={allowAdminSearch} enableRbac={enableRbac}>{children}</AdminShell>;
 }

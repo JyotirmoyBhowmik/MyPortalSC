@@ -1,4 +1,7 @@
-import React from "react";
+"use client";
+
+import React, { useRef } from "react";
+import { useSettings } from "@/components/SettingsProvider";
 
 type ButtonVariant = "primary" | "secondary" | "ghost" | "danger" | "outline";
 type ButtonSize = "sm" | "md" | "lg";
@@ -36,12 +39,34 @@ export default function Button({
     disabled,
     ...props
 }: ButtonProps) {
+    const settings = useSettings();
+    const isMagnetic = settings?.feature_magnetic_buttons;
+    const buttonRef = useRef<HTMLButtonElement>(null);
+
+    const handleMouseMove = (e: React.MouseEvent<HTMLButtonElement>) => {
+        if (!isMagnetic || !buttonRef.current) return;
+        const rect = buttonRef.current.getBoundingClientRect();
+        const x = e.clientX - rect.left - rect.width / 2;
+        const y = e.clientY - rect.top - rect.height / 2;
+        // Limit the transform to prevent moving too far away from the cursor
+        buttonRef.current.style.transform = `translate(${x * 0.2}px, ${y * 0.2}px)`;
+    };
+
+    const handleMouseLeave = () => {
+        if (!isMagnetic || !buttonRef.current) return;
+        buttonRef.current.style.transform = "translate(0px, 0px)";
+    };
+
     return (
         <button
+            ref={buttonRef}
+            onMouseMove={handleMouseMove}
+            onMouseLeave={handleMouseLeave}
             className={`
         inline-flex items-center justify-center gap-2
         font-medium transition-all duration-200
         focus-ring disabled:opacity-50 disabled:cursor-not-allowed
+        ${isMagnetic ? "transition-[transform,background-color] ease-out" : ""}
         ${variantStyles[variant]}
         ${sizeStyles[size]}
         ${className}

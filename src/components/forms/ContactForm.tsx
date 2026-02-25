@@ -2,10 +2,16 @@
 
 import { useState } from "react";
 import { submitContactForm } from "@/app/admin/actions/contact";
+import { useSettings } from "@/components/SettingsProvider";
+import { Turnstile } from "@marsidev/react-turnstile";
 
 export default function ContactForm() {
+    const settings = useSettings();
+    const requireCaptcha = settings?.feature_captcha;
+
     const [loading, setLoading] = useState(false);
     const [status, setStatus] = useState<{ success?: boolean; message?: string } | null>(null);
+    const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
 
     async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
@@ -13,6 +19,9 @@ export default function ContactForm() {
         setStatus(null);
 
         const formData = new FormData(e.currentTarget);
+        if (requireCaptcha && turnstileToken) {
+            formData.append("cf-turnstile-response", turnstileToken);
+        }
 
         try {
             const result = await submitContactForm(formData);
@@ -21,6 +30,7 @@ export default function ContactForm() {
 
             if (result.success) {
                 (e.target as HTMLFormElement).reset();
+                setTurnstileToken(null);
             }
         } catch (error) {
             setStatus({ success: false, message: "An unexpected error occurred." });
@@ -101,9 +111,19 @@ export default function ContactForm() {
                 </div>
             )}
 
+            {requireCaptcha && (
+                <div className="flex justify-center mt-4">
+                    <Turnstile
+                        siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || "1x00000000000000000000AA"}
+                        onSuccess={(token) => setTurnstileToken(token)}
+                        onError={() => setStatus({ success: false, message: "CAPTCHA validation failed. Please try again." })}
+                    />
+                </div>
+            )}
+
             <button
                 type="submit"
-                disabled={loading}
+                disabled={loading || (requireCaptcha && !turnstileToken)}
                 className="w-full py-3 rounded-lg gradient-bg text-white font-medium shadow-lg shadow-primary/20 hover:shadow-primary/40 transition-shadow disabled:opacity-70 disabled:cursor-not-allowed"
             >
                 {loading ? "Sending..." : "Send Message"}

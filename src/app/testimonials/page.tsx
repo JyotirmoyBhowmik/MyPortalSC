@@ -1,7 +1,9 @@
 import { createClient } from "@/lib/supabase/server";
 import TestimonialsContent from "@/components/executive/TestimonialsContent";
+import { getFeatureFlag } from "@/lib/data/settings";
+import { notFound } from "next/navigation";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 60;
 
 export const metadata = {
     title: "Testimonials | Jyotirmoy Bhowmik",
@@ -9,6 +11,9 @@ export const metadata = {
 };
 
 export default async function TestimonialsPage() {
+    const isEnabled = await getFeatureFlag("feature_testimonials");
+    if (!isEnabled) notFound();
+
     const supabase = await createClient();
     const { data } = await supabase
         .from("testimonials")

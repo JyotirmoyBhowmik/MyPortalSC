@@ -6,7 +6,7 @@ import {
     getInitiativesByProgram,
 } from "@/lib/data/initiatives";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 60;
 
 interface Props {
     params: Promise<{ slug: string }>;

@@ -1,0 +1,79 @@
+{
+  "feature_executive_summary": [
+    "src/components/layout/Footer.tsx",
+    "src/components/layout/NavbarClassic.tsx",
+    "src/components/layout/NavbarPremium.tsx"
+  ],
+  "feature_timeline": [
+    "src/components/layout/Footer.tsx",
+    "src/components/layout/NavbarClassic.tsx",
+    "src/components/layout/NavbarPremium.tsx"
+  ],
+  "feature_video_intro": [],
+  "feature_rich_editor": [],
+  "feature_drag_drop": [],
+  "feature_content_versioning": [],
+  "feature_scheduled_publish": [],
+  "feature_contact_crm": [],
+  "feature_downloads": [
+    "src/components/layout/Footer.tsx",
+    "src/components/layout/NavbarClassic.tsx",
+    "src/components/layout/NavbarPremium.tsx"
+  ],
+  "feature_newsletter": [],
+  "navbar_style": [],
+  "site_template": [
+    "src/components/layout/Navbar.tsx"
+  ],
+  "feature_i18n": [],
+  "feature_pdf_export": [],
+  "feature_2fa": [
+    "src/app/admin/login/page.tsx"
+  ],
+  "feature_captcha": [],
+  "feature_csp_headers": [],
+  "feature_enhanced_audit": [],
+  "feature_rbac": [],
+  "feature_session_management": [],
+  "feature_3d_globe": [],
+  "feature_light_theme": [],
+  "feature_magnetic_buttons": [],
+  "feature_page_transitions": [],
+  "feature_particle_bg": [],
+  "feature_scroll_animations": [],
+  "feature_analytics_dashboard": [],
+  "feature_contact_analytics": [],
+  "feature_initiative_heatmap": [],
+  "feature_activity_feed": [],
+  "feature_admin_search": [],
+  "feature_bulk_actions": [],
+  "feature_media_library": [],
+  "feature_jsonld": [],
+  "feature_og_images": [],
+  "feature_pwa": [],
+  "feature_blog": [
+    "src/components/layout/Footer.tsx",
+    "src/components/layout/NavbarClassic.tsx",
+    "src/components/layout/NavbarPremium.tsx"
+  ],
+  "feature_case_studies": [
+    "src/components/layout/Footer.tsx",
+    "src/components/layout/NavbarClassic.tsx",
+    "src/components/layout/NavbarPremium.tsx"
+  ],
+  "feature_testimonials": [
+    "src/components/layout/Footer.tsx",
+    "src/components/layout/NavbarClassic.tsx",
+    "src/components/layout/NavbarPremium.tsx"
+  ],
+  "feature_speaking": [
+    "src/components/layout/Footer.tsx",
+    "src/components/layout/NavbarClassic.tsx",
+    "src/components/layout/NavbarPremium.tsx"
+  ],
+  "feature_publications": [
+    "src/components/layout/Footer.tsx",
+    "src/components/layout/NavbarClassic.tsx",
+    "src/components/layout/NavbarPremium.tsx"
+  ]
+}

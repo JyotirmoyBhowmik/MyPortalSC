@@ -1,7 +1,9 @@
 import { createClient } from "@/lib/supabase/server";
 import TimelineContent from "@/components/executive/TimelineContent";
+import { getFeatureFlag } from "@/lib/data/settings";
+import { notFound } from "next/navigation";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 60;
 
 export const metadata = {
     title: "Career Timeline | Jyotirmoy Bhowmik",
@@ -9,6 +11,9 @@ export const metadata = {
 };
 
 export default async function TimelinePage() {
+    const isEnabled = await getFeatureFlag("feature_timeline");
+    if (!isEnabled) notFound();
+
     const supabase = await createClient();
     const { data } = await supabase
         .from("timeline_entries")

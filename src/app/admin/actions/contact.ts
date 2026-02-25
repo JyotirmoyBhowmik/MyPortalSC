@@ -3,17 +3,44 @@
 import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
 import { Resend } from "resend";
+import { getFeatureFlag } from "@/lib/data/settings";
 
 export async function submitContactForm(formData: FormData) {
+    const isContactEnabled = await getFeatureFlag("feature_contact_crm");
+    if (!isContactEnabled) {
+        return { success: false, error: "Contact submissions are currently disabled." };
+    }
+
     const supabase = await createClient();
 
     const name = formData.get("name") as string;
     const email = formData.get("email") as string;
     const subject = formData.get("subject") as string;
     const message = formData.get("message") as string;
+    const turnstileToken = formData.get("token") as string | null;
 
     if (!name || !email || !message) {
         return { success: false, error: "Name, email, and message are required." };
+    }
+
+    // Server-side Turnstile CAPTCHA verification
+    const requireCaptcha = await getFeatureFlag("feature_captcha");
+    if (requireCaptcha) {
+        if (!turnstileToken) {
+            return { success: false, error: "CAPTCHA verification is required." };
+        }
+        const secretKey = process.env.TURNSTILE_SECRET_KEY;
+        if (secretKey) {
+            const verifyRes = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", {
+                method: "POST",
+                headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                body: new URLSearchParams({ secret: secretKey, response: turnstileToken }),
+            });
+            const verification = await verifyRes.json();
+            if (!verification.success) {
+                return { success: false, error: "CAPTCHA verification failed. Please try again." };
+            }
+        }
     }
 
     try {
@@ -59,6 +86,11 @@ export async function submitContactForm(formData: FormData) {
 }
 
 export async function replyToContact(id: string, email: string, name: string, replyMessage: string) {
+    const isContactEnabled = await getFeatureFlag("feature_contact_crm");
+    if (!isContactEnabled) {
+        return { success: false, error: "Contact CRM is currently disabled." };
+    }
+
     const supabase = await createClient();
 
     try {

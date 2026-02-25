@@ -7,9 +7,10 @@ interface SortableRowProps {
     id: string;
     children: React.ReactNode;
     className?: string;
+    disabled?: boolean;
 }
 
-export function SortableRow({ id, children, className = "" }: SortableRowProps) {
+export function SortableRow({ id, children, className = "", disabled = false }: SortableRowProps) {
     const {
         attributes,
         listeners,
@@ -30,11 +31,13 @@ export function SortableRow({ id, children, className = "" }: SortableRowProps) 
     return (
         <tr ref={setNodeRef} style={style} className={className}>
             {children}
-            <td className="px-2 py-3 w-8">
-                <button {...attributes} {...listeners} className="cursor-grab text-muted-foreground hover:text-foreground p-1">
-                    ⋮⋮
-                </button>
-            </td>
+            {!disabled && (
+                <td className="px-2 py-3 w-8">
+                    <button {...attributes} {...listeners} className="cursor-grab text-muted-foreground hover:text-foreground p-1">
+                        ⋮⋮
+                    </button>
+                </td>
+            )}
         </tr>
     );
 }

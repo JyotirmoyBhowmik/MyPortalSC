@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, type ReactNode } from "react";
+import { useSettings } from "@/components/SettingsProvider";
 
 interface Props {
     children: ReactNode;
@@ -10,17 +11,21 @@ interface Props {
 }
 
 export default function ScrollReveal({ children, className = "", delay = 0, direction = "up" }: Props) {
+    const settings = useSettings();
+    const isScrollEnabled = settings?.feature_scroll_animations !== false;
     const ref = useRef<HTMLDivElement>(null);
-    const [visible, setVisible] = useState(false);
+    const [visible, setVisible] = useState(!isScrollEnabled);
 
     useEffect(() => {
+        if (!isScrollEnabled) return;
+
         const observer = new IntersectionObserver(
             ([entry]) => { if (entry.isIntersecting) { setVisible(true); observer.disconnect(); } },
             { threshold: 0.1, rootMargin: "0px 0px -50px 0px" }
         );
         if (ref.current) observer.observe(ref.current);
         return () => observer.disconnect();
-    }, []);
+    }, [isScrollEnabled]);
 
     const transforms: Record<string, string> = {
         up: "translateY(40px)",

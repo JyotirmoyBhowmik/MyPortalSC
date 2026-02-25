@@ -59,8 +59,8 @@ export default function NavbarPremium({ flags = {} }: { flags?: Record<string, b
 
                     {/* Right Actions */}
                     <div className="flex items-center gap-3 shrink-0">
-                        <LanguageSwitcher />
-                        <ThemeSwitcher />
+                        {flags["feature_i18n"] !== false && <LanguageSwitcher />}
+                        {flags["feature_light_theme"] !== false && <ThemeSwitcher />}
                         {/* Mobile Hamburger */}
                         <button
                             onClick={() => setMobileOpen(!mobileOpen)}

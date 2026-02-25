@@ -3,14 +3,27 @@
 import { useState, useTransition } from "react";
 import Button from "@/components/ui/Button";
 import { updatePageContent } from "@/app/admin/actions/pages";
+import { useSettings } from "@/components/SettingsProvider";
+import dynamic from "next/dynamic";
+
+const RichTextEditor = dynamic(() => import("@/components/ui/RichTextEditor"), {
+    ssr: false,
+    loading: () => <div className="admin-input min-h-[150px] animate-pulse bg-surface/50" />,
+});
 
 export default function PagesManager({
     initialAbout,
-    initialContact
+    initialContact,
+    allowVersioning = false,
+    allowScheduledPublish = false,
 }: {
     initialAbout: Record<string, any>;
     initialContact: Record<string, any>;
+    allowVersioning?: boolean;
+    allowScheduledPublish?: boolean;
 }) {
+    const settings = useSettings();
+    const useRichEditor = !!settings?.feature_rich_editor;
     const [isPending, startTransition] = useTransition();
     const [message, setMessage] = useState<{ type: string; text: string } | null>(null);
 
@@ -97,22 +110,40 @@ export default function PagesManager({
 
                     <div>
                         <label className="block text-sm font-medium mb-2">Biography Override (Optional)</label>
-                        <textarea
-                            value={biography}
-                            onChange={(e) => setBiography(e.target.value)}
-                            className="admin-input min-h-[150px]"
-                            placeholder="Leave blank to use the default hardcoded bullets."
-                        />
+                        {useRichEditor ? (
+                            <RichTextEditor
+                                value={biography}
+                                onChange={setBiography}
+                                placeholder="Leave blank to use the default hardcoded bullets."
+                                minHeight="150px"
+                            />
+                        ) : (
+                            <textarea
+                                value={biography}
+                                onChange={(e) => setBiography(e.target.value)}
+                                className="admin-input min-h-[150px]"
+                                placeholder="Leave blank to use the default hardcoded bullets."
+                            />
+                        )}
                     </div>
 
                     <div>
                         <label className="block text-sm font-medium mb-2">Vision Statement Override (Optional)</label>
-                        <textarea
-                            value={vision}
-                            onChange={(e) => setVision(e.target.value)}
-                            className="admin-input min-h-[100px]"
-                            placeholder="To drive purposeful technology transformation..."
-                        />
+                        {useRichEditor ? (
+                            <RichTextEditor
+                                value={vision}
+                                onChange={setVision}
+                                placeholder="To drive purposeful technology transformation..."
+                                minHeight="100px"
+                            />
+                        ) : (
+                            <textarea
+                                value={vision}
+                                onChange={(e) => setVision(e.target.value)}
+                                className="admin-input min-h-[100px]"
+                                placeholder="To drive purposeful technology transformation..."
+                            />
+                        )}
                     </div>
 
                     <div className="flex justify-end pt-4">

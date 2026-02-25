@@ -1,8 +1,13 @@
 import { createClient } from "@/lib/supabase/server";
+import { getFeatureFlag } from "@/lib/data/settings";
+import { notFound } from "next/navigation";
 
 export const dynamic = "force-dynamic";
 
 export default async function AdminAuditPage() {
+    const isEnabled = await getFeatureFlag("feature_enhanced_audit");
+    if (!isEnabled) notFound();
+
     const supabase = await createClient();
     const { data: logs } = await supabase
         .from("audit_log")

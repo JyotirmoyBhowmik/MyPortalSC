@@ -164,6 +164,15 @@ const sidebarSections = [
                 ),
             },
             {
+                href: "/admin/appearance",
+                label: "Appearance",
+                icon: (
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" />
+                    </svg>
+                ),
+            },
+            {
                 href: "/admin/settings",
                 label: "Settings & Feature Toggles",
                 icon: (
@@ -248,8 +257,12 @@ function getBreadcrumbs(pathname: string): { label: string; href: string }[] {
 /* ─── Component ─── */
 export default function AdminShell({
     children,
+    allowAdminSearch = false,
+    enableRbac = false,
 }: {
     children: React.ReactNode;
+    allowAdminSearch?: boolean;
+    enableRbac?: boolean;
 }) {
     const pathname = usePathname();
     const router = useRouter();
@@ -305,55 +318,65 @@ export default function AdminShell({
 
                 {/* Nav links */}
                 <nav className="flex-1 px-2 py-2 overflow-y-auto space-y-6">
-                    {sidebarSections.map((section) => (
-                        <div key={section.title}>
-                            {!sidebarCollapsed && (
-                                <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-2 px-3">
-                                    {section.title}
-                                </p>
-                            )}
-                            <div className="space-y-0.5">
-                                {section.links.map((link) => {
-                                    const isActive =
-                                        pathname === link.href ||
-                                        (link.href !== "/admin" && pathname.startsWith(link.href));
-                                    return (
-                                        <Link
-                                            key={link.href}
-                                            href={link.href}
-                                            onClick={() => setMobileOpen(false)}
-                                            title={sidebarCollapsed ? link.label : undefined}
-                                            className={`
-                                                flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all relative group
-                                                ${isActive
-                                                    ? "bg-primary/10 text-primary shadow-sm shadow-primary/5"
-                                                    : "text-muted-foreground hover:text-foreground hover:bg-surface-hover"
-                                                }
-                                            `}
-                                        >
-                                            {/* Active indicator bar */}
-                                            {isActive && (
-                                                <span className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-primary rounded-r-full" />
-                                            )}
-                                            <span className={`flex-shrink-0 ${sidebarCollapsed ? "mx-auto" : ""}`}>
-                                                {link.icon}
-                                            </span>
-                                            {!sidebarCollapsed && (
-                                                <>
-                                                    <span className="truncate">{link.label}</span>
-                                                    {"badge" in link && link.badge && (
-                                                        <span className="ml-auto text-[10px] px-1.5 py-0.5 rounded-full bg-primary/20 text-primary font-bold">
-                                                            {link.badge}
-                                                        </span>
-                                                    )}
-                                                </>
-                                            )}
-                                        </Link>
-                                    );
-                                })}
+                    {sidebarSections.map((section) => {
+                        /* When RBAC is enabled, hide admin-only configuration links
+                           (Users & Roles, Settings) from the sidebar. In the future
+                           this would check the user's actual role from the DB. */
+                        const rbacRestrictedPaths = ["/admin/users", "/admin/settings"];
+                        const visibleLinks = enableRbac
+                            ? section.links.filter((l) => !rbacRestrictedPaths.includes(l.href))
+                            : section.links;
+                        if (visibleLinks.length === 0) return null;
+                        return (
+                            <div key={section.title}>
+                                {!sidebarCollapsed && (
+                                    <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-2 px-3">
+                                        {section.title}
+                                    </p>
+                                )}
+                                <div className="space-y-0.5">
+                                    {visibleLinks.map((link) => {
+                                        const isActive =
+                                            pathname === link.href ||
+                                            (link.href !== "/admin" && pathname.startsWith(link.href));
+                                        return (
+                                            <Link
+                                                key={link.href}
+                                                href={link.href}
+                                                onClick={() => setMobileOpen(false)}
+                                                title={sidebarCollapsed ? link.label : undefined}
+                                                className={`
+                                                    flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all relative group
+                                                    ${isActive
+                                                        ? "bg-primary/10 text-primary shadow-sm shadow-primary/5"
+                                                        : "text-muted-foreground hover:text-foreground hover:bg-surface-hover"
+                                                    }
+                                                `}
+                                            >
+                                                {/* Active indicator bar */}
+                                                {isActive && (
+                                                    <span className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-primary rounded-r-full" />
+                                                )}
+                                                <span className={`flex-shrink-0 ${sidebarCollapsed ? "mx-auto" : ""}`}>
+                                                    {link.icon}
+                                                </span>
+                                                {!sidebarCollapsed && (
+                                                    <>
+                                                        <span className="truncate">{link.label}</span>
+                                                        {"badge" in link && (link as any).badge && (
+                                                            <span className="ml-auto text-[10px] px-1.5 py-0.5 rounded-full bg-primary/20 text-primary font-bold">
+                                                                {(link as any).badge}
+                                                            </span>
+                                                        )}
+                                                    </>
+                                                )}
+                                            </Link>
+                                        );
+                                    })}
+                                </div>
                             </div>
-                        </div>
-                    ))}
+                        );
+                    })}
                 </nav>
 
                 {/* Bottom actions */}
@@ -420,6 +443,14 @@ export default function AdminShell({
 
                         {/* Right: Theme switcher */}
                         <div className="flex items-center gap-2">
+                            {allowAdminSearch && (
+                                <div className="relative hidden sm:block mr-2">
+                                    <svg className="absolute left-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                                    </svg>
+                                    <input type="text" placeholder="Search admin..." className="w-64 pl-9 pr-4 py-1.5 bg-surface border border-border rounded-lg text-sm transition-shadow text-foreground focus:outline-none focus:ring-1 focus:ring-primary placeholder-muted-foreground" />
+                                </div>
+                            )}
                             <ThemeSwitcher />
                         </div>
                     </div>
@@ -430,6 +461,6 @@ export default function AdminShell({
             </div>
 
             <RealtimeNotifications />
-        </div>
+        </div >
     );
 }

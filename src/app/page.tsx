@@ -3,16 +3,31 @@ import { getFeaturedProjects } from "@/lib/data/projects";
 import { getSkillsByCategory } from "@/lib/data/skills";
 import { getActiveCertifications } from "@/lib/data/certifications";
 import { getPageContent, getContentField } from "@/lib/data/content";
+import { getFeatureFlag } from "@/lib/data/settings";
 import Badge from "@/components/ui/Badge";
+import ParticleBackground from "@/components/animations/ParticleBackground";
+import VideoPlayer from "@/components/visuals/VideoPlayer";
+import DeliveryGlobe from "@/components/visuals/DeliveryGlobe";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 60;
 
 export default async function HomePage() {
-  const [projects, skillsByCategory, certifications, pageContent] = await Promise.all([
+  const [
+    projects,
+    skillsByCategory,
+    certifications,
+    pageContent,
+    featureVideoIntro,
+    featureParticleBg,
+    feature3dGlobe
+  ] = await Promise.all([
     getFeaturedProjects(3),
     getSkillsByCategory(),
     getActiveCertifications(),
     getPageContent("home"),
+    getFeatureFlag("feature_video_intro"),
+    getFeatureFlag("feature_particle_bg"),
+    getFeatureFlag("feature_3d_globe"),
   ]);
 
   const totalSkills = Object.values(skillsByCategory).flat().length;
@@ -26,7 +41,11 @@ export default async function HomePage() {
       {/* ========== HERO SECTION ========== */}
       <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden">
         {/* Background effects */}
-        <div className="absolute inset-0 dot-pattern opacity-30" />
+        {featureParticleBg ? (
+          <ParticleBackground />
+        ) : (
+          <div className="absolute inset-0 dot-pattern opacity-30" />
+        )}
         <div
           className="absolute inset-0"
           style={{ background: "var(--gradient-hero)" }}
@@ -72,7 +91,7 @@ export default async function HomePage() {
           </p>
 
           {/* CTAs */}
-          <div className="flex flex-wrap items-center justify-center gap-4 animate-slide-up stagger-4">
+          <div className="flex flex-wrap items-center justify-center gap-4 animate-slide-up stagger-4 mb-16">
             <Link
               href="/initiatives"
               className="inline-flex items-center gap-2 px-6 py-3 rounded-lg gradient-bg text-white font-medium shadow-lg shadow-primary/25 hover:shadow-primary/40 transition-shadow"
@@ -95,6 +114,18 @@ export default async function HomePage() {
               Get in Touch
             </Link>
           </div>
+
+          {featureVideoIntro && (
+            <div className="max-w-3xl mx-auto mb-16 animate-slide-up stagger-4">
+              <VideoPlayer src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" className="aspect-video shadow-2xl rounded-2xl border border-primary/20" />
+            </div>
+          )}
+
+          {feature3dGlobe && (
+            <div className="relative w-full h-[300px] mb-16 animate-scale-in">
+              <DeliveryGlobe />
+            </div>
+          )}
 
           {/* Stats row */}
           <div className="grid grid-cols-2 md:flex md:flex-row items-center justify-center gap-8 md:gap-12 mt-12 md:mt-16 animate-fade-in stagger-4">

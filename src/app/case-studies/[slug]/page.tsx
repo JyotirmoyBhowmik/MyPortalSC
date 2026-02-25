@@ -4,7 +4,7 @@ import type { Metadata } from "next";
 import DOMPurify from "isomorphic-dompurify";
 import Link from "next/link";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 60;
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
     const { slug } = await params;
