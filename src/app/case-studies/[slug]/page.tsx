@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import DOMPurify from "isomorphic-dompurify";
 import Link from "next/link";
+import Image from "next/image";
 
 export const revalidate = 60;
 
@@ -97,7 +98,7 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ slug
 
                 {study.cover_image_url && (
                     <div className="rounded-2xl overflow-hidden mb-12 shadow-2xl">
-                        <img src={study.cover_image_url} alt={study.title} className="w-full h-auto" />
+                        <Image src={study.cover_image_url} alt={study.title} width={1200} height={630} className="w-full h-auto object-cover" />
                     </div>
                 )}
 

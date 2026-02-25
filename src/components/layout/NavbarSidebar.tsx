@@ -85,24 +85,24 @@ export default function NavbarSidebar({ flags = {} }: { flags?: Record<string, b
 
             {/* Sidebar */}
             <aside
-                className={`fixed top-0 left-0 z-[55] h-full flex flex-col transition-all duration-300 ease-in-out glass border-r border-border ${isOpen ? "w-64" : isMobile ? "w-0 -translate-x-full" : "w-0 -translate-x-full"
+                className={`fixed top-0 left-0 z-[55] h-full flex flex-col transition-all duration-300 ease-in-out glass border-r border-border ${isOpen ? "w-64" : isMobile ? "w-0 -translate-x-full" : "w-16"
                     }`}
                 style={{ overflowX: "hidden" }}
             >
                 {/* Logo area */}
-                <div className="flex items-center gap-3 px-5 h-16 shrink-0 border-b border-border/50">
-                    <Link href="/" className="flex items-center gap-2 group" onClick={() => isMobile && setIsOpen(false)}>
+                <div className="flex items-center px-4 h-16 shrink-0 border-b border-border/50">
+                    <Link href="/" className="flex items-center gap-3 group" onClick={() => isMobile && setIsOpen(false)}>
                         <div className="w-8 h-8 rounded-lg gradient-bg flex items-center justify-center text-white font-bold text-sm shrink-0">
                             JB
                         </div>
-                        <span className="text-lg font-bold text-foreground group-hover:text-primary transition-colors whitespace-nowrap">
+                        <span className={`text-lg font-bold text-foreground group-hover:text-primary transition-opacity duration-300 whitespace-nowrap ${isOpen ? "opacity-100" : "opacity-0 invisible w-0"}`}>
                             Jyotirmoy
                         </span>
                     </Link>
                 </div>
 
                 {/* Nav links */}
-                <nav className="flex-1 overflow-y-auto py-4 px-3 space-y-1">
+                <nav className="flex-1 overflow-y-auto py-4 px-2 space-y-1">
                     {navLinks.map((link) => {
                         const isActive = pathname === link.href || (link.href !== "/" && pathname.startsWith(link.href));
                         const icon = navIcons[link.href] || "📄";
@@ -111,31 +111,47 @@ export default function NavbarSidebar({ flags = {} }: { flags?: Record<string, b
                                 key={link.href}
                                 href={link.href}
                                 onClick={() => isMobile && setIsOpen(false)}
-                                className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all whitespace-nowrap ${isActive
+                                title={!isOpen ? link.label : undefined}
+                                className={`flex items-center px-3 py-2.5 rounded-xl text-sm font-medium transition-all group relative overflow-hidden ${isActive
                                         ? "bg-primary/15 text-primary border border-primary/20"
                                         : "text-muted-foreground hover:text-foreground hover:bg-surface-hover"
                                     }`}
                             >
-                                <span className="text-base shrink-0">{icon}</span>
-                                <span>{link.label}</span>
+                                <span className={`text-base shrink-0 flex items-center justify-center transition-all ${!isOpen ? "w-full" : "mr-3"}`}>
+                                    {icon}
+                                </span>
+                                <span className={`whitespace-nowrap transition-all duration-300 ${isOpen ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-4 absolute"
+                                    }`}>
+                                    {link.label}
+                                </span>
                             </Link>
                         );
                     })}
                 </nav>
 
                 {/* Bottom controls */}
-                <div className="shrink-0 px-4 py-4 border-t border-border/50 space-y-3">
-                    <div className="flex items-center gap-2">
+                <div className="shrink-0 px-2 py-4 border-t border-border/50 space-y-3 flex flex-col items-center">
+                    <div className={`flex items-center gap-2 transition-opacity ${isOpen ? "opacity-100" : "opacity-0 h-0 overflow-hidden"}`}>
                         <LanguageSwitcher />
                         <ThemeSwitcher />
                     </div>
-                    <Link
-                        href="/contact"
-                        onClick={() => isMobile && setIsOpen(false)}
-                        className="flex items-center justify-center gap-2 w-full px-4 py-2.5 rounded-xl gradient-bg text-white text-sm font-medium shadow-lg shadow-primary/20 hover:shadow-primary/30 transition-all whitespace-nowrap"
-                    >
-                        Get in touch
-                    </Link>
+                    {isOpen ? (
+                        <Link
+                            href="/contact"
+                            onClick={() => isMobile && setIsOpen(false)}
+                            className="flex items-center justify-center w-full px-4 py-2.5 rounded-xl gradient-bg text-white text-sm font-medium shadow-lg shadow-primary/20 hover:shadow-primary/30 transition-all whitespace-nowrap"
+                        >
+                            Get in touch
+                        </Link>
+                    ) : (
+                        <Link
+                            href="/contact"
+                            title="Get in touch"
+                            className="flex items-center justify-center w-10 h-10 rounded-xl gradient-bg text-white text-lg hover:shadow-lg shadow-primary/30 transition-all shrink-0"
+                        >
+                            ✉️
+                        </Link>
+                    )}
                 </div>
             </aside>
         </>

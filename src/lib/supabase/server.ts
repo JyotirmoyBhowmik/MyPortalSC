@@ -6,7 +6,7 @@ export async function createClient() {
     const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
     if (!supabaseUrl || !supabaseAnonKey) {
-        return createDummyClient();
+        return createFallbackClient(supabaseUrl || "", supabaseAnonKey || "");
     }
 
     try {
@@ -30,21 +30,18 @@ export async function createClient() {
             },
         });
     } catch (error) {
-        // Provide a dummy client if cookies() fails (e.g. during static generation)
-        console.warn("Using dummy client due to cookie error:", error);
-        return createDummyClient();
+        // If cookies() fails (e.g. during Next.js static generation pass),
+        // we return an anonymous client that can safely fetch public data
+        // without triggering connection refused or warnings.
+        return createFallbackClient(supabaseUrl, supabaseAnonKey);
     }
 }
 
-function createDummyClient() {
-    return createServerClient(
-        "http://localhost:3000",
-        "dummy-key",
-        {
-            cookies: {
-                getAll() { return []; },
-                setAll() { }
-            }
+function createFallbackClient(url: string, key: string) {
+    return createServerClient(url, key, {
+        cookies: {
+            getAll() { return []; },
+            setAll() { }
         }
-    );
+    });
 }

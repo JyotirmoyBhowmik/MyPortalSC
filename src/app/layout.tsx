@@ -114,7 +114,7 @@ export default async function RootLayout({
             <SettingsProvider settings={flags}>
               <Navbar settings={settings} />
               <PageTransition enabled={!!flags.feature_page_transitions}>
-                <main className="min-h-screen">{children}</main>
+                <main className="min-h-screen md:pl-16">{children}</main>
               </PageTransition>
               <Footer flags={flags} />
               <VisitorTracker />

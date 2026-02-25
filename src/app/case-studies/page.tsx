@@ -1,5 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import Link from "next/link";
+import Image from "next/image";
 import { getFeatureFlag } from "@/lib/data/settings";
 import { notFound } from "next/navigation";
 
@@ -38,8 +39,8 @@ export default async function CaseStudiesPage() {
                                 <article className="glass rounded-2xl p-6 md:p-8 hover:scale-[1.01] transition-transform">
                                     <div className="flex flex-col md:flex-row gap-6">
                                         {cs.cover_image_url && (
-                                            <div className="w-full md:w-48 h-32 rounded-xl overflow-hidden bg-surface flex-shrink-0">
-                                                <img src={cs.cover_image_url} alt={cs.title} className="w-full h-full object-cover" />
+                                            <div className="relative w-full md:w-48 h-32 rounded-xl overflow-hidden bg-surface flex-shrink-0">
+                                                <Image src={cs.cover_image_url} alt={cs.title} fill sizes="(max-width: 768px) 100vw, 33vw" className="object-cover" />
                                             </div>
                                         )}
                                         <div className="flex-1">

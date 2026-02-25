@@ -1,5 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import { notFound } from "next/navigation";
+import Image from "next/image";
 import type { Metadata } from "next";
 import DOMPurify from "isomorphic-dompurify";
 
@@ -87,7 +88,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                 </header>
                 {post.cover_image_url && (
                     <div className="rounded-2xl overflow-hidden mb-10">
-                        <img src={post.cover_image_url} alt={post.title} className="w-full h-auto" />
+                        <Image src={post.cover_image_url} alt={post.title} width={1200} height={630} className="w-full h-auto object-cover" />
                     </div>
                 )}
                 <div

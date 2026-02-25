@@ -53,7 +53,21 @@ const nextConfig: NextConfig = {
         ]
       }
     ];
-  }
+  },
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'cqtluudfmigefqphmfbb.supabase.co',
+        port: '',
+        pathname: '/storage/v1/object/public/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'commondatastorage.googleapis.com',
+      }
+    ],
+  },
 };
 
 export default nextConfig;

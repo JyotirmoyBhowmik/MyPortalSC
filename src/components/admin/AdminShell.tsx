@@ -322,7 +322,7 @@ export default function AdminShell({
                         /* When RBAC is enabled, hide admin-only configuration links
                            (Users & Roles, Settings) from the sidebar. In the future
                            this would check the user's actual role from the DB. */
-                        const rbacRestrictedPaths = ["/admin/users", "/admin/settings"];
+                        const rbacRestrictedPaths = ["/admin/users"];
                         const visibleLinks = enableRbac
                             ? section.links.filter((l) => !rbacRestrictedPaths.includes(l.href))
                             : section.links;
