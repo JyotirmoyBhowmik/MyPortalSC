@@ -26,6 +26,12 @@ export async function uploadSiteIcon(formData: FormData) {
     const fileName = `site-icon-${Date.now()}.${fileExt}`;
     const filePath = `branding/${fileName}`;
 
+    // Ensure the storage bucket exists
+    const { data: buckets } = await supabase.storage.listBuckets();
+    if (!buckets?.find((b) => b.name === "media")) {
+        await supabase.storage.createBucket("media", { public: true });
+    }
+
     // Upload to Supabase storage
     const { error: uploadError } = await supabase.storage
         .from("media")

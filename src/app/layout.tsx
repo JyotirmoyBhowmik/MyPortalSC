@@ -88,7 +88,7 @@ export default async function RootLayout({
   return (
     <html lang="en" className="dark" suppressHydrationWarning>
       <head>
-        {flags.feature_pwa && <link rel="manifest" href="/manifest.json" />}
+        {flags.feature_pwa && <link rel="manifest" href="/manifest.webmanifest" />}
         {flags.feature_jsonld && (
           <script
             type="application/ld+json"
