@@ -6,14 +6,17 @@ export const dynamic = "force-dynamic";
 export default async function AdminAppearancePage() {
     const supabase = await createClient();
 
-    // Fetch current site icon
-    const { data } = await supabase
-        .from("site_settings")
-        .select("value")
-        .eq("key", "site_icon")
-        .single();
-
-    const currentIcon = (data?.value as string) || "";
+    let currentIcon = "";
+    try {
+        const { data } = await supabase
+            .from("site_settings")
+            .select("value")
+            .eq("key", "site_icon")
+            .single();
+        currentIcon = (data?.value as string) || "";
+    } catch {
+        // site_icon row may not exist yet
+    }
 
     return (
         <div>
