@@ -9,6 +9,7 @@ import {
     updateCertification,
     deleteCertification,
 } from "@/app/admin/actions/certifications";
+import { useConfirmDialog } from "@/components/ui/ConfirmDialog";
 
 export default function CertificationsManager({
     certifications,
@@ -18,6 +19,7 @@ export default function CertificationsManager({
     const [showNew, setShowNew] = useState(false);
     const [editing, setEditing] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
+    const { dialog, confirm: confirmDelete } = useConfirmDialog();
 
     async function handleCreate(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
@@ -61,13 +63,10 @@ export default function CertificationsManager({
         setLoading(false);
     }
 
-    async function handleDelete(id: string) {
-        if (!confirm("Delete this certification?")) return;
-        try {
+    function handleDelete(id: string) {
+        confirmDelete("This certification will be permanently deleted.", async () => {
             await deleteCertification(id);
-        } catch (err) {
-            alert(err instanceof Error ? err.message : "Failed");
-        }
+        }, { title: "Delete Certification?" });
     }
 
     const CertForm = ({
@@ -109,74 +108,77 @@ export default function CertificationsManager({
     );
 
     return (
-        <div>
-            <div className="flex items-center justify-between mb-8">
-                <div>
-                    <h1 className="text-2xl font-bold">Certifications</h1>
-                    <p className="text-sm text-muted-foreground mt-1">
-                        Manage your certifications and badges
-                    </p>
+        <>
+            {dialog}
+            <div>
+                <div className="flex items-center justify-between mb-8">
+                    <div>
+                        <h1 className="text-2xl font-bold">Certifications</h1>
+                        <p className="text-sm text-muted-foreground mt-1">
+                            Manage your certifications and badges
+                        </p>
+                    </div>
+                    <Button variant="primary" onClick={() => setShowNew(true)}>
+                        + Add Certification
+                    </Button>
                 </div>
-                <Button variant="primary" onClick={() => setShowNew(true)}>
-                    + Add Certification
-                </Button>
-            </div>
 
-            {showNew && (
-                <CertForm onSubmit={handleCreate} onCancel={() => setShowNew(false)} />
-            )}
+                {showNew && (
+                    <CertForm onSubmit={handleCreate} onCancel={() => setShowNew(false)} />
+                )}
 
-            <div className="space-y-3">
-                {certifications.map((cert) =>
-                    editing === cert.id ? (
-                        <CertForm
-                            key={cert.id}
-                            cert={cert}
-                            onSubmit={(e) => handleUpdate(e, cert.id)}
-                            onCancel={() => setEditing(null)}
-                        />
-                    ) : (
-                        <div
-                            key={cert.id}
-                            className="glass rounded-xl p-5 flex items-center justify-between gap-4"
-                        >
-                            <div className="flex-1 min-w-0">
-                                <div className="flex items-center gap-2 mb-1">
-                                    <span className="font-medium">{cert.title}</span>
-                                    <Badge
-                                        variant={cert.status === "active" ? "success" : cert.status === "expired" ? "danger" : "outline"}
-                                    >
-                                        {cert.status}
-                                    </Badge>
+                <div className="space-y-3">
+                    {certifications.map((cert) =>
+                        editing === cert.id ? (
+                            <CertForm
+                                key={cert.id}
+                                cert={cert}
+                                onSubmit={(e) => handleUpdate(e, cert.id)}
+                                onCancel={() => setEditing(null)}
+                            />
+                        ) : (
+                            <div
+                                key={cert.id}
+                                className="glass rounded-xl p-5 flex items-center justify-between gap-4"
+                            >
+                                <div className="flex-1 min-w-0">
+                                    <div className="flex items-center gap-2 mb-1">
+                                        <span className="font-medium">{cert.title}</span>
+                                        <Badge
+                                            variant={cert.status === "active" ? "success" : cert.status === "expired" ? "danger" : "outline"}
+                                        >
+                                            {cert.status}
+                                        </Badge>
+                                    </div>
+                                    <p className="text-sm text-muted-foreground">
+                                        {cert.issuing_organization} ·{" "}
+                                        {new Date(cert.issue_date).toLocaleDateString()}
+                                    </p>
                                 </div>
-                                <p className="text-sm text-muted-foreground">
-                                    {cert.issuing_organization} ·{" "}
-                                    {new Date(cert.issue_date).toLocaleDateString()}
-                                </p>
+                                <div className="flex items-center gap-2 flex-shrink-0">
+                                    <button
+                                        onClick={() => setEditing(cert.id)}
+                                        className="text-xs px-2 py-1 rounded bg-primary/10 text-primary hover:bg-primary/20 transition-colors"
+                                    >
+                                        Edit
+                                    </button>
+                                    <button
+                                        onClick={() => handleDelete(cert.id)}
+                                        className="text-xs px-2 py-1 rounded bg-danger/10 text-danger hover:bg-danger/20 transition-colors"
+                                    >
+                                        Delete
+                                    </button>
+                                </div>
                             </div>
-                            <div className="flex items-center gap-2 flex-shrink-0">
-                                <button
-                                    onClick={() => setEditing(cert.id)}
-                                    className="text-xs px-2 py-1 rounded bg-primary/10 text-primary hover:bg-primary/20 transition-colors"
-                                >
-                                    Edit
-                                </button>
-                                <button
-                                    onClick={() => handleDelete(cert.id)}
-                                    className="text-xs px-2 py-1 rounded bg-danger/10 text-danger hover:bg-danger/20 transition-colors"
-                                >
-                                    Delete
-                                </button>
-                            </div>
-                        </div>
-                    )
-                )}
-                {certifications.length === 0 && (
-                    <p className="text-sm text-muted-foreground text-center py-8">
-                        No certifications yet.
-                    </p>
-                )}
+                        )
+                    )}
+                    {certifications.length === 0 && (
+                        <p className="text-sm text-muted-foreground text-center py-8">
+                            No certifications yet.
+                        </p>
+                    )}
+                </div>
             </div>
-        </div>
+        </>
     );
 }

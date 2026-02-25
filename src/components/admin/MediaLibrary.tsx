@@ -3,6 +3,7 @@
 import { useState, useTransition, useCallback } from "react";
 import { useDropzone } from "react-dropzone";
 import { uploadMedia, deleteMedia, registerMedia } from "@/app/admin/actions/media";
+import { useConfirmDialog } from "@/components/ui/ConfirmDialog";
 
 export interface MediaItem {
     id: string;
@@ -23,6 +24,7 @@ export default function MediaLibrary({ initialMedia, onSelect, selectable = fals
     const [media, setMedia] = useState<MediaItem[]>(initialMedia);
     const [isPending, startTransition] = useTransition();
     const [uploading, setUploading] = useState(false);
+    const { dialog, confirm: confirmDelete } = useConfirmDialog();
 
     const onDrop = useCallback(async (acceptedFiles: File[]) => {
         setUploading(true);
@@ -80,17 +82,17 @@ export default function MediaLibrary({ initialMedia, onSelect, selectable = fals
 
     const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop, accept: { 'image/*': [] } });
 
-    async function handleDelete(id: string, path: string) {
-        if (!confirm("Delete this file permanently?")) return;
-
-        startTransition(async () => {
-            const result = await deleteMedia(id, path);
-            if (result.success) {
-                setMedia((prev) => prev.filter((m) => m.id !== id));
-            } else {
-                alert(result.error);
-            }
-        });
+    function handleDelete(id: string, path: string) {
+        confirmDelete("This file will be permanently deleted.", async () => {
+            startTransition(async () => {
+                const result = await deleteMedia(id, path);
+                if (result.success) {
+                    setMedia((prev) => prev.filter((m) => m.id !== id));
+                } else {
+                    alert(result.error);
+                }
+            });
+        }, { title: "Delete File?" });
     }
 
     const [copiedId, setCopiedId] = useState<string | null>(null);
