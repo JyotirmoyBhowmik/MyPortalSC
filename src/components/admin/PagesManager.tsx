@@ -5,8 +5,9 @@ import Button from "@/components/ui/Button";
 import { updatePageContent } from "@/app/admin/actions/pages";
 import { useSettings } from "@/components/SettingsProvider";
 import dynamic from "next/dynamic";
+import { useToast } from "@/components/ui/ToastProvider";
 
-const RichTextEditor = dynamic(() => import("@/components/ui/RichTextEditor"), {
+const RichTextEditor = dynamic(() => import("./RichTextEditor"), {
     ssr: false,
     loading: () => <div className="admin-input min-h-[150px] animate-pulse bg-surface/50" />,
 });
@@ -25,7 +26,7 @@ export default function PagesManager({
     const settings = useSettings();
     const useRichEditor = !!settings?.feature_rich_editor;
     const [isPending, startTransition] = useTransition();
-    const [message, setMessage] = useState<{ type: string; text: string } | null>(null);
+    const { showToast } = useToast();
 
     // About State
     const [biography, setBiography] = useState(initialAbout.biography || "");
@@ -40,7 +41,6 @@ export default function PagesManager({
     const [activeTab, setActiveTab] = useState<"about" | "contact">("about");
 
     function handleSave(pageKey: "about" | "contact") {
-        setMessage(null);
         startTransition(async () => {
             let contentToSave = {};
 
@@ -61,22 +61,15 @@ export default function PagesManager({
             const result = await updatePageContent(pageKey, contentToSave);
 
             if (result.success) {
-                setMessage({ type: "success", text: `${pageKey.charAt(0).toUpperCase() + pageKey.slice(1)} page updated.` });
+                showToast(`${pageKey.charAt(0).toUpperCase() + pageKey.slice(1)} page updated.`, "success");
             } else {
-                setMessage({ type: "error", text: result.error || "Failed to update." });
+                showToast(result.error || "Failed to update.", "error");
             }
-            setTimeout(() => setMessage(null), 3000);
         });
     }
 
     return (
         <div className="space-y-6">
-            {message && (
-                <div className={`p-4 rounded-xl text-sm ${message.type === "success" ? "bg-green-500/10 text-green-500 border border-green-500/20" : "bg-red-500/10 text-red-500 border border-red-500/20"}`}>
-                    {message.text}
-                </div>
-            )}
-
             {/* Tabs */}
             <div className="flex gap-2 border-b border-border/50 pb-4">
                 <button
@@ -112,10 +105,10 @@ export default function PagesManager({
                         <label className="block text-sm font-medium mb-2">Biography Override (Optional)</label>
                         {useRichEditor ? (
                             <RichTextEditor
-                                value={biography}
+                                content={biography}
                                 onChange={setBiography}
-                                placeholder="Leave blank to use the default hardcoded bullets."
-                                minHeight="150px"
+                                // placeholder="Leave blank to use the default hardcoded bullets." // TipTap extension required for placeholders
+                                minHeight="min-h-[150px]"
                             />
                         ) : (
                             <textarea
@@ -131,10 +124,10 @@ export default function PagesManager({
                         <label className="block text-sm font-medium mb-2">Vision Statement Override (Optional)</label>
                         {useRichEditor ? (
                             <RichTextEditor
-                                value={vision}
+                                content={vision}
                                 onChange={setVision}
-                                placeholder="To drive purposeful technology transformation..."
-                                minHeight="100px"
+                                // placeholder="To drive purposeful technology transformation..."
+                                minHeight="min-h-[100px]"
                             />
                         ) : (
                             <textarea

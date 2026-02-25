@@ -6,6 +6,7 @@ import { createBlogPost, updateBlogPost, deleteBlogPost } from "@/app/admin/acti
 import RichTextEditor from "./RichTextEditor";
 import MediaPickerModal from "./MediaPickerModal";
 import { useConfirmDialog } from "@/components/ui/ConfirmDialog";
+import { useToast } from "@/components/ui/ToastProvider";
 
 interface Post {
     id: string;
@@ -26,10 +27,10 @@ export default function BlogManager({ posts }: { posts: Post[] }) {
     const [coverImage, setCoverImage] = useState("");
     const [editing, setEditing] = useState<Post | null>(null);
     const [isPending, startTransition] = useTransition();
-    const [message, setMessage] = useState<{ type: string; text: string } | null>(null);
     const { dialog, confirm: confirmDelete } = useConfirmDialog();
     const [publishedAt, setPublishedAt] = useState<Date | undefined>(undefined);
     const [editorContent, setEditorContent] = useState("");
+    const { showToast } = useToast();
 
     function handleSubmit(formData: FormData) {
         if (publishedAt) {
@@ -41,12 +42,11 @@ export default function BlogManager({ posts }: { posts: Post[] }) {
                 ? await updateBlogPost(editing.id, formData)
                 : await createBlogPost(formData);
             if (result.success) {
-                setMessage({ type: "success", text: editing ? "Updated!" : "Created!" });
+                showToast(editing ? "Blog post updated successfully!" : "Blog post created successfully!", "success");
                 setShowModal(false);
             } else {
-                setMessage({ type: "error", text: result.error || "Failed" });
+                showToast(result.error || "Failed to save blog post.", "error");
             }
-            setTimeout(() => setMessage(null), 2000);
         });
     }
 
@@ -54,8 +54,7 @@ export default function BlogManager({ posts }: { posts: Post[] }) {
         confirmDelete("This blog post will be permanently deleted.", async () => {
             startTransition(async () => {
                 await deleteBlogPost(id);
-                setMessage({ type: "success", text: "Deleted!" });
-                setTimeout(() => setMessage(null), 2000);
+                showToast("Blog post deleted.", "success");
             });
         }, { title: "Delete Post?" });
     }
@@ -73,11 +72,6 @@ export default function BlogManager({ posts }: { posts: Post[] }) {
         <>
             {dialog}
             <div>
-                {message && (
-                    <div className={`fixed top-4 right-4 z-50 px-4 py-3 rounded-lg text-sm font-medium shadow-lg ${message.type === "success" ? "bg-green-500/20 text-green-400 border border-green-500/30" : "bg-red-500/20 text-red-400 border border-red-500/30"}`}>
-                        {message.text}
-                    </div>
-                )}
 
                 <div className="flex justify-end mb-4">
                     <button onClick={() => { setEditing(null); setShowModal(true); }} className="px-4 py-2 bg-primary text-primary-foreground rounded-lg text-sm font-medium hover:bg-primary-hover transition-colors">

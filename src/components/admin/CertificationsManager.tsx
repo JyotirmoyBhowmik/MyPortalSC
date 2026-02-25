@@ -10,6 +10,7 @@ import {
     deleteCertification,
 } from "@/app/admin/actions/certifications";
 import { useConfirmDialog } from "@/components/ui/ConfirmDialog";
+import { useToast } from "@/components/ui/ToastProvider";
 
 export default function CertificationsManager({
     certifications,
@@ -20,6 +21,7 @@ export default function CertificationsManager({
     const [editing, setEditing] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
     const { dialog, confirm: confirmDelete } = useConfirmDialog();
+    const { showToast } = useToast();
 
     async function handleCreate(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
@@ -36,8 +38,9 @@ export default function CertificationsManager({
                 status: fd.get("status") as "active" | "expired",
             });
             setShowNew(false);
+            showToast("Certification created successfully", "success");
         } catch (err) {
-            alert(err instanceof Error ? err.message : "Failed");
+            showToast(err instanceof Error ? err.message : "Failed to create certification", "error");
         }
         setLoading(false);
     }
@@ -57,15 +60,21 @@ export default function CertificationsManager({
                 status: fd.get("status") as "active" | "expired" | "archived",
             });
             setEditing(null);
+            showToast("Certification updated successfully", "success");
         } catch (err) {
-            alert(err instanceof Error ? err.message : "Failed");
+            showToast(err instanceof Error ? err.message : "Failed to update certification", "error");
         }
         setLoading(false);
     }
 
     function handleDelete(id: string) {
         confirmDelete("This certification will be permanently deleted.", async () => {
-            await deleteCertification(id);
+            try {
+                await deleteCertification(id);
+                showToast("Certification deleted successfully", "success");
+            } catch (err) {
+                showToast(err instanceof Error ? err.message : "Failed to delete certification", "error");
+            }
         }, { title: "Delete Certification?" });
     }
 

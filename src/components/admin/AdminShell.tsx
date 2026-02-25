@@ -6,6 +6,7 @@ import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import ThemeSwitcher from "@/components/ThemeSwitcher";
 import RealtimeNotifications from "./RealtimeNotifications";
+import { ToastProvider } from "@/components/ui/ToastProvider";
 
 /* ─── Sidebar link definitions ─── */
 const sidebarSections = [
@@ -285,182 +286,184 @@ export default function AdminShell({
     const sidebarWidth = sidebarCollapsed ? "w-16" : "w-64";
 
     return (
-        <div className="min-h-screen bg-background flex">
-            {/* ─── Mobile overlay ─── */}
-            {mobileOpen && (
-                <div
-                    className="fixed inset-0 bg-black/40 backdrop-blur-sm z-40 lg:hidden"
-                    onClick={() => setMobileOpen(false)}
-                />
-            )}
+        <ToastProvider>
+            <div className="min-h-screen bg-background flex">
+                {/* ─── Mobile overlay ─── */}
+                {mobileOpen && (
+                    <div
+                        className="fixed inset-0 bg-black/40 backdrop-blur-sm z-40 lg:hidden"
+                        onClick={() => setMobileOpen(false)}
+                    />
+                )}
 
-            {/* ─── Sidebar ─── */}
-            <aside
-                className={`
+                {/* ─── Sidebar ─── */}
+                <aside
+                    className={`
                     ${sidebarWidth} border-r border-border bg-surface/30 backdrop-blur-lg
                     flex flex-col fixed top-16 bottom-0 left-0 z-50
                     transition-all duration-300 ease-in-out
                     ${mobileOpen ? "translate-x-0" : "-translate-x-full"} lg:translate-x-0
                 `}
-            >
-                {/* Collapse toggle — desktop only */}
-                <div className="hidden lg:flex items-center justify-end p-2">
-                    <button
-                        onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
-                        className="p-1.5 rounded-lg text-muted-foreground hover:text-foreground hover:bg-surface transition-all"
-                        title={sidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"}
-                    >
-                        <svg className={`w-4 h-4 transition-transform ${sidebarCollapsed ? "rotate-180" : ""}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 19l-7-7 7-7m8 14l-7-7 7-7" />
-                        </svg>
-                    </button>
-                </div>
+                >
+                    {/* Collapse toggle — desktop only */}
+                    <div className="hidden lg:flex items-center justify-end p-2">
+                        <button
+                            onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
+                            className="p-1.5 rounded-lg text-muted-foreground hover:text-foreground hover:bg-surface transition-all"
+                            title={sidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+                        >
+                            <svg className={`w-4 h-4 transition-transform ${sidebarCollapsed ? "rotate-180" : ""}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 19l-7-7 7-7m8 14l-7-7 7-7" />
+                            </svg>
+                        </button>
+                    </div>
 
-                {/* Nav links */}
-                <nav className="flex-1 px-2 py-2 overflow-y-auto space-y-6">
-                    {sidebarSections.map((section) => {
-                        /* When RBAC is enabled, hide admin-only configuration links
-                           (Users & Roles, Settings) from the sidebar. In the future
-                           this would check the user's actual role from the DB. */
-                        const rbacRestrictedPaths = ["/admin/users"];
-                        const visibleLinks = enableRbac
-                            ? section.links.filter((l) => !rbacRestrictedPaths.includes(l.href))
-                            : section.links;
-                        if (visibleLinks.length === 0) return null;
-                        return (
-                            <div key={section.title}>
-                                {!sidebarCollapsed && (
-                                    <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-2 px-3">
-                                        {section.title}
-                                    </p>
-                                )}
-                                <div className="space-y-0.5">
-                                    {visibleLinks.map((link) => {
-                                        const isActive =
-                                            pathname === link.href ||
-                                            (link.href !== "/admin" && pathname.startsWith(link.href));
-                                        return (
-                                            <Link
-                                                key={link.href}
-                                                href={link.href}
-                                                onClick={() => setMobileOpen(false)}
-                                                title={sidebarCollapsed ? link.label : undefined}
-                                                className={`
+                    {/* Nav links */}
+                    <nav className="flex-1 px-2 py-2 overflow-y-auto space-y-6">
+                        {sidebarSections.map((section) => {
+                            /* When RBAC is enabled, hide admin-only configuration links
+                               (Users & Roles, Settings) from the sidebar. In the future
+                               this would check the user's actual role from the DB. */
+                            const rbacRestrictedPaths = ["/admin/users"];
+                            const visibleLinks = enableRbac
+                                ? section.links.filter((l) => !rbacRestrictedPaths.includes(l.href))
+                                : section.links;
+                            if (visibleLinks.length === 0) return null;
+                            return (
+                                <div key={section.title}>
+                                    {!sidebarCollapsed && (
+                                        <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-2 px-3">
+                                            {section.title}
+                                        </p>
+                                    )}
+                                    <div className="space-y-0.5">
+                                        {visibleLinks.map((link) => {
+                                            const isActive =
+                                                pathname === link.href ||
+                                                (link.href !== "/admin" && pathname.startsWith(link.href));
+                                            return (
+                                                <Link
+                                                    key={link.href}
+                                                    href={link.href}
+                                                    onClick={() => setMobileOpen(false)}
+                                                    title={sidebarCollapsed ? link.label : undefined}
+                                                    className={`
                                                     flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all relative group
                                                     ${isActive
-                                                        ? "bg-primary/10 text-primary shadow-sm shadow-primary/5"
-                                                        : "text-muted-foreground hover:text-foreground hover:bg-surface-hover"
-                                                    }
+                                                            ? "bg-primary/10 text-primary shadow-sm shadow-primary/5"
+                                                            : "text-muted-foreground hover:text-foreground hover:bg-surface-hover"
+                                                        }
                                                 `}
-                                            >
-                                                {/* Active indicator bar */}
-                                                {isActive && (
-                                                    <span className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-primary rounded-r-full" />
-                                                )}
-                                                <span className={`flex-shrink-0 ${sidebarCollapsed ? "mx-auto" : ""}`}>
-                                                    {link.icon}
-                                                </span>
-                                                {!sidebarCollapsed && (
-                                                    <>
-                                                        <span className="truncate">{link.label}</span>
-                                                        {"badge" in link && (link as any).badge && (
-                                                            <span className="ml-auto text-[10px] px-1.5 py-0.5 rounded-full bg-primary/20 text-primary font-bold">
-                                                                {(link as any).badge}
-                                                            </span>
-                                                        )}
-                                                    </>
-                                                )}
-                                            </Link>
-                                        );
-                                    })}
+                                                >
+                                                    {/* Active indicator bar */}
+                                                    {isActive && (
+                                                        <span className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-primary rounded-r-full" />
+                                                    )}
+                                                    <span className={`flex-shrink-0 ${sidebarCollapsed ? "mx-auto" : ""}`}>
+                                                        {link.icon}
+                                                    </span>
+                                                    {!sidebarCollapsed && (
+                                                        <>
+                                                            <span className="truncate">{link.label}</span>
+                                                            {"badge" in link && (link as any).badge && (
+                                                                <span className="ml-auto text-[10px] px-1.5 py-0.5 rounded-full bg-primary/20 text-primary font-bold">
+                                                                    {(link as any).badge}
+                                                                </span>
+                                                            )}
+                                                        </>
+                                                    )}
+                                                </Link>
+                                            );
+                                        })}
+                                    </div>
                                 </div>
-                            </div>
-                        );
-                    })}
-                </nav>
+                            );
+                        })}
+                    </nav>
 
-                {/* Bottom actions */}
-                <div className="p-2 border-t border-border space-y-1">
-                    {!sidebarCollapsed && (
-                        <Link
-                            href="/"
-                            className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-surface transition-all"
-                        >
-                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                            </svg>
-                            View Site
-                        </Link>
-                    )}
-                    <button
-                        onClick={handleLogout}
-                        className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-muted-foreground hover:text-danger hover:bg-danger/10 transition-all w-full ${sidebarCollapsed ? "justify-center" : ""}`}
-                    >
-                        <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                        </svg>
-                        {!sidebarCollapsed && "Sign Out"}
-                    </button>
-                </div>
-            </aside>
-
-            {/* ─── Main content area ─── */}
-            <div className={`flex-1 transition-all duration-300 ${sidebarCollapsed ? "lg:ml-16" : "lg:ml-64"}`}>
-                {/* Top bar */}
-                <header className="sticky top-16 z-30 bg-background/80 backdrop-blur-lg border-b border-border">
-                    <div className="flex items-center justify-between px-4 sm:px-6 h-14">
-                        {/* Left: Mobile hamburger + Breadcrumbs */}
-                        <div className="flex items-center gap-3">
-                            <button
-                                onClick={() => setMobileOpen(!mobileOpen)}
-                                className="lg:hidden p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-surface transition-all"
+                    {/* Bottom actions */}
+                    <div className="p-2 border-t border-border space-y-1">
+                        {!sidebarCollapsed && (
+                            <Link
+                                href="/"
+                                className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-surface transition-all"
                             >
                                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                                 </svg>
-                            </button>
-                            <nav className="flex items-center gap-1.5 text-sm">
-                                {breadcrumbs.map((crumb, i) => (
-                                    <span key={crumb.href} className="flex items-center gap-1.5">
-                                        {i > 0 && (
-                                            <svg className="w-3.5 h-3.5 text-muted-foreground/50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                                            </svg>
-                                        )}
-                                        <Link
-                                            href={crumb.href}
-                                            className={`${i === breadcrumbs.length - 1
-                                                ? "text-foreground font-semibold"
-                                                : "text-muted-foreground hover:text-foreground"
-                                                } transition-colors`}
-                                        >
-                                            {crumb.label}
-                                        </Link>
-                                    </span>
-                                ))}
-                            </nav>
-                        </div>
-
-                        {/* Right: Theme switcher */}
-                        <div className="flex items-center gap-2">
-                            {allowAdminSearch && (
-                                <div className="relative hidden sm:block mr-2">
-                                    <svg className="absolute left-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                                    </svg>
-                                    <input type="text" placeholder="Search admin..." className="w-64 pl-9 pr-4 py-1.5 bg-surface border border-border rounded-lg text-sm transition-shadow text-foreground focus:outline-none focus:ring-1 focus:ring-primary placeholder-muted-foreground" />
-                                </div>
-                            )}
-                            <ThemeSwitcher />
-                        </div>
+                                View Site
+                            </Link>
+                        )}
+                        <button
+                            onClick={handleLogout}
+                            className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-muted-foreground hover:text-danger hover:bg-danger/10 transition-all w-full ${sidebarCollapsed ? "justify-center" : ""}`}
+                        >
+                            <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                            </svg>
+                            {!sidebarCollapsed && "Sign Out"}
+                        </button>
                     </div>
-                </header>
+                </aside>
 
-                {/* Page content */}
-                <div className="p-4 sm:p-6 lg:p-8">{children}</div>
-            </div>
+                {/* ─── Main content area ─── */}
+                <div className={`flex-1 transition-all duration-300 ${sidebarCollapsed ? "lg:ml-16" : "lg:ml-64"}`}>
+                    {/* Top bar */}
+                    <header className="sticky top-16 z-30 bg-background/80 backdrop-blur-lg border-b border-border">
+                        <div className="flex items-center justify-between px-4 sm:px-6 h-14">
+                            {/* Left: Mobile hamburger + Breadcrumbs */}
+                            <div className="flex items-center gap-3">
+                                <button
+                                    onClick={() => setMobileOpen(!mobileOpen)}
+                                    className="lg:hidden p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-surface transition-all"
+                                >
+                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                                    </svg>
+                                </button>
+                                <nav className="flex items-center gap-1.5 text-sm">
+                                    {breadcrumbs.map((crumb, i) => (
+                                        <span key={crumb.href} className="flex items-center gap-1.5">
+                                            {i > 0 && (
+                                                <svg className="w-3.5 h-3.5 text-muted-foreground/50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                                                </svg>
+                                            )}
+                                            <Link
+                                                href={crumb.href}
+                                                className={`${i === breadcrumbs.length - 1
+                                                    ? "text-foreground font-semibold"
+                                                    : "text-muted-foreground hover:text-foreground"
+                                                    } transition-colors`}
+                                            >
+                                                {crumb.label}
+                                            </Link>
+                                        </span>
+                                    ))}
+                                </nav>
+                            </div>
 
-            <RealtimeNotifications />
-        </div >
+                            {/* Right: Theme switcher */}
+                            <div className="flex items-center gap-2">
+                                {allowAdminSearch && (
+                                    <div className="relative hidden sm:block mr-2">
+                                        <svg className="absolute left-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                                        </svg>
+                                        <input type="text" placeholder="Search admin..." className="w-64 pl-9 pr-4 py-1.5 bg-surface border border-border rounded-lg text-sm transition-shadow text-foreground focus:outline-none focus:ring-1 focus:ring-primary placeholder-muted-foreground" />
+                                    </div>
+                                )}
+                                <ThemeSwitcher />
+                            </div>
+                        </div>
+                    </header>
+
+                    {/* Page content */}
+                    <div className="p-4 sm:p-6 lg:p-8">{children}</div>
+                </div>
+
+                <RealtimeNotifications />
+            </div >
+        </ToastProvider>
     );
 }

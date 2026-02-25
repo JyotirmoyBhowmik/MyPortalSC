@@ -3,6 +3,7 @@
 import { useTransition, useState } from "react";
 import { createSpeakingEvent, updateSpeakingEvent, deleteSpeakingEvent } from "@/app/admin/actions/speaking";
 import { useConfirmDialog } from "@/components/ui/ConfirmDialog";
+import { useToast } from "@/components/ui/ToastProvider";
 
 interface SpeakingEvent {
     id: string;
@@ -22,22 +23,36 @@ export default function SpeakingManager({ events }: { events: SpeakingEvent[] })
     const [showForm, setShowForm] = useState(false);
     const [editing, setEditing] = useState<SpeakingEvent | null>(null);
     const { dialog, confirm: confirmDelete } = useConfirmDialog();
+    const { showToast } = useToast();
 
     function handleSubmit(formData: FormData) {
         startTransition(async () => {
-            if (editing) {
-                await updateSpeakingEvent(editing.id, formData);
-            } else {
-                await createSpeakingEvent(formData);
+            try {
+                if (editing) {
+                    await updateSpeakingEvent(editing.id, formData);
+                    showToast("Event updated successfully", "success");
+                } else {
+                    await createSpeakingEvent(formData);
+                    showToast("Event created successfully", "success");
+                }
+                setShowForm(false);
+                setEditing(null);
+            } catch (err) {
+                showToast(err instanceof Error ? err.message : "Failed to save event", "error");
             }
-            setShowForm(false);
-            setEditing(null);
         });
     }
 
     function handleDelete(id: string) {
         confirmDelete("This speaking event will be permanently deleted.", async () => {
-            startTransition(() => deleteSpeakingEvent(id));
+            startTransition(async () => {
+                try {
+                    await deleteSpeakingEvent(id);
+                    showToast("Event deleted successfully", "success");
+                } catch (err) {
+                    showToast(err instanceof Error ? err.message : "Failed to delete event", "error");
+                }
+            });
         }, { title: "Delete Speaking Event?" });
     }
 

@@ -2,11 +2,12 @@
 
 import { useState, useTransition } from "react";
 import { replyToContact } from "@/app/admin/actions/contact";
+import { useToast } from "@/components/ui/ToastProvider";
 
 export default function ContactsManager({ contacts, showAnalytics = false }: { contacts: any[]; showAnalytics?: boolean }) {
     const [selectedContact, setSelectedContact] = useState<any | null>(null);
     const [isPending, startTransition] = useTransition();
-    const [message, setMessage] = useState<{ type: string; text: string } | null>(null);
+    const { showToast } = useToast();
 
     const statusColors: Record<string, string> = {
         new: "bg-blue-500/15 text-blue-400",
@@ -27,22 +28,16 @@ export default function ContactsManager({ contacts, showAnalytics = false }: { c
                 replyMessage
             );
             if (result.success) {
-                setMessage({ type: "success", text: "Reply sent successfully!" });
+                showToast("Reply sent successfully!", "success");
                 setSelectedContact(null);
             } else {
-                setMessage({ type: "error", text: result.error || "Failed to send reply" });
+                showToast(result.error || "Failed to send reply", "error");
             }
-            setTimeout(() => setMessage(null), 3000);
         });
     }
 
     return (
         <div>
-            {message && (
-                <div className={`fixed top-4 right-4 z-50 px-4 py-3 rounded-lg text-sm font-medium shadow-lg ${message.type === "success" ? "bg-green-500/20 text-green-400 border border-green-500/30" : "bg-red-500/20 text-red-400 border border-red-500/30"}`}>
-                    {message.text}
-                </div>
-            )}
 
             <div className="glass rounded-xl overflow-hidden">
                 <table className="w-full">

@@ -4,6 +4,7 @@ import { useState, useTransition, useCallback } from "react";
 import { useDropzone } from "react-dropzone";
 import { uploadMedia, deleteMedia, registerMedia } from "@/app/admin/actions/media";
 import { useConfirmDialog } from "@/components/ui/ConfirmDialog";
+import { useToast } from "@/components/ui/ToastProvider";
 
 export interface MediaItem {
     id: string;
@@ -25,6 +26,7 @@ export default function MediaLibrary({ initialMedia, onSelect, selectable = fals
     const [isPending, startTransition] = useTransition();
     const [uploading, setUploading] = useState(false);
     const { dialog, confirm: confirmDelete } = useConfirmDialog();
+    const { showToast } = useToast();
 
     const onDrop = useCallback(async (acceptedFiles: File[]) => {
         setUploading(true);
@@ -70,15 +72,17 @@ export default function MediaLibrary({ initialMedia, onSelect, selectable = fals
 
                 await registerMedia(formData);
             }
+            showToast("Media uploaded successfully.", "success");
         } catch (err) {
             console.error("Upload failed", err);
+            showToast(err instanceof Error ? err.message : "Media upload failed.", "error");
         } finally {
             setUploading(false);
             if (typeof window !== "undefined") {
                 window.location.reload();
             }
         }
-    }, [media]);
+    }, [media, showToast]);
 
     const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop, accept: { 'image/*': [] } });
 
@@ -88,8 +92,9 @@ export default function MediaLibrary({ initialMedia, onSelect, selectable = fals
                 const result = await deleteMedia(id, path);
                 if (result.success) {
                     setMedia((prev) => prev.filter((m) => m.id !== id));
+                    showToast("Media file deleted.", "success");
                 } else {
-                    alert(result.error);
+                    showToast(result.error || "Failed to delete file.", "error");
                 }
             });
         }, { title: "Delete File?" });

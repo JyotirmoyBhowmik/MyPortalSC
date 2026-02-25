@@ -9,6 +9,7 @@ import {
     deleteAchievement,
 } from "@/app/admin/actions/achievements";
 import { useConfirmDialog } from "@/components/ui/ConfirmDialog";
+import { useToast } from "@/components/ui/ToastProvider";
 
 export default function AchievementsManager({
     achievements,
@@ -19,6 +20,7 @@ export default function AchievementsManager({
     const [editing, setEditing] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
     const { dialog, confirm: confirmDelete } = useConfirmDialog();
+    const { showToast } = useToast();
 
     async function handleCreate(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
@@ -33,8 +35,9 @@ export default function AchievementsManager({
                 order_index: parseInt(fd.get("order_index") as string) || 0,
             });
             setShowNew(false);
+            showToast("Achievement created successfully", "success");
         } catch (err) {
-            alert(err instanceof Error ? err.message : "Failed");
+            showToast(err instanceof Error ? err.message : "Failed to create achievement", "error");
         }
         setLoading(false);
     }
@@ -52,15 +55,21 @@ export default function AchievementsManager({
                 order_index: parseInt(fd.get("order_index") as string) || 0,
             });
             setEditing(null);
+            showToast("Achievement updated successfully", "success");
         } catch (err) {
-            alert(err instanceof Error ? err.message : "Failed");
+            showToast(err instanceof Error ? err.message : "Failed to update achievement", "error");
         }
         setLoading(false);
     }
 
     function handleDelete(id: string) {
         confirmDelete("This achievement will be permanently deleted.", async () => {
-            await deleteAchievement(id);
+            try {
+                await deleteAchievement(id);
+                showToast("Achievement deleted successfully", "success");
+            } catch (err) {
+                showToast(err instanceof Error ? err.message : "Failed to delete achievement", "error");
+            }
         }, { title: "Delete Achievement?" });
     }
 

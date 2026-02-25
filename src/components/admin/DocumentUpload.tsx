@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
+import { useToast } from "@/components/ui/ToastProvider";
 
 interface Document {
     name: string;
@@ -24,6 +25,7 @@ export default function DocumentUpload({
 }: DocumentUploadProps) {
     const [uploading, setUploading] = useState(false);
     const supabase = createClient();
+    const { showToast } = useToast();
 
     const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const files = e.target.files;
@@ -59,9 +61,10 @@ export default function DocumentUpload({
             }
 
             onChange(uploadedDocs);
+            showToast("Documents uploaded successfully", "success");
         } catch (error) {
             console.error("Upload failed:", error);
-            alert("One or more files failed to upload.");
+            showToast("One or more files failed to upload.", "error");
         } finally {
             setUploading(false);
         }

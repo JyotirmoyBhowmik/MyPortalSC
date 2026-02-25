@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import { createClient } from "@/lib/supabase/client";
+import { useToast } from "@/components/ui/ToastProvider";
 
 interface ImageUploadProps {
     value?: string | null;
@@ -20,6 +21,7 @@ export default function ImageUpload({
     const [uploading, setUploading] = useState(false);
     const [preview, setPreview] = useState<string | null>(value || null);
     const supabase = createClient();
+    const { showToast } = useToast();
 
     const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
@@ -47,9 +49,10 @@ export default function ImageUpload({
             // Use proxy route to hide raw Supabase URL from visitors
             const proxyUrl = `/api/assets?path=${encodeURIComponent(filePath)}`;
             onChange(proxyUrl);
+            showToast("Upload successful", "success");
         } catch (error) {
             console.error("Upload failed:", error);
-            alert("Upload failed. Please try again.");
+            showToast("Upload failed. Please try again.", "error");
             setPreview(value || null); // Revert preview
         } finally {
             setUploading(false);

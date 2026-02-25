@@ -6,6 +6,7 @@ import { DndContext, closestCenter, KeyboardSensor, PointerSensor, useSensor, us
 import { arrayMove, SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable";
 import { SortableRow } from "./SortableRow";
 import { useConfirmDialog } from "@/components/ui/ConfirmDialog";
+import { useToast } from "@/components/ui/ToastProvider";
 
 interface TimelineEntry {
     id: string;
@@ -30,8 +31,8 @@ export default function TimelineManager({ entries }: { entries: TimelineEntry[] 
     const [showModal, setShowModal] = useState(false);
     const [editing, setEditing] = useState<TimelineEntry | null>(null);
     const [isPending, startTransition] = useTransition();
-    const [message, setMessage] = useState<{ type: string; text: string } | null>(null);
     const { dialog, confirm: confirmDelete } = useConfirmDialog();
+    const { showToast } = useToast();
 
     useEffect(() => { setItems(entries); }, [entries]);
 
@@ -54,7 +55,12 @@ export default function TimelineManager({ entries }: { entries: TimelineEntry[] 
                     sort_order: index,
                 }));
                 startTransition(async () => {
-                    await updateTimelineOrder(updates);
+                    try {
+                        await updateTimelineOrder(updates);
+                        showToast("Timeline reordered successfully", "success");
+                    } catch (err) {
+                        showToast("Failed to reorder timeline items", "error");
+                    }
                 });
 
                 return newItems;
@@ -70,21 +76,23 @@ export default function TimelineManager({ entries }: { entries: TimelineEntry[] 
                 ? await updateTimelineEntry(editing.id, formData)
                 : await createTimelineEntry(formData);
             if (result.success) {
-                setMessage({ type: "success", text: editing ? "Updated!" : "Created!" });
+                showToast(editing ? "Timeline entry updated!" : "Timeline entry created!", "success");
                 setShowModal(false);
             } else {
-                setMessage({ type: "error", text: result.error || "Failed" });
+                showToast(result.error || "Failed to save timeline entry", "error");
             }
-            setTimeout(() => setMessage(null), 2000);
         });
     }
 
     function handleDelete(id: string) {
         confirmDelete("This timeline entry will be permanently deleted.", async () => {
             startTransition(async () => {
-                await deleteTimelineEntry(id);
-                setMessage({ type: "success", text: "Deleted!" });
-                setTimeout(() => setMessage(null), 2000);
+                const result = await deleteTimelineEntry(id);
+                if (result?.success) {
+                    showToast("Timeline entry deleted!", "success");
+                } else {
+                    showToast(result?.error || "Failed to delete timeline entry", "error");
+                }
             });
         }, { title: "Delete Entry?" });
     }
@@ -100,11 +108,6 @@ export default function TimelineManager({ entries }: { entries: TimelineEntry[] 
         <>
             {dialog}
             <div>
-                {message && (
-                    <div className={`fixed top-4 right-4 z-50 px-4 py-3 rounded-lg text-sm font-medium shadow-lg ${message.type === "success" ? "bg-green-500/20 text-green-400 border border-green-500/30" : "bg-red-500/20 text-red-400 border border-red-500/30"}`}>
-                        {message.text}
-                    </div>
-                )}
 
                 <div className="flex justify-end mb-4">
                     <button onClick={() => { setEditing(null); setShowModal(true); }} className="px-4 py-2 bg-primary text-primary-foreground rounded-lg text-sm font-medium hover:bg-primary-hover transition-colors">

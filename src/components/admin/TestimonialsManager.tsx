@@ -6,6 +6,7 @@ import { DndContext, closestCenter, KeyboardSensor, PointerSensor, useSensor, us
 import { arrayMove, SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable";
 import { SortableRow } from "./SortableRow";
 import { useConfirmDialog } from "@/components/ui/ConfirmDialog";
+import { useToast } from "@/components/ui/ToastProvider";
 
 interface Testimonial {
     id: string;
@@ -26,8 +27,8 @@ export default function TestimonialsManager({ testimonials }: { testimonials: Te
     const [showModal, setShowModal] = useState(false);
     const [editing, setEditing] = useState<Testimonial | null>(null);
     const [isPending, startTransition] = useTransition();
-    const [message, setMessage] = useState<{ type: string; text: string } | null>(null);
     const { dialog, confirm: confirmDelete } = useConfirmDialog();
+    const { showToast } = useToast();
 
     useEffect(() => { setItems(testimonials); }, [testimonials]);
 
@@ -50,7 +51,12 @@ export default function TestimonialsManager({ testimonials }: { testimonials: Te
                     sort_order: index,
                 }));
                 startTransition(async () => {
-                    await updateTestimonialOrder(updates);
+                    try {
+                        await updateTestimonialOrder(updates);
+                        showToast("Testimonials reordered", "success");
+                    } catch (err) {
+                        showToast("Failed to reorder testimonials", "error");
+                    }
                 });
 
                 return newItems;
@@ -67,21 +73,23 @@ export default function TestimonialsManager({ testimonials }: { testimonials: Te
                 ? await updateTestimonial(editing.id, formData)
                 : await createTestimonial(formData);
             if (result.success) {
-                setMessage({ type: "success", text: editing ? "Updated!" : "Created!" });
+                showToast(editing ? "Testimonial updated!" : "Testimonial created!", "success");
                 setShowModal(false);
             } else {
-                setMessage({ type: "error", text: result.error || "Failed" });
+                showToast(result.error || "Failed to save", "error");
             }
-            setTimeout(() => setMessage(null), 2000);
         });
     }
 
     function handleDelete(id: string) {
         confirmDelete("This testimonial will be permanently deleted.", async () => {
             startTransition(async () => {
-                await deleteTestimonial(id);
-                setMessage({ type: "success", text: "Deleted!" });
-                setTimeout(() => setMessage(null), 2000);
+                const result = await deleteTestimonial(id);
+                if (result.success) {
+                    showToast("Testimonial deleted!", "success");
+                } else {
+                    showToast(result.error || "Failed to delete", "error");
+                }
             });
         }, { title: "Delete Testimonial?" });
     }
@@ -91,7 +99,6 @@ export default function TestimonialsManager({ testimonials }: { testimonials: Te
         <>
             {dialog}
             <div>
-                {/* ... (keep message) */}
 
                 <div className="flex justify-end mb-4">
                     <button onClick={openAdd} className="px-4 py-2 bg-primary text-primary-foreground rounded-lg text-sm font-medium hover:bg-primary-hover transition-colors">

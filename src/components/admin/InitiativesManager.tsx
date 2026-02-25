@@ -47,6 +47,8 @@ const statusColors: Record<string, string> = {
     archived: "bg-gray-500/15 text-gray-400",
 };
 
+import { useToast } from "@/components/ui/ToastProvider";
+
 export default function InitiativesManager({
     initiatives,
     programs,
@@ -57,8 +59,8 @@ export default function InitiativesManager({
     const [showModal, setShowModal] = useState(false);
     const [editingId, setEditingId] = useState<string | null>(null);
     const [isPending, startTransition] = useTransition();
-    const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
     const { dialog, confirm: confirmDelete } = useConfirmDialog();
+    const { showToast } = useToast();
 
     // Form state
     const [formData, setFormData] = useState({
@@ -105,8 +107,9 @@ export default function InitiativesManager({
 
             try {
                 await reorderInitiatives(orderedPayload);
+                showToast("Initiatives reordered", "success");
             } catch (err) {
-                console.error("Failed to reorder initiatives:", err);
+                showToast("Failed to reorder initiatives", "error");
                 setItems(initiatives);
             }
         }
@@ -164,12 +167,11 @@ export default function InitiativesManager({
                 result = await createInitiative(fd);
             }
             if (result.success) {
-                setMessage({ type: "success", text: editingId ? "Initiative updated!" : "Initiative created!" });
+                showToast(editingId ? "Initiative updated!" : "Initiative created!", "success");
                 setShowModal(false);
             } else {
-                setMessage({ type: "error", text: result.error || "Failed to save" });
+                showToast(result.error || "Failed to save", "error");
             }
-            setTimeout(() => setMessage(null), 3000);
         });
     }
 
@@ -180,11 +182,10 @@ export default function InitiativesManager({
                 startTransition(async () => {
                     const result = await deleteInitiative(id);
                     if (result.success) {
-                        setMessage({ type: "success", text: "Initiative deleted!" });
+                        showToast("Initiative deleted!", "success");
                     } else {
-                        setMessage({ type: "error", text: result.error || "Failed to delete" });
+                        showToast(result.error || "Failed to delete", "error");
                     }
-                    setTimeout(() => setMessage(null), 3000);
                 });
             },
             { title: "Delete Initiative?" }
@@ -199,13 +200,6 @@ export default function InitiativesManager({
         <>
             {dialog}
             <div>
-                {/* Toast message */}
-                {message && (
-                    <div className={`fixed top-4 right-4 z-50 px-4 py-3 rounded-lg text-sm font-medium shadow-lg animate-slide-down ${message.type === "success" ? "bg-green-500/20 text-green-400 border border-green-500/30" : "bg-red-500/20 text-red-400 border border-red-500/30"}`}>
-                        {message.text}
-                    </div>
-                )}
-
                 {/* Header */}
                 <div className="flex items-center justify-between flex-wrap gap-4 mb-6">
                     <div className="flex items-center gap-3 flex-1 min-w-0">

@@ -1,10 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { inviteUser, updateUserRole, removeUser } from "@/app/admin/actions/users";
+import { updateUserRole, removeUser } from "@/app/admin/actions/users";
 import UserInviteModal from "./UserInviteModal";
 import { useRouter } from "next/navigation";
 import { useConfirmDialog } from "@/components/ui/ConfirmDialog";
+import { useToast } from "@/components/ui/ToastProvider";
 
 interface AdminUser {
     id: string;
@@ -23,15 +24,17 @@ export default function UsersManager({ users }: UsersManagerProps) {
     const [updating, setUpdating] = useState<string | null>(null);
     const router = useRouter();
     const { dialog, confirm: confirmDelete } = useConfirmDialog();
+    const { showToast } = useToast();
 
     async function handleRoleChange(userId: string, newRole: string) {
         setUpdating(userId);
         try {
             await updateUserRole(userId, newRole);
+            showToast("User role updated successfully", "success");
             router.refresh(); // Refresh server data
         } catch (error) {
             console.error("Failed to update role:", error);
-            alert("Failed to update role");
+            showToast("Failed to update role", "error");
         } finally {
             setUpdating(null);
         }
@@ -42,10 +45,11 @@ export default function UsersManager({ users }: UsersManagerProps) {
             setUpdating(userId);
             try {
                 await removeUser(userId);
+                showToast("User removed successfully", "success");
                 router.refresh();
             } catch (error) {
                 console.error("Failed to remove user:", error);
-                alert("Failed to remove user");
+                showToast("Failed to remove user", "error");
             } finally {
                 setUpdating(null);
             }

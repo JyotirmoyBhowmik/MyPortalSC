@@ -24,6 +24,7 @@ import {
     verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { SortableRow } from "@/components/admin/SortableRow";
+import { useToast } from "@/components/ui/ToastProvider";
 
 export default function ProjectsTable({
     projects: initialProjects,
@@ -37,6 +38,7 @@ export default function ProjectsTable({
     const [deleting, setDeleting] = useState<string | null>(null);
     const [items, setItems] = useState(initialProjects);
     const { dialog, confirm: confirmDelete } = useConfirmDialog();
+    const { showToast } = useToast();
 
     useEffect(() => {
         setItems(initialProjects);
@@ -70,8 +72,10 @@ export default function ProjectsTable({
 
             try {
                 await reorderProjects(orderedPayload);
+                showToast("Project order updated", "success");
             } catch (err) {
                 console.error("Failed to reorder projects:", err);
+                showToast("Failed to reorder projects", "error");
                 // Revert on failure
                 setItems(initialProjects);
             }
@@ -85,8 +89,9 @@ export default function ProjectsTable({
                 setDeleting(id);
                 try {
                     await deleteProject(id);
+                    showToast("Project deleted", "success");
                 } catch (err) {
-                    alert(err instanceof Error ? err.message : "Failed to delete");
+                    showToast(err instanceof Error ? err.message : "Failed to delete", "error");
                 }
                 setDeleting(null);
             },
@@ -97,8 +102,9 @@ export default function ProjectsTable({
     async function handleToggleStatus(id: string, currentStatus: string) {
         try {
             await toggleProjectStatus(id, currentStatus);
+            showToast(`Status updated to ${currentStatus === "published" ? "draft" : "published"}`, "success");
         } catch (err) {
-            alert(err instanceof Error ? err.message : "Failed to update status");
+            showToast(err instanceof Error ? err.message : "Failed to update status", "error");
         }
     }
 

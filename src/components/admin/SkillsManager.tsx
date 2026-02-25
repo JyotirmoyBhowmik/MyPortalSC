@@ -22,6 +22,7 @@ import {
     verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { SortableRow } from "@/components/admin/SortableRow";
+import { useToast } from "@/components/ui/ToastProvider";
 
 export default function SkillsManager({
     skills,
@@ -36,6 +37,7 @@ export default function SkillsManager({
     const [showNew, setShowNew] = useState(false);
     const [loading, setLoading] = useState(false);
     const { dialog, confirm: confirmDelete } = useConfirmDialog();
+    const { showToast } = useToast();
 
     async function handleCreate(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
@@ -50,8 +52,9 @@ export default function SkillsManager({
                 order_index: parseInt(fd.get("order_index") as string) || 0,
             });
             setShowNew(false);
+            showToast("Skill created successfully", "success");
         } catch (err) {
-            alert(err instanceof Error ? err.message : "Failed");
+            showToast(err instanceof Error ? err.message : "Failed to create skill", "error");
         }
         setLoading(false);
     }
@@ -69,8 +72,9 @@ export default function SkillsManager({
                 order_index: parseInt(fd.get("order_index") as string) || 0,
             });
             setEditing(null);
+            showToast("Skill updated successfully", "success");
         } catch (err) {
-            alert(err instanceof Error ? err.message : "Failed");
+            showToast(err instanceof Error ? err.message : "Failed to update skill", "error");
         }
         setLoading(false);
     }
@@ -79,7 +83,12 @@ export default function SkillsManager({
         confirmDelete(
             "This skill will be permanently removed. This cannot be undone.",
             async () => {
-                await deleteSkill(id);
+                try {
+                    await deleteSkill(id);
+                    showToast("Skill deleted successfully", "success");
+                } catch (err) {
+                    showToast(err instanceof Error ? err.message : "Failed to delete skill", "error");
+                }
             },
             { title: "Delete Skill?" }
         );
@@ -118,8 +127,9 @@ export default function SkillsManager({
 
             try {
                 await reorderSkills(orderedPayload);
+                showToast("Skills reordered successfully", "success");
             } catch (err) {
-                console.error("Failed to reorder skills:", err);
+                showToast("Failed to reorder skills", "error");
                 setItems(skills);
             }
         }
