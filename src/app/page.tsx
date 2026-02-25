@@ -6,8 +6,7 @@ import { getPageContent, getContentField } from "@/lib/data/content";
 import { getFeatureFlag } from "@/lib/data/settings";
 import Badge from "@/components/ui/Badge";
 import ParticleBackground from "@/components/animations/ParticleBackground";
-import VideoPlayer from "@/components/visuals/VideoPlayer";
-import DeliveryGlobe from "@/components/visuals/DeliveryGlobe";
+
 
 export const revalidate = 60;
 
@@ -17,17 +16,13 @@ export default async function HomePage() {
     skillsByCategory,
     certifications,
     pageContent,
-    featureVideoIntro,
-    featureParticleBg,
-    feature3dGlobe
+    featureParticleBg
   ] = await Promise.all([
     getFeaturedProjects(3),
     getSkillsByCategory(),
     getActiveCertifications(),
     getPageContent("home"),
-    getFeatureFlag("feature_video_intro"),
-    getFeatureFlag("feature_particle_bg"),
-    getFeatureFlag("feature_3d_globe"),
+    getFeatureFlag("feature_particle_bg")
   ]);
 
   const totalSkills = Object.values(skillsByCategory).flat().length;
@@ -115,17 +110,7 @@ export default async function HomePage() {
             </Link>
           </div>
 
-          {featureVideoIntro && (
-            <div className="max-w-3xl mx-auto mb-16 animate-slide-up stagger-4">
-              <VideoPlayer src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" className="aspect-video shadow-2xl rounded-2xl border border-primary/20" />
-            </div>
-          )}
 
-          {feature3dGlobe && (
-            <div className="relative w-full h-[300px] mb-16 animate-scale-in">
-              <DeliveryGlobe />
-            </div>
-          )}
 
           {/* Stats row */}
           <div className="grid grid-cols-2 md:flex md:flex-row items-center justify-center gap-8 md:gap-12 mt-12 md:mt-16 animate-fade-in stagger-4">
