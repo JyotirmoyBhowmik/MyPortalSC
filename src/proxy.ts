@@ -33,7 +33,13 @@ export async function proxy(request: NextRequest) {
                 // Content Security Policy
                 response.headers.set(
                     'Content-Security-Policy',
-                    "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' blob: data: https:; font-src 'self' data:; connect-src 'self' https: wss:;"
+                    "default-src 'self'; " +
+                    "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://challenges.cloudflare.com https://vercel.live https://static.cloudflareinsights.com; " +
+                    "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; " +
+                    "img-src 'self' blob: data: https:; " +
+                    "font-src 'self' data: https://fonts.gstatic.com; " +
+                    "frame-src 'self' https://challenges.cloudflare.com; " +
+                    "connect-src 'self' https: wss:;"
                 );
             }
         }

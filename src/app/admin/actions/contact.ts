@@ -26,14 +26,20 @@ function checkRateLimit(ip: string): boolean {
 // ----------------------------------------------------
 
 export async function submitContactForm(formData: FormData) {
+    console.log("[CONTACT] submitContactForm called");
+
     const headersList = await headers();
     const ip = headersList.get("x-forwarded-for") || "unknown";
+    console.log("[CONTACT] IP:", ip);
 
     if (!checkRateLimit(ip)) {
         return { success: false, error: "Too many submissions. Please try again later." };
     }
 
+    console.log("[CONTACT] Checking feature_contact_crm flag...");
     const isContactEnabled = await getFeatureFlag("feature_contact_crm");
+    console.log("[CONTACT] feature_contact_crm =", isContactEnabled);
+
     if (!isContactEnabled) {
         return { success: false, error: "Contact submissions are currently disabled." };
     }
@@ -44,7 +50,7 @@ export async function submitContactForm(formData: FormData) {
     const email = formData.get("email") as string;
     const subject = formData.get("subject") as string;
     const message = formData.get("message") as string;
-    const turnstileToken = formData.get("token") as string | null;
+    const turnstileToken = formData.get("cf-turnstile-response") as string | null;
 
     if (!name || !email || !message) {
         return { success: false, error: "Name, email, and message are required." };
@@ -89,7 +95,7 @@ export async function submitContactForm(formData: FormData) {
 
                 // 1. Send Auto-Responder to User
                 await resend.emails.send({
-                    from: 'Jyotirmoy <onboarding@resend.dev>', // Use onboarding@resend.dev for free tier testing
+                    from: 'Jyotirmoy Bhowmik <noreply@resend.jyotirmoyb.com>',
                     to: email,
                     subject: 'Thank you for your message',
                     html: `<p>Hi ${name},</p><p>Thank you for reaching out! I have received your message regarding "<strong>${subject}</strong>" and will get back to you shortly.</p><br><p>Best,<br>Jyotirmoy Bhowmik</p>`,
@@ -97,7 +103,7 @@ export async function submitContactForm(formData: FormData) {
 
                 // 2. Send Notification to Admin
                 await resend.emails.send({
-                    from: 'Jyotirmoy <onboarding@resend.dev>',
+                    from: 'Jyotirmoy Bhowmik <noreply@resend.jyotirmoyb.com>',
                     to: adminEmail,
                     subject: `New Contact Submission: ${subject}`,
                     html: `<p><strong>Name:</strong> ${name}</p><p><strong>Email:</strong> ${email}</p><p><strong>Message:</strong></p><p>${message}</p>`,
@@ -132,7 +138,7 @@ export async function replyToContact(id: string, email: string, name: string, re
                 const adminEmail = process.env.ADMIN_EMAIL || "admin@jyotirmoyb.com";
 
                 await resend.emails.send({
-                    from: `Jyotirmoy Bhowmik <onboarding@resend.dev>`, // Use onboarding@resend.dev for free tier
+                    from: `Jyotirmoy Bhowmik <noreply@resend.jyotirmoyb.com>`,
                     to: email,
                     replyTo: adminEmail,
                     subject: `Re: Your message to Jyotirmoy`,

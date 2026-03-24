@@ -9,6 +9,7 @@ import ChatWidget from "@/components/chat/ChatWidget";
 import VoiceWidget from "@/components/chat/VoiceWidget";
 import PageTransition from "@/components/animations/PageTransition";
 import { SettingsProvider } from "@/components/SettingsProvider";
+import RetroToggle from "@/components/RetroToggle";
 import "./globals.css";
 
 const inter = Inter({
@@ -112,6 +113,7 @@ export default async function RootLayout({
         <ThemeProvider>
           <I18nProvider>
             <SettingsProvider settings={flags}>
+              <RetroToggle />
               <Navbar settings={settings} />
               <PageTransition enabled={!!flags.feature_page_transitions}>
                 <main className="min-h-screen md:pl-16">{children}</main>

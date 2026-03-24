@@ -563,3 +563,290 @@ select {
 .admin-input::placeholder {
   color: var(--muted-fg);
 }
+
+/* ============================================================
+   Retro / 90s Terminal Theme
+   ============================================================ */
+
+/* Smooth transition for all theme-aware properties */
+html {
+  transition: background-color 0.4s ease, color 0.4s ease;
+}
+
+html[data-retro="true"] {
+  /* Override all design tokens */
+  --background: #0a0a0a;
+  --foreground: #00ff41;
+  --surface: #0d0d0d;
+  --surface-hover: #1a1a1a;
+  --border-color: #00ff41;
+  --border-hover: #33ff66;
+  --primary: #00ff41;
+  --primary-hover: #33ff66;
+  --primary-fg: #0a0a0a;
+  --accent: #00cc33;
+  --accent-hover: #00ff41;
+  --muted: #111111;
+  --muted-fg: #00cc33;
+  --success: #00ff41;
+  --warning: #ffff00;
+  --danger: #ff3333;
+  --card-bg: rgba(0, 0, 0, 0.9);
+  --card-hover: rgba(0, 30, 0, 0.9);
+  --heading: #00ff41;
+
+  /* Override gradients */
+  --gradient-primary: linear-gradient(135deg, #00ff41 0%, #00cc33 100%);
+  --gradient-subtle: linear-gradient(135deg, rgba(0, 255, 65, 0.05) 0%, transparent 100%);
+  --gradient-hero: none;
+  --gradient-card: none;
+
+  /* Override glass */
+  --glass-bg: rgba(0, 10, 0, 0.85);
+  --glass-border: #00ff41;
+  --glass-blur: 0px;
+}
+
+/* Global font override for retro */
+html[data-retro="true"] body {
+  font-family: 'Courier New', 'Lucida Console', monospace !important;
+  background: #0a0a0a;
+  color: #00ff41;
+  text-shadow: 0 0 4px rgba(0, 255, 65, 0.3);
+}
+
+html[data-retro="true"] * {
+  font-family: 'Courier New', 'Lucida Console', monospace !important;
+  border-radius: 0px !important;
+}
+
+/* Keep the retro toggle switch rounded */
+html[data-retro="true"] .retro-toggle-switch {
+  border-radius: 4px !important;
+}
+
+/* CRT Scanline overlay */
+html[data-retro="true"] body::after {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  z-index: 99998;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 0, 0, 0.08) 2px,
+    rgba(0, 0, 0, 0.08) 4px
+  );
+}
+
+/* Override glassmorphism */
+html[data-retro="true"] .glass {
+  background: rgba(0, 10, 0, 0.85);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  border: 1px solid #00ff41;
+  box-shadow: 0 0 8px rgba(0, 255, 65, 0.15), inset 0 0 4px rgba(0, 255, 65, 0.05);
+}
+
+/* Override gradient text */
+html[data-retro="true"] .gradient-text {
+  background: none !important;
+  -webkit-background-clip: unset !important;
+  -webkit-text-fill-color: #00ff41 !important;
+  background-clip: unset !important;
+  text-shadow: 0 0 10px rgba(0, 255, 65, 0.6);
+}
+
+/* Override gradient background */
+html[data-retro="true"] .gradient-bg {
+  background: #00ff41 !important;
+  animation: none;
+}
+
+/* Override dot pattern */
+html[data-retro="true"] .dot-pattern {
+  background-image: none;
+}
+
+/* Override hover lift */
+html[data-retro="true"] .hover-lift:hover {
+  transform: none;
+  box-shadow: 0 0 15px rgba(0, 255, 65, 0.3), inset 0 0 5px rgba(0, 255, 65, 0.1);
+}
+
+/* Override headings */
+html[data-retro="true"] h1,
+html[data-retro="true"] h2,
+html[data-retro="true"] h3,
+html[data-retro="true"] h4,
+html[data-retro="true"] h5,
+html[data-retro="true"] h6 {
+  color: #00ff41;
+  text-shadow: 0 0 8px rgba(0, 255, 65, 0.5);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Links */
+html[data-retro="true"] a {
+  color: #00ff41;
+  text-decoration: underline;
+}
+
+html[data-retro="true"] a:hover {
+  color: #33ff66;
+  text-shadow: 0 0 8px rgba(0, 255, 65, 0.6);
+}
+
+/* Buttons */
+html[data-retro="true"] button,
+html[data-retro="true"] [type="submit"] {
+  border: 1px solid #00ff41 !important;
+  background: transparent !important;
+  color: #00ff41 !important;
+  text-shadow: 0 0 4px rgba(0, 255, 65, 0.3);
+  box-shadow: 0 0 6px rgba(0, 255, 65, 0.15);
+}
+
+html[data-retro="true"] button:hover,
+html[data-retro="true"] [type="submit"]:hover {
+  background: rgba(0, 255, 65, 0.1) !important;
+  box-shadow: 0 0 12px rgba(0, 255, 65, 0.4);
+}
+
+/* Form inputs */
+html[data-retro="true"] .admin-input,
+html[data-retro="true"] input,
+html[data-retro="true"] textarea,
+html[data-retro="true"] select {
+  background: #0a0a0a !important;
+  border: 1px solid #00ff41 !important;
+  color: #00ff41 !important;
+}
+
+html[data-retro="true"] .admin-input:focus,
+html[data-retro="true"] input:focus,
+html[data-retro="true"] textarea:focus {
+  box-shadow: 0 0 10px rgba(0, 255, 65, 0.3) !important;
+}
+
+html[data-retro="true"] .admin-input::placeholder,
+html[data-retro="true"] input::placeholder,
+html[data-retro="true"] textarea::placeholder {
+  color: #006b1e !important;
+}
+
+/* Badges */
+html[data-retro="true"] [class*="bg-primary"],
+html[data-retro="true"] [class*="bg-success"],
+html[data-retro="true"] [class*="bg-accent"] {
+  background: rgba(0, 255, 65, 0.1) !important;
+  color: #00ff41 !important;
+  border: 1px solid #00ff41;
+}
+
+/* Proficiency bars */
+html[data-retro="true"] .proficiency-bar {
+  background: #111;
+  border: 1px solid #004d14;
+}
+
+html[data-retro="true"] .proficiency-bar-fill {
+  background: #00ff41;
+  box-shadow: 0 0 6px rgba(0, 255, 65, 0.4);
+}
+
+/* Scrollbar */
+html[data-retro="true"] ::-webkit-scrollbar-thumb {
+  background: rgba(0, 255, 65, 0.4);
+}
+
+html[data-retro="true"] ::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 255, 65, 0.7);
+}
+
+/* Selection */
+html[data-retro="true"] ::selection {
+  background: rgba(0, 255, 65, 0.3);
+  color: #000;
+}
+
+/* Cursor blink animation for retro mode */
+@keyframes retro-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+html[data-retro="true"] .retro-cursor::after {
+  content: '█';
+  animation: retro-blink 1s step-end infinite;
+  color: #00ff41;
+}
+
+/* Retro mode: pulsating glow on primary elements */
+@keyframes retro-glow {
+  0%, 100% { box-shadow: 0 0 5px rgba(0, 255, 65, 0.2); }
+  50% { box-shadow: 0 0 15px rgba(0, 255, 65, 0.5); }
+}
+
+/* Bento Grid and enhanced utility classes */
+
+.bento-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+}
+
+.bento-grid > :nth-child(1) {
+  grid-column: span 2;
+}
+
+.bento-grid > :nth-child(4) {
+  grid-column: span 2;
+}
+
+.bento-grid > :nth-child(7) {
+  grid-column: span 2;
+}
+
+@media (max-width: 1024px) {
+  .bento-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .bento-grid > :nth-child(1),
+  .bento-grid > :nth-child(4),
+  .bento-grid > :nth-child(7) {
+    grid-column: span 2;
+  }
+}
+
+@media (max-width: 640px) {
+  .bento-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .bento-grid > * {
+    grid-column: span 1 !important;
+  }
+}
+
+/* Glow border on hover */
+.glow-border {
+  position: relative;
+  transition: box-shadow 0.3s ease;
+}
+
+.glow-border:hover {
+  box-shadow: 0 0 20px rgba(var(--primary-rgb, 100, 255, 218), 0.15),
+    0 0 40px rgba(var(--primary-rgb, 100, 255, 218), 0.05);
+}
+
+html[data-retro="true"] .glow-border:hover {
+  box-shadow: 0 0 15px rgba(0, 255, 65, 0.3);
+}

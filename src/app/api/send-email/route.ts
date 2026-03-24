@@ -13,9 +13,7 @@ export async function POST(request: Request) {
         const resend = new Resend(process.env.RESEND_API_KEY);
 
         const data = await resend.emails.send({
-            // Note: For Resend free tier, you can only send from a verified domain or 'onboarding@resend.dev'
-            // Replace 'onboarding@resend.dev' with your own domain once verified
-            from: 'Jyotirmoy Bhowmik from Portal <contact@jyotirmoyb.com>',
+            from: 'Jyotirmoy Bhowmik <noreply@resend.jyotirmoyb.com>',
             to,
             subject,
             html,

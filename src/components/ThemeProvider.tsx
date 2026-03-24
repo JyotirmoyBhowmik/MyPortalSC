@@ -8,6 +8,8 @@ interface ThemeContextValue {
     theme: ThemeName;
     setTheme: (t: ThemeName) => void;
     themes: { name: ThemeName; label: string; swatch: string }[];
+    isRetro: boolean;
+    toggleRetro: () => void;
 }
 
 const themes: ThemeContextValue["themes"] = [
@@ -21,6 +23,8 @@ const ThemeContext = createContext<ThemeContextValue>({
     theme: "deep-navy",
     setTheme: () => { },
     themes,
+    isRetro: false,
+    toggleRetro: () => { },
 });
 
 export function useTheme() {
@@ -29,6 +33,7 @@ export function useTheme() {
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
     const [theme, setThemeState] = useState<ThemeName>("deep-navy");
+    const [isRetro, setIsRetro] = useState(false);
     const [mounted, setMounted] = useState(false);
 
     useEffect(() => {
@@ -38,6 +43,11 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
             setThemeState(stored);
             document.documentElement.setAttribute("data-theme", stored);
         }
+        const retroStored = localStorage.getItem("portfolio-retro");
+        if (retroStored === "true") {
+            setIsRetro(true);
+            document.documentElement.setAttribute("data-retro", "true");
+        }
     }, []);
 
     function setTheme(t: ThemeName) {
@@ -46,15 +56,32 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
         document.documentElement.setAttribute("data-theme", t);
     }
 
-    // Prevent flash: apply theme attribute on mount
+    function toggleRetro() {
+        setIsRetro((prev) => {
+            const next = !prev;
+            localStorage.setItem("portfolio-retro", String(next));
+            if (next) {
+                document.documentElement.setAttribute("data-retro", "true");
+            } else {
+                document.documentElement.removeAttribute("data-retro");
+            }
+            return next;
+        });
+    }
+
     useEffect(() => {
         if (mounted) {
             document.documentElement.setAttribute("data-theme", theme);
+            if (isRetro) {
+                document.documentElement.setAttribute("data-retro", "true");
+            } else {
+                document.documentElement.removeAttribute("data-retro");
+            }
         }
-    }, [theme, mounted]);
+    }, [theme, isRetro, mounted]);
 
     return (
-        <ThemeContext.Provider value={{ theme, setTheme, themes }}>
+        <ThemeContext.Provider value={{ theme, setTheme, themes, isRetro, toggleRetro }}>
             {children}
         </ThemeContext.Provider>
     );

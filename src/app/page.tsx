@@ -6,6 +6,7 @@ import { getPageContent, getContentField } from "@/lib/data/content";
 import { getFeatureFlag } from "@/lib/data/settings";
 import Badge from "@/components/ui/Badge";
 import dynamic from "next/dynamic";
+import AnimatedSection, { AnimatedCard } from "@/components/animations/AnimatedSection";
 
 const ParticleBackground = dynamic(() => import("@/components/animations/ParticleBackground"));
 
@@ -151,19 +152,21 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* ========== CORE COMPETENCIES SUMMARY ========== */}
+      {/* ========== CORE COMPETENCIES SUMMARY (Bento Grid) ========== */}
       <section className="py-24 px-4 bg-surface/50">
         <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl sm:text-4xl font-bold mb-4">
-              Core <span className="gradient-text">Competencies</span>
-            </h2>
-            <p className="text-muted-foreground max-w-2xl mx-auto">
-              Deep expertise across IT infrastructure, security, cloud, and enterprise technology management.
-            </p>
-          </div>
+          <AnimatedSection>
+            <div className="text-center mb-16">
+              <h2 className="text-3xl sm:text-4xl font-bold mb-4">
+                Core <span className="gradient-text">Competencies</span>
+              </h2>
+              <p className="text-muted-foreground max-w-2xl mx-auto">
+                Deep expertise across IT infrastructure, security, cloud, and enterprise technology management.
+              </p>
+            </div>
+          </AnimatedSection>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="bento-grid">
             {[
               { icon: "🏢", title: "IT Infrastructure", desc: "Data Center, capacity planning, OS administration, patching, service continuity" },
               { icon: "🔒", title: "Network & Security", desc: "Cisco/Juniper, Palo Alto/Fortinet, VPN, Zscaler SASE, network segmentation" },
@@ -173,12 +176,12 @@ export default async function HomePage() {
               { icon: "📋", title: "Project Management", desc: "Scope & planning, vendor management, procurement, budget, risk, governance" },
               { icon: "🤖", title: "Automation & Analytics", desc: "30+ RPA bots (UiPath), Tableau/Power BI dashboards, process improvement" },
               { icon: "🏭", title: "OT/ICS Security", desc: "IT/OT connectivity, SCADA environments, IEC 62443, OT security roadmaps" },
-            ].map((comp) => (
-              <div key={comp.title} className="glass rounded-xl p-6 hover-lift transition-all duration-300">
+            ].map((comp, i) => (
+              <AnimatedCard key={comp.title} delay={i * 0.08} className="glass rounded-xl p-6 glow-border transition-all duration-300">
                 <div className="text-3xl mb-3">{comp.icon}</div>
                 <h3 className="text-sm font-semibold text-primary uppercase tracking-wider mb-2">{comp.title}</h3>
                 <p className="text-sm text-muted-foreground leading-relaxed">{comp.desc}</p>
-              </div>
+              </AnimatedCard>
             ))}
           </div>
         </div>
@@ -188,63 +191,66 @@ export default async function HomePage() {
       <section className="py-24 px-4">
         <div className="max-w-6xl mx-auto">
           {/* Section header */}
-          <div className="text-center mb-16">
-            <h2 className="text-3xl sm:text-4xl font-bold mb-4">
-              Featured <span className="gradient-text">Projects</span>
-            </h2>
-            <p className="text-muted-foreground max-w-xl mx-auto">
-              A curated selection of enterprise infrastructure and technology projects.
-            </p>
-          </div>
+          <AnimatedSection>
+            <div className="text-center mb-16">
+              <h2 className="text-3xl sm:text-4xl font-bold mb-4">
+                Featured <span className="gradient-text">Projects</span>
+              </h2>
+              <p className="text-muted-foreground max-w-xl mx-auto">
+                A curated selection of enterprise infrastructure and technology projects.
+              </p>
+            </div>
+          </AnimatedSection>
 
           {/* Project cards */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {projects.map((project, i) => (
-              <Link
-                key={project.id}
-                href={`/projects/${project.slug}`}
-                className={`group glass rounded-xl overflow-hidden hover-lift stagger-${i + 1}`}
-              >
-                {/* Image placeholder */}
-                <div className="h-48 bg-gradient-to-br from-primary/10 to-accent/10 flex items-center justify-center overflow-hidden">
-                  {project.featured_image_url ? (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img
-                      src={project.featured_image_url}
-                      alt={project.title}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                    />
-                  ) : (
-                    <div className="w-16 h-16 rounded-xl gradient-bg opacity-30 group-hover:opacity-60 transition-opacity" />
-                  )}
-                </div>
-                <div className="p-6">
-                  <div className="flex items-center gap-2 mb-3">
-                    <Badge variant="primary">{project.status}</Badge>
-                    {project.domain?.slice(0, 1).map((d) => (
-                      <Badge key={d} variant="outline">
-                        {d}
-                      </Badge>
-                    ))}
+              <AnimatedCard key={project.id} delay={i * 0.1}>
+                <Link
+                  href={`/projects/${project.slug}`}
+                  className="group glass rounded-xl overflow-hidden glow-border block h-full"
+                >
+                  {/* Image placeholder */}
+                  <div className="h-48 bg-gradient-to-br from-primary/10 to-accent/10 flex items-center justify-center overflow-hidden">
+                    {project.featured_image_url ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        src={project.featured_image_url}
+                        alt={project.title}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                      />
+                    ) : (
+                      <div className="w-16 h-16 rounded-xl gradient-bg opacity-30 group-hover:opacity-60 transition-opacity" />
+                    )}
                   </div>
-                  <h3 className="text-lg font-semibold text-foreground group-hover:text-primary transition-colors mb-2">
-                    {project.title}
-                  </h3>
-                  <p className="text-sm text-muted-foreground line-clamp-2 mb-4">
-                    {project.short_description}
-                  </p>
-                  <div className="flex flex-wrap gap-1.5">
-                    {project.technologies?.slice(0, 4).map((tech) => (
-                      <span
-                        key={tech}
-                        className="text-xs px-2 py-0.5 rounded bg-muted text-muted-foreground"
-                      >
-                        {tech}
-                      </span>
-                    ))}
+                  <div className="p-6">
+                    <div className="flex items-center gap-2 mb-3">
+                      <Badge variant="primary">{project.status}</Badge>
+                      {project.domain?.slice(0, 1).map((d) => (
+                        <Badge key={d} variant="outline">
+                          {d}
+                        </Badge>
+                      ))}
+                    </div>
+                    <h3 className="text-lg font-semibold text-foreground group-hover:text-primary transition-colors mb-2">
+                      {project.title}
+                    </h3>
+                    <p className="text-sm text-muted-foreground line-clamp-2 mb-4">
+                      {project.short_description}
+                    </p>
+                    <div className="flex flex-wrap gap-1.5">
+                      {project.technologies?.slice(0, 4).map((tech) => (
+                        <span
+                          key={tech}
+                          className="text-xs px-2 py-0.5 rounded bg-muted text-muted-foreground"
+                        >
+                          {tech}
+                        </span>
+                      ))}
+                    </div>
                   </div>
-                </div>
-              </Link>
+                </Link>
+              </AnimatedCard>
             ))}
           </div>
 
@@ -266,21 +272,24 @@ export default async function HomePage() {
       {/* ========== SKILLS OVERVIEW ========== */}
       <section className="py-24 px-4 bg-surface/50">
         <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl sm:text-4xl font-bold mb-4">
-              Skills & <span className="gradient-text">Technologies</span>
-            </h2>
-            <p className="text-muted-foreground max-w-xl mx-auto">
-              Technologies and platforms used to deliver enterprise infrastructure and security solutions.
-            </p>
-          </div>
+          <AnimatedSection>
+            <div className="text-center mb-16">
+              <h2 className="text-3xl sm:text-4xl font-bold mb-4">
+                Skills & <span className="gradient-text">Technologies</span>
+              </h2>
+              <p className="text-muted-foreground max-w-xl mx-auto">
+                Technologies and platforms used to deliver enterprise infrastructure and security solutions.
+              </p>
+            </div>
+          </AnimatedSection>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {Object.entries(skillsByCategory).map(
               ([category, skills], catIdx) => (
-                <div
+                <AnimatedCard
                   key={category}
-                  className={`glass rounded-xl p-6 stagger-${catIdx + 1}`}
+                  delay={catIdx * 0.1}
+                  className="glass rounded-xl p-6 glow-border"
                 >
                   <h3 className="text-sm font-semibold text-primary uppercase tracking-wider mb-4">
                     {category}
@@ -307,7 +316,7 @@ export default async function HomePage() {
                       </div>
                     ))}
                   </div>
-                </div>
+                </AnimatedCard>
               )
             )}
           </div>
@@ -317,17 +326,20 @@ export default async function HomePage() {
       {/* ========== CERTIFICATIONS ========== */}
       <section className="py-24 px-4">
         <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl sm:text-4xl font-bold mb-4">
-              <span className="gradient-text">Certifications</span> & Badges
-            </h2>
-          </div>
+          <AnimatedSection>
+            <div className="text-center mb-16">
+              <h2 className="text-3xl sm:text-4xl font-bold mb-4">
+                <span className="gradient-text">Certifications</span> & Badges
+              </h2>
+            </div>
+          </AnimatedSection>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {certifications.map((cert, i) => (
-              <div
+              <AnimatedCard
                 key={cert.id}
-                className={`glass rounded-xl p-6 hover-lift stagger-${i + 1}`}
+                delay={i * 0.12}
+                className="glass rounded-xl p-6 glow-border"
               >
                 <div className="w-12 h-12 rounded-lg gradient-bg flex items-center justify-center text-white text-lg font-bold mb-4">
                   🏆
@@ -360,7 +372,7 @@ export default async function HomePage() {
                     </svg>
                   </a>
                 )}
-              </div>
+              </AnimatedCard>
             ))}
           </div>
         </div>
@@ -368,8 +380,8 @@ export default async function HomePage() {
 
       {/* ========== CTA SECTION ========== */}
       <section className="py-24 px-4">
-        <div className="max-w-3xl mx-auto text-center">
-          <div className="glass rounded-2xl p-10 sm:p-16 relative overflow-hidden">
+        <AnimatedSection className="max-w-3xl mx-auto text-center">
+          <div className="glass rounded-2xl p-10 sm:p-16 relative overflow-hidden glow-border">
             <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-accent/5" />
             <div className="relative z-10">
               <h2 className="text-3xl sm:text-4xl font-bold mb-4">
@@ -391,7 +403,7 @@ export default async function HomePage() {
               </Link>
             </div>
           </div>
-        </div>
+        </AnimatedSection>
       </section>
     </>
   );

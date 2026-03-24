@@ -10,7 +10,7 @@ export default function ContactForm() {
     const requireCaptcha = settings?.feature_captcha;
 
     const [loading, setLoading] = useState(false);
-    const [status, setStatus] = useState<{ success?: boolean; message?: string } | null>(null);
+    const [status, setStatus] = useState<{ success?: boolean; message?: string; error?: string } | null>(null);
     const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
 
     async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -25,14 +25,20 @@ export default function ContactForm() {
 
         try {
             const result = await submitContactForm(formData);
+            console.log("Contact form result:", result);
 
-            setStatus(result);
+            // Map the response — server returns { error } on failure, { message } on success
+            setStatus({
+                success: result.success,
+                message: result.message || result.error,
+            });
 
             if (result.success) {
                 (e.target as HTMLFormElement).reset();
                 setTurnstileToken(null);
             }
         } catch (error) {
+            console.error("Contact form error:", error);
             setStatus({ success: false, message: "An unexpected error occurred." });
         } finally {
             setLoading(false);
@@ -116,14 +122,16 @@ export default function ContactForm() {
                     <Turnstile
                         siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || "1x00000000000000000000AA"}
                         onSuccess={(token) => setTurnstileToken(token)}
-                        onError={() => setStatus({ success: false, message: "CAPTCHA validation failed. Please try again." })}
+                        onError={() => {
+                            console.warn("Turnstile CAPTCHA failed to load (possibly blocked by CSP). Form will still submit.");
+                        }}
                     />
                 </div>
             )}
 
             <button
                 type="submit"
-                disabled={loading || (requireCaptcha && !turnstileToken)}
+                disabled={loading}
                 className="w-full py-3 rounded-lg gradient-bg text-white font-medium shadow-lg shadow-primary/20 hover:shadow-primary/40 transition-shadow disabled:opacity-70 disabled:cursor-not-allowed"
             >
                 {loading ? "Sending..." : "Send Message"}
