@@ -9,6 +9,8 @@ import dynamic from "next/dynamic";
 import AnimatedSection, { AnimatedCard } from "@/components/animations/AnimatedSection";
 
 const ParticleBackground = dynamic(() => import("@/components/animations/ParticleBackground"));
+const TypewriterText = dynamic(() => import("@/components/animations/TypewriterText"));
+const SkillsRadarChart = dynamic(() => import("@/components/visuals/SkillsRadarChart"));
 
 
 export const revalidate = 60;
@@ -66,9 +68,20 @@ export default async function HomePage() {
             <span className="gradient-text">{heroTitle || "Jyotirmoy Bhowmik"}</span>
           </h1>
 
-          {/* Tagline / Subtitle */}
+          {/* Tagline / Subtitle with Typewriter */}
           <h2 className="text-xl sm:text-2xl font-bold text-foreground mb-4 animate-slide-up stagger-1 max-w-3xl mx-auto">
-            {heroSubtitle || "Project Manager – IT Infrastructure & Network | Security | Cloud"}
+            <TypewriterText
+              texts={[
+                "IT Infrastructure & Cloud Specialist",
+                "Network & Security Architect",
+                "Project Management Leader",
+                "OT/ICS Security Expert",
+                "Disaster Recovery Strategist",
+              ]}
+              typingSpeed={70}
+              deletingSpeed={35}
+              pauseDuration={2500}
+            />
           </h2>
 
           {/* Contact Info Line */}
@@ -111,6 +124,15 @@ export default async function HomePage() {
             >
               Get in Touch
             </Link>
+            <a
+              href="/downloads"
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-lg border border-primary/30 text-primary font-medium hover:bg-primary/10 transition-all"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+              Download Resume
+            </a>
           </div>
 
 
@@ -283,7 +305,26 @@ export default async function HomePage() {
             </div>
           </AnimatedSection>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
+            {/* Radar chart column */}
+            <AnimatedSection className="lg:col-span-1">
+              <div className="glass rounded-xl p-6 glow-border h-full flex flex-col items-center justify-center">
+                <h3 className="text-sm font-semibold text-primary uppercase tracking-wider mb-4 text-center">
+                  Proficiency Overview
+                </h3>
+                <SkillsRadarChart
+                  data={Object.entries(skillsByCategory).map(([category, skills]) => ({
+                    category,
+                    avgProficiency:
+                      skills.reduce((sum, s) => sum + (s.proficiency_level ?? 0), 0) / skills.length,
+                    skillCount: skills.length,
+                  }))}
+                />
+              </div>
+            </AnimatedSection>
+
+            {/* Skill cards column */}
+            <div className="lg:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-6">
             {Object.entries(skillsByCategory).map(
               ([category, skills], catIdx) => (
                 <AnimatedCard
@@ -319,6 +360,7 @@ export default async function HomePage() {
                 </AnimatedCard>
               )
             )}
+            </div>
           </div>
         </div>
       </section>

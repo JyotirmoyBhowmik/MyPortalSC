@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getProjectBySlug } from "@/lib/data/projects";
 import Badge from "@/components/ui/Badge";
+import ProjectImageWithLightbox from "@/components/projects/ProjectImageWithLightbox";
 
 export const revalidate = 60;
 
@@ -69,8 +70,7 @@ export default async function ProjectDetailPage({ params }: Props) {
                     <div className="glass rounded-xl overflow-hidden mb-8 shadow-2xl shadow-primary/5">
                         <div className="relative h-64 sm:h-96 md:h-[500px] w-full bg-gradient-to-br from-primary/10 to-accent/10 flex items-center justify-center">
                             {project.featured_image_url ? (
-                                // eslint-disable-next-line @next/next/no-img-element
-                                <img
+                                <ProjectImageWithLightbox
                                     src={project.featured_image_url}
                                     alt={project.title}
                                     className="w-full h-full object-cover"
