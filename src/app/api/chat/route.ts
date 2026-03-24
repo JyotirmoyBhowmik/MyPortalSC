@@ -36,7 +36,8 @@ export async function POST(req: Request) {
         });
 
         if (!response.ok) {
-            throw new Error(`OpenRouter API error: ${response.statusText}`);
+            const errBody = await response.text();
+            throw new Error(`OpenRouter API error: ${response.status} - ${errBody}`);
         }
 
         const completion = await response.json();
@@ -57,7 +58,7 @@ export async function POST(req: Request) {
         const errorStream = new ReadableStream({
             start(controller) {
                 controller.enqueue(new TextEncoder().encode(
-                    "I'm having a brief connection issue. Please try again or message me via the contact form!"
+                    `Error: ${error.message || 'Unknown error'}`
                 ));
                 controller.close();
             }
