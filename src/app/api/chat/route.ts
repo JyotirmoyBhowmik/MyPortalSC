@@ -1,5 +1,3 @@
-import { OpenRouter } from '@openrouter/sdk';
-
 export const maxDuration = 30;
 
 const SYSTEM_PROMPT = `
@@ -13,14 +11,6 @@ Be concise, highly professional, and welcoming. Do not make up facts about your 
 export async function POST(req: Request) {
     const { messages } = await req.json();
 
-    const openRouter = new OpenRouter({
-        apiKey: process.env.OPENROUTER_API_KEY || '',
-        defaultHeaders: {
-            'HTTP-Referer': 'https://jyotirmoyb.com',
-            'X-OpenRouter-Title': 'Jyotirmoy Bhowmik Portfolio',
-        },
-    });
-
     try {
         const formattedMessages = [
             { role: 'system', content: SYSTEM_PROMPT },
@@ -30,13 +20,27 @@ export async function POST(req: Request) {
             }))
         ];
 
-        const completion = await openRouter.chat.send({
-            model: 'openai/gpt-5.2',
-            messages: formattedMessages,
-            stream: false,
+        const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+            method: "POST",
+            headers: {
+                "Authorization": `Bearer ${process.env.OPENROUTER_API_KEY}`,
+                "HTTP-Referer": "https://jyotirmoyb.com",
+                "X-OpenRouter-Title": "Jyotirmoy Bhowmik Portfolio",
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                model: "meta-llama/llama-3.3-70b-instruct:free",
+                messages: formattedMessages,
+                stream: false
+            })
         });
 
-        const replyText = completion.choices[0].message.content || "I'm sorry, I couldn't generate a response.";
+        if (!response.ok) {
+            throw new Error(`OpenRouter API error: ${response.statusText}`);
+        }
+
+        const completion = await response.json();
+        const replyText = completion.choices?.[0]?.message?.content || "I'm sorry, I couldn't generate a response.";
 
         // Stream the reply to the client (matched to ChatWidget's stream reader logic)
         const stream = new ReadableStream({
