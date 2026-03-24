@@ -38,7 +38,7 @@ export default function SkillsRadarChart({ data }: SkillsRadarChartProps) {
     return (
         <div className="w-full aspect-square max-w-md mx-auto">
             <ResponsiveContainer width="100%" height="100%">
-                <RadarChart cx="50%" cy="50%" outerRadius="70%" data={chartData}>
+                <RadarChart cx="50%" cy="50%" outerRadius="60%" data={chartData}>
                     <PolarGrid stroke={gridColor} />
                     <PolarAngleAxis
                         dataKey="shortName"

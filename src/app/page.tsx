@@ -308,8 +308,8 @@ export default async function HomePage() {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
             {/* Radar chart column */}
             <AnimatedSection className="lg:col-span-1">
-              <div className="glass rounded-xl p-6 glow-border h-full flex flex-col items-center justify-center">
-                <h3 className="text-sm font-semibold text-primary uppercase tracking-wider mb-4 text-center">
+              <div className="glass rounded-xl p-6 glow-border h-full flex flex-col items-center justify-start pt-8">
+                <h3 className="text-sm font-semibold text-primary uppercase tracking-wider mb-8 text-center">
                   Proficiency Overview
                 </h3>
                 <SkillsRadarChart
