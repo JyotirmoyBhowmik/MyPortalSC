@@ -39,6 +39,8 @@ const socialLinks = [
     },
 ];
 
+import ViewCounter from "@/components/analytics/ViewCounter";
+
 export default function Footer({ flags = {} }: { flags?: Record<string, boolean> }) {
     const quickLinks = [
         { href: "/", label: "Home", visible: true },
@@ -130,11 +132,14 @@ export default function Footer({ flags = {} }: { flags?: Record<string, boolean>
                     <p className="text-xs text-muted-foreground">
                         © {new Date().getFullYear()} Jyotirmoy Bhowmik. All rights reserved.
                     </p>
-                    <p className="text-xs text-muted-foreground">
-                        Built with{" "}
-                        <span className="text-primary">Next.js</span> &{" "}
-                        <span className="text-accent">Supabase</span>
-                    </p>
+                    <div className="flex items-center gap-4">
+                        <ViewCounter />
+                        <p className="text-xs text-muted-foreground hidden sm:block">
+                            Built with{" "}
+                            <span className="text-primary">Next.js</span> &{" "}
+                            <span className="text-accent">Supabase</span>
+                        </p>
+                    </div>
                 </div>
             </div>
         </footer>

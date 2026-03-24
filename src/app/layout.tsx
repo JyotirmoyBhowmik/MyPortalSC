@@ -78,6 +78,8 @@ export async function generateMetadata(): Promise<Metadata> {
 
 // ... imports
 
+import ProgressBar from "@/components/layout/ProgressBar";
+
 export default async function RootLayout({
   children,
 }: Readonly<{
@@ -110,6 +112,7 @@ export default async function RootLayout({
         className={`${inter.variable} ${jetbrainsMono.variable} font-sans antialiased`}
         data-template={((settings["site_template"] as string) || "classic").replace(/"/g, "")}
       >
+        <ProgressBar />
         <ThemeProvider>
           <I18nProvider>
             <SettingsProvider settings={flags}>

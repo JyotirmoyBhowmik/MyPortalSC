@@ -7,11 +7,12 @@ import { getFeatureFlag } from "@/lib/data/settings";
 import Badge from "@/components/ui/Badge";
 import dynamic from "next/dynamic";
 import AnimatedSection, { AnimatedCard } from "@/components/animations/AnimatedSection";
+import type { Project } from "@/lib/database.types";
+import FeaturedProjectsFilter from "@/components/projects/FeaturedProjectsFilter";
 
 const ParticleBackground = dynamic(() => import("@/components/animations/ParticleBackground"));
 const TypewriterText = dynamic(() => import("@/components/animations/TypewriterText"));
 const SkillsRadarChart = dynamic(() => import("@/components/visuals/SkillsRadarChart"));
-
 
 export const revalidate = 60;
 
@@ -224,57 +225,8 @@ export default async function HomePage() {
             </div>
           </AnimatedSection>
 
-          {/* Project cards */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {projects.map((project, i) => (
-              <AnimatedCard key={project.id} delay={i * 0.1}>
-                <Link
-                  href={`/projects/${project.slug}`}
-                  className="group glass rounded-xl overflow-hidden glow-border block h-full"
-                >
-                  {/* Image placeholder */}
-                  <div className="h-48 bg-gradient-to-br from-primary/10 to-accent/10 flex items-center justify-center overflow-hidden">
-                    {project.featured_image_url ? (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img
-                        src={project.featured_image_url}
-                        alt={project.title}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                      />
-                    ) : (
-                      <div className="w-16 h-16 rounded-xl gradient-bg opacity-30 group-hover:opacity-60 transition-opacity" />
-                    )}
-                  </div>
-                  <div className="p-6">
-                    <div className="flex items-center gap-2 mb-3">
-                      <Badge variant="primary">{project.status}</Badge>
-                      {project.domain?.slice(0, 1).map((d) => (
-                        <Badge key={d} variant="outline">
-                          {d}
-                        </Badge>
-                      ))}
-                    </div>
-                    <h3 className="text-lg font-semibold text-foreground group-hover:text-primary transition-colors mb-2">
-                      {project.title}
-                    </h3>
-                    <p className="text-sm text-muted-foreground line-clamp-2 mb-4">
-                      {project.short_description}
-                    </p>
-                    <div className="flex flex-wrap gap-1.5">
-                      {project.technologies?.slice(0, 4).map((tech) => (
-                        <span
-                          key={tech}
-                          className="text-xs px-2 py-0.5 rounded bg-muted text-muted-foreground"
-                        >
-                          {tech}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                </Link>
-              </AnimatedCard>
-            ))}
-          </div>
+          {/* Project cards Filter */}
+          <FeaturedProjectsFilter projects={projects as Project[]} />
 
           {/* View all link */}
           <div className="text-center mt-12">
