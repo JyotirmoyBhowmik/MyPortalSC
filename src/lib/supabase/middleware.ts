@@ -53,20 +53,49 @@ export async function updateSession(request: NextRequest) {
 
     // Protect admin routes: redirect to login if not authenticated
     if (request.nextUrl.pathname.startsWith("/admin")) {
-        if (
-            !user &&
-            !request.nextUrl.pathname.startsWith("/admin/login")
-        ) {
+        if (!user && !request.nextUrl.pathname.startsWith("/admin/login")) {
             const url = request.nextUrl.clone();
             url.pathname = "/admin/login";
             return NextResponse.redirect(url);
         }
 
-        // If user is logged in and tries to visit login page, redirect to dashboard
         if (user && request.nextUrl.pathname === "/admin/login") {
             const url = request.nextUrl.clone();
             url.pathname = "/admin";
             return NextResponse.redirect(url);
+        }
+
+        // --- RBAC Implementation ---
+        if (user && !request.nextUrl.pathname.startsWith("/admin/login")) {
+            // Check if user is in admin_users and what their role is
+            const { data: adminRecord } = await supabase
+                .from("admin_users")
+                .select("role")
+                .eq("user_id", user.id)
+                .single();
+
+            // 1. Not an admin at all (e.g., standard authenticated consumer user, if those existed)
+            if (!adminRecord) {
+                // Force logout and redirect
+                await supabase.auth.signOut();
+                const url = request.nextUrl.clone();
+                url.pathname = "/admin/login";
+                return NextResponse.redirect(url);
+            }
+
+            // 2. Protect Super Admin Routes
+            const pathname = request.nextUrl.pathname;
+            const isSuperAdminRoute =
+                pathname.startsWith("/admin/users") ||
+                pathname.startsWith("/admin/settings") ||
+                pathname.startsWith("/admin/audit");
+
+            if (isSuperAdminRoute && adminRecord.role !== "super_admin") {
+                // If an 'admin' tries to access a 'super_admin' route, kick them back to the dashboard
+                const url = request.nextUrl.clone();
+                url.pathname = "/admin";
+                return NextResponse.redirect(url);
+            }
         }
     }
 

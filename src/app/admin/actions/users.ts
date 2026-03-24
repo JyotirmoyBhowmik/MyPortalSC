@@ -12,6 +12,11 @@ export async function inviteUser(email: string, role: string) {
         const { data: { user } } = await supabase.auth.getUser();
         if (!user) return { success: false, error: "Unauthorized" };
 
+        const { data: callerRecord } = await supabase.from("admin_users").select("role").eq("user_id", user.id).single();
+        if (!callerRecord || callerRecord.role !== "super_admin") {
+            return { success: false, error: "Insufficient permissions to invite users." };
+        }
+
         const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
         if (!serviceRoleKey || !process.env.NEXT_PUBLIC_SUPABASE_URL) {
             return {
@@ -70,7 +75,7 @@ export async function updateUserRole(userId: string, role: string) {
     if (!caller) return { success: false, error: "Unauthorized" };
 
     const { data: callerRecord } = await supabase.from("admin_users").select("role").eq("user_id", caller.id).single();
-    if (!callerRecord || (callerRecord.role !== "super_admin" && callerRecord.role !== "admin")) {
+    if (!callerRecord || callerRecord.role !== "super_admin") {
         return { success: false, error: "Insufficient permissions to change roles." };
     }
 
@@ -103,7 +108,7 @@ export async function removeUser(userId: string) {
     if (!caller) return { success: false, error: "Unauthorized" };
 
     const { data: callerRecord } = await supabase.from("admin_users").select("role").eq("user_id", caller.id).single();
-    if (!callerRecord || (callerRecord.role !== "super_admin" && callerRecord.role !== "admin")) {
+    if (!callerRecord || callerRecord.role !== "super_admin") {
         return { success: false, error: "Insufficient permissions to remove users." };
     }
 
@@ -130,3 +135,4 @@ export async function removeUser(userId: string) {
     revalidatePath("/admin/users");
     return { success: true };
 }
+

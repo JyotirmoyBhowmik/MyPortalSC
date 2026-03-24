@@ -270,6 +270,23 @@ export default function AdminShell({
     const supabase = createClient();
     const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
     const [mobileOpen, setMobileOpen] = useState(false);
+    // Track the current user's role:
+    const [userRole, setUserRole] = useState<string | null>(null);
+
+    // Initial role fetch
+    useState(() => {
+        if (!enableRbac) return;
+        supabase.auth.getUser().then(({ data: { user } }) => {
+            if (user) {
+                supabase
+                    .from("admin_users")
+                    .select("role")
+                    .eq("user_id", user.id)
+                    .single()
+                    .then(({ data }) => setUserRole(data?.role || null));
+            }
+        });
+    });
 
     if (pathname === "/admin/login") {
         return <>{children}</>;
@@ -322,12 +339,14 @@ export default function AdminShell({
                     <nav className="flex-1 px-2 py-2 overflow-y-auto space-y-6">
                         {sidebarSections.map((section) => {
                             /* When RBAC is enabled, hide admin-only configuration links
-                               (Users & Roles, Settings) from the sidebar. In the future
-                               this would check the user's actual role from the DB. */
-                            const rbacRestrictedPaths = ["/admin/users"];
-                            const visibleLinks = enableRbac
+                               (Users & Roles, Settings, Audit) from the sidebar. */
+                            const rbacRestrictedPaths = ["/admin/users", "/admin/settings", "/admin/audit"];
+                            const isStandardAdmin = enableRbac && userRole !== "super_admin";
+
+                            const visibleLinks = isStandardAdmin
                                 ? section.links.filter((l) => !rbacRestrictedPaths.includes(l.href))
                                 : section.links;
+
                             if (visibleLinks.length === 0) return null;
                             return (
                                 <div key={section.title}>
