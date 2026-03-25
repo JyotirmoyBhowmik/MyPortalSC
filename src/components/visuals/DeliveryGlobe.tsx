@@ -22,15 +22,32 @@ function Arc({ start, end }: { start: [number, number, number]; end: [number, nu
     const points = useMemo(() => curve.getPoints(50), [curve]);
 
     return (
-        <line>
-            <bufferGeometry>
-                <bufferAttribute
-                    attach="attributes-position"
-                    args={[new Float32Array(points.flatMap(p => [p.x, p.y, p.z])), 3]}
-                />
-            </bufferGeometry>
-            <lineBasicMaterial attach="material" color="#4f46e5" opacity={0.6} transparent linewidth={1} />
-        </line>
+        <group>
+            {/* The Arc Line */}
+            <line>
+                <bufferGeometry>
+                    <bufferAttribute
+                        attach="attributes-position"
+                        args={[new Float32Array(points.flatMap(p => [p.x, p.y, p.z])), 3]}
+                    />
+                </bufferGeometry>
+                <lineBasicMaterial attach="material" color="#64ffda" opacity={0.6} transparent linewidth={2} />
+            </line>
+            
+            {/* Start Node */}
+            <mesh position={new THREE.Vector3(...start)}>
+                <Sphere args={[0.04, 16, 16]}>
+                    <meshBasicMaterial color="#00ff41" transparent opacity={0.9} />
+                </Sphere>
+            </mesh>
+            
+            {/* End Node */}
+            <mesh position={new THREE.Vector3(...end)}>
+                <Sphere args={[0.04, 16, 16]}>
+                    <meshBasicMaterial color="#00ff41" transparent opacity={0.9} />
+                </Sphere>
+            </mesh>
+        </group>
     );
 }
 
@@ -39,7 +56,7 @@ function Earth() {
 
     useFrame((state, delta) => {
         if (meshRef.current) {
-            meshRef.current.rotation.y += delta * 0.1;
+            meshRef.current.rotation.y += delta * 0.15;
         }
     });
 
@@ -47,17 +64,17 @@ function Earth() {
         <mesh ref={meshRef}>
             <Sphere args={[2, 64, 64]}>
                 <meshStandardMaterial
-                    color="#1e1b4b" // dark blue
-                    emissive="#1e1b4b"
-                    emissiveIntensity={0.5}
+                    color="#00ff41" // neon green
+                    emissive="#00ff41"
+                    emissiveIntensity={0.6}
                     wireframe
                     transparent
-                    opacity={0.8}
+                    opacity={0.3}
                 />
             </Sphere>
             {/* Inner solid core to block lines behind */}
             <Sphere args={[1.98, 64, 64]}>
-                <meshBasicMaterial color="#0f172a" />
+                <meshBasicMaterial color="#050505" />
             </Sphere>
         </mesh>
     );
