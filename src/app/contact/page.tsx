@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import { getPageContent, getContentField } from "@/lib/data/content";
 import dynamic from "next/dynamic";
 
-const DeliveryGlobe = dynamic(() => import("@/components/visuals/DeliveryGlobe"), {
-    loading: () => <div className="w-full h-[300px] animate-pulse bg-surface/20 rounded-full blur-2xl" />
+const GlobalOperationsDashboard = dynamic(() => import("@/components/visuals/GlobalOperationsDashboard"), {
+    loading: () => <div className="w-full h-[450px] animate-pulse bg-surface/10 rounded-xl" />
 });
 import ContactForm from "@/components/forms/ContactForm";
 
@@ -86,7 +86,7 @@ export default async function ContactPage() {
                         <h2 className="text-2xl font-bold mb-2">{globalOpsTitle}</h2>
                         <p className="text-muted-foreground text-sm">{globalOpsDesc}</p>
                     </div>
-                    <DeliveryGlobe />
+                    <GlobalOperationsDashboard />
                 </div>
             </section>
 
