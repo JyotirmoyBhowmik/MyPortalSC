@@ -13,6 +13,7 @@ import FeaturedProjectsFilter from "@/components/projects/FeaturedProjectsFilter
 const ParticleBackground = dynamic(() => import("@/components/animations/ParticleBackground"));
 const TypewriterText = dynamic(() => import("@/components/animations/TypewriterText"));
 const SkillsRadarChart = dynamic(() => import("@/components/visuals/SkillsRadarChart"));
+const ServerStatusWidget = dynamic(() => import("@/components/visuals/ServerStatusWidget"), { ssr: false });
 
 export const revalidate = 60;
 
@@ -198,7 +199,6 @@ export default async function HomePage() {
               { icon: "🖥️", title: "Virtualization", desc: "VMware vSphere/ESXi, Hyper-V, Citrix, Red Hat Virtualization, SAP hosting" },
               { icon: "📋", title: "Project Management", desc: "Scope & planning, vendor management, procurement, budget, risk, governance" },
               { icon: "🤖", title: "Automation & Analytics", desc: "30+ RPA bots (UiPath), Tableau/Power BI dashboards, process improvement" },
-              { icon: "🏭", title: "OT/ICS Security", desc: "IT/OT connectivity, SCADA environments, IEC 62443, OT security roadmaps" },
             ].map((comp, i) => (
               <AnimatedCard key={comp.title} delay={i * 0.08} className="glass rounded-xl p-6 glow-border transition-all duration-300">
                 <div className="text-3xl mb-3">{comp.icon}</div>
@@ -206,6 +206,9 @@ export default async function HomePage() {
                 <p className="text-sm text-muted-foreground leading-relaxed">{comp.desc}</p>
               </AnimatedCard>
             ))}
+            <AnimatedCard delay={0.64} className="h-full">
+              <ServerStatusWidget />
+            </AnimatedCard>
           </div>
         </div>
       </section>
