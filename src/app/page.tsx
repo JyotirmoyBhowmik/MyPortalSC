@@ -13,7 +13,7 @@ import FeaturedProjectsFilter from "@/components/projects/FeaturedProjectsFilter
 const ParticleBackground = dynamic(() => import("@/components/animations/ParticleBackground"));
 const TypewriterText = dynamic(() => import("@/components/animations/TypewriterText"));
 const SkillsRadarChart = dynamic(() => import("@/components/visuals/SkillsRadarChart"));
-const ServerStatusWidget = dynamic(() => import("@/components/visuals/ServerStatusWidget"), { ssr: false });
+const ServerStatusWidget = dynamic(() => import("@/components/visuals/ServerStatusWidget"));
 
 export const revalidate = 60;
 
