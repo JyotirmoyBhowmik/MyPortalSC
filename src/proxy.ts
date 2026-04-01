@@ -92,8 +92,8 @@ export async function proxy(request: NextRequest) {
             frame-ancestors 'self';
             frame-src 'self' https://challenges.cloudflare.com;
             worker-src 'self' blob:;
-            media-src 'self' blob: https://cqtluudfmigefqphmfbb.supabase.co mediastream:;
-            connect-src 'self' https://vercel.live https://*.supabase.co wss://*.supabase.co wss://*.googleapis.com https://*.googleapis.com;
+            media-src 'self' blob: https://cqtluudfmigefqphmfbb.supabase.co https://commondatastorage.googleapis.com mediastream:;
+            connect-src 'self' https://vercel.live https://*.supabase.co wss://*.supabase.co wss://*.googleapis.com https://*.googleapis.com https://cdn.jsdelivr.net;
             upgrade-insecure-requests;
         `.replace(/\s{2,}/g, ' ').trim();
         

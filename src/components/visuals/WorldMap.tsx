@@ -23,7 +23,7 @@ const markers = [
 
 const WorldMap = () => {
     return (
-        <div className="w-full h-full min-h-[400px] flex items-center justify-center relative">
+        <div className="w-full h-full min-h-[400px] flex items-center justify-center relative" style={{ backgroundColor: '#000000' }}>
             <ComposableMap
                 projection="geoMercator"
                 projectionConfig={{
@@ -31,6 +31,7 @@ const WorldMap = () => {
                     center: [20, 30] // Centers near Middle East / South Asia
                 }}
                 className="w-full h-full"
+                style={{ backgroundColor: '#000000' }}
             >
                 <Geographies geography={geoUrl}>
                     {({ geographies }) =>
@@ -38,8 +39,8 @@ const WorldMap = () => {
                             <Geography
                                 key={geo.rsmKey}
                                 geography={geo}
-                                fill="#111111"
-                                stroke="#333333"
+                                fill="#0a0a0a"
+                                stroke="#1a1a1a"
                                 strokeWidth={0.5}
                                 style={{
                                     default: { outline: "none" },

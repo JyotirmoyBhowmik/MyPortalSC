@@ -54,6 +54,7 @@ const settingGroups = [
             "feature_2fa",
             "feature_captcha",
             "feature_csp_headers",
+            "feature_strict_security_headers",
             "feature_enhanced_audit",
             "feature_rbac",
             "feature_session_management",
