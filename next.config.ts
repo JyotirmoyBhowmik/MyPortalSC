@@ -15,6 +15,25 @@ const nextConfig: NextConfig = {
       }
     ],
   },
+  poweredByHeader: false,
+  async headers() {
+    return [
+      {
+        // Apply strict baseline headers to all statically served Next.js files
+        source: '/_next/static/:path*',
+        headers: [
+          {
+            key: 'X-Content-Type-Options',
+            value: 'nosniff'
+          },
+          {
+            key: 'Strict-Transport-Security',
+            value: 'max-age=63072000; includeSubDomains; preload'
+          }
+        ]
+      }
+    ];
+  }
 };
 
 export default nextConfig;
