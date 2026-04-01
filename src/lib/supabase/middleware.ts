@@ -1,3 +1,8 @@
+/**
+ * Supabase Middleware Client — Edge-runtime auth session refresh + RBAC.
+ * Runs on every request via Next.js middleware. Refreshes JWT tokens,
+ * protects /admin routes, and enforces role-based access (super_admin vs admin).
+ */
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 

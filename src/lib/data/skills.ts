@@ -1,3 +1,8 @@
+/**
+ * Skills Data Access Layer — Supabase queries for technology skills.
+ * Skills are grouped by category for the radar chart and skill cards
+ * on the homepage. Ordered by order_index for drag-sort from admin.
+ */
 import { createClient } from "@/lib/supabase/server";
 import type { Skill } from "@/lib/database.types";
 

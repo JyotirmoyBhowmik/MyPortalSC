@@ -1,3 +1,9 @@
+/**
+ * Home Page — The main landing page (route: /).
+ * A Server Component that fetches featured projects, skills, certifications,
+ * and CMS content in parallel via Promise.all for maximum performance.
+ * Uses ISR with 60-second revalidation to balance freshness with speed.
+ */
 import Link from "next/link";
 import { getFeaturedProjects } from "@/lib/data/projects";
 import { getSkillsByCategory } from "@/lib/data/skills";

@@ -1,3 +1,7 @@
+/**
+ * PWA Manifest Generator — Creates manifest.webmanifest dynamically.
+ * Configures the Progressive Web App installability parameters (name, colors, icons).
+ */
 import type { MetadataRoute } from "next";
 
 export default function manifest(): MetadataRoute.Manifest {

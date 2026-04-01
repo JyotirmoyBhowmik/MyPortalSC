@@ -1,7 +1,14 @@
+/**
+ * Edge Middleware Proxy — Security Header Injection & Session Management.
+ * Runs on every request (except static assets) at the Vercel Edge.
+ * Combines Supabase session refresh with UpGuard-compliant security headers.
+ */
 import { NextResponse, type NextRequest } from "next/server";
 import { updateSession } from "@/lib/supabase/middleware";
 
-// Cache in global memory to prevent latency on every edge invocation
+// We cache the security flag in edge memory to avoid a Supabase fetch on
+// every single request. The TTL ensures the flag is re-checked every minute,
+// so admin changes to security settings propagate within ~60 seconds.
 let cachedSecurityFlag: boolean | null = null;
 let lastFetchTime = 0;
 const CACHE_TTL_MS = 60000; // 1 minute

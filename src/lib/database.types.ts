@@ -1,3 +1,8 @@
+/**
+ * Database Type Definitions — TypeScript interfaces mirroring the Supabase schema.
+ * Provides Row/Insert/Update types for each table plus convenient type aliases.
+ * Keep in sync with supabase/migrations/ when schema changes are made.
+ */
 export type Json =
     | string
     | number
@@ -58,6 +63,11 @@ export interface Database {
                     created_at: string;
                     updated_at: string;
                     created_by: string | null;
+                    challenge: string | null;
+                    approach: string | null;
+                    architecture_notes: string | null;
+                    outcome: string | null;
+                    key_metrics: Json | null;
                 };
                 Insert: {
                     id?: string;

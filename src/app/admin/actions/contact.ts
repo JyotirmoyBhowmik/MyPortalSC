@@ -77,12 +77,20 @@ export async function submitContactForm(formData: FormData) {
     }
 
     try {
+        // Generate SHA-256 integrity hash for tamper detection
+        const timestamp = new Date().toISOString();
+        const payload = JSON.stringify({ name, email, subject, message, timestamp });
+        const encoder = new TextEncoder();
+        const hashBuffer = await crypto.subtle.digest("SHA-256", encoder.encode(payload));
+        const hashArray = Array.from(new Uint8Array(hashBuffer));
+        const integrityHash = hashArray.map((b) => b.toString(16).padStart(2, "0")).join("");
+
         const { error } = await supabase.from("contact_submissions").insert({
             name,
             email,
             subject,
             message,
-            // status default is usually 'new' or handled by db default
+            integrity_hash: integrityHash,
         });
 
         if (error) throw error;

@@ -1,3 +1,9 @@
+/**
+ * Dynamic Sitemap Generator — Produces /sitemap.xml from DB content.
+ * Includes static routes, dynamic slugs (projects, blog, case studies),
+ * and feature-gated routes (only included if the feature flag is enabled).
+ * Regenerated every hour via ISR (revalidate = 3600).
+ */
 import type { MetadataRoute } from "next";
 import { createClient } from "@/lib/supabase/server";
 import { getFeatureFlag } from "@/lib/data/settings";

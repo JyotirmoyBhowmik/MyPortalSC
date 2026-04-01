@@ -1,3 +1,9 @@
+/**
+ * ThemeProvider — Client-side color scheme context.
+ * Manages 4 named themes (Deep Navy, Midnight Purple, Carbon, Emerald Forest)
+ * plus a retro CRT mode. Persists selection in localStorage and applies
+ * data-theme / data-retro attributes to <html> for CSS variable switching.
+ */
 "use client";
 
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";

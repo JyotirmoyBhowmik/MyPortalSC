@@ -1,6 +1,8 @@
-/* ─────────────────────────────────────────────────────
-   Site Settings / Feature Flags — Supabase-backed
-   ───────────────────────────────────────────────────── */
+/**
+ * Site Settings & Feature Flags — Data Access Layer (DAL).
+ * All feature flag reads go through this module. Uses React cache()
+ * to deduplicate DB calls within a single server-side render pass.
+ */
 import { createClient } from "@/lib/supabase/server";
 import { cache } from "react";
 

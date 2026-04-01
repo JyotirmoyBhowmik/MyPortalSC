@@ -1,3 +1,8 @@
+/**
+ * Supabase Server Client — Creates a server-side Supabase instance with cookie access.
+ * Used in Server Components and Server Actions. Handles the Next.js cookies() API
+ * and falls back gracefully during static generation (when cookies aren't available).
+ */
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 

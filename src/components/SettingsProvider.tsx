@@ -1,3 +1,8 @@
+/**
+ * SettingsProvider — Client-side feature flags context.
+ * Bridges server-fetched feature flags (from RootLayout) to client components.
+ * Components use useSettings() to check flags without additional DB queries.
+ */
 "use client";
 
 import { createContext, useContext, ReactNode } from "react";

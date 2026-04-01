@@ -58,9 +58,20 @@ export default function ContactsManager({ contacts, showAnalytics = false }: { c
                                 <td className="px-4 py-3 text-sm text-muted-foreground hidden md:table-cell">{c.email}</td>
                                 <td className="px-4 py-3 text-sm text-muted-foreground hidden lg:table-cell truncate max-w-xs">{c.message}</td>
                                 <td className="px-4 py-3">
-                                    <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded uppercase ${statusColors[c.status] || statusColors.new}`}>
-                                        {c.status}
-                                    </span>
+                                    <div className="flex items-center gap-1.5">
+                                        <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded uppercase ${statusColors[c.status] || statusColors.new}`}>
+                                            {c.status}
+                                        </span>
+                                        {c.integrity_hash ? (
+                                            <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-green-500/15 text-green-400" title={`Hash: ${c.integrity_hash.substring(0, 16)}...`}>
+                                                ✓ Signed
+                                            </span>
+                                        ) : (
+                                            <span className="text-[10px] px-1.5 py-0.5 rounded bg-gray-500/10 text-gray-500">
+                                                Legacy
+                                            </span>
+                                        )}
+                                    </div>
                                 </td>
                                 <td className="px-4 py-3 text-xs text-muted-foreground">
                                     {new Date(c.created_at).toLocaleDateString()}

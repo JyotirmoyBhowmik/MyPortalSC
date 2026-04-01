@@ -8,6 +8,14 @@ import { getSkillsByCategory } from "@/lib/data/skills";
 import { getAllAchievements } from "@/lib/data/achievements";
 import Link from "next/link";
 import VideoPlayer from "@/components/visuals/VideoPlayer";
+import dynamic from "next/dynamic";
+
+const NetworkTopology = dynamic(() => import("@/components/visuals/NetworkTopology"), {
+    loading: () => <div className="w-full h-[400px] animate-pulse bg-surface/10 rounded-xl" />
+});
+const CostComparison = dynamic(() => import("@/components/visuals/CostComparison"), {
+    loading: () => <div className="w-full h-[500px] animate-pulse bg-surface/10 rounded-xl" />
+});
 
 export const revalidate = 60;
 
@@ -230,6 +238,20 @@ export default async function AboutPage() {
                                 </svg>
                             </Link>
                         </div>
+                    </div>
+
+                    {/* Enterprise Architecture */}
+                    <div className="mb-16">
+                        <h2 className="text-3xl font-bold mb-8 flex items-center gap-3">
+                            <span className="w-2 h-8 bg-primary rounded-full" />
+                            Enterprise <span className="gradient-text">Architecture</span>
+                        </h2>
+                        <NetworkTopology />
+                    </div>
+
+                    {/* Infrastructure Cost Model */}
+                    <div className="mb-16">
+                        <CostComparison />
                     </div>
 
                     {/* Professional Experience */}

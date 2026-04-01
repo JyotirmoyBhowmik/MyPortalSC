@@ -1,3 +1,7 @@
+/**
+ * Robots.txt Generator — Controls search engine crawling behavior.
+ * Allows all public routes, blocks /admin/, /api/, and /debug/ from indexing.
+ */
 import type { MetadataRoute } from "next";
 
 export default function robots(): MetadataRoute.Robots {

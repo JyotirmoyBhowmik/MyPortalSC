@@ -1,3 +1,8 @@
+/**
+ * Global Error Boundary — Catches unhandled runtime errors in any route.
+ * Must be a client component ("use client") per Next.js App Router rules.
+ * Provides a user-friendly error message and a "Try again" reset button.
+ */
 "use client";
 
 import Button from "@/components/ui/Button";

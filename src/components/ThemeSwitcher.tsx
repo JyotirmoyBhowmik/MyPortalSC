@@ -36,8 +36,13 @@ export default function ThemeSwitcher() {
                                 <button
                                     key={t.name}
                                     onClick={() => {
+                                        // Smooth morph: add transition class briefly
+                                        document.documentElement.classList.add('theme-transitioning');
                                         setTheme(t.name);
                                         setOpen(false);
+                                        setTimeout(() => {
+                                            document.documentElement.classList.remove('theme-transitioning');
+                                        }, 600);
                                     }}
                                     className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all ${theme === t.name
                                         ? "bg-primary/10 text-primary"

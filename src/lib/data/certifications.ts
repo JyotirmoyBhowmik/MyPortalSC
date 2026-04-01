@@ -1,3 +1,8 @@
+/**
+ * Certifications Data Access Layer — Supabase queries for professional certs.
+ * Active certifications are shown on the homepage; getAllCertifications
+ * is used by the admin panel to manage all statuses (active/expired/archived).
+ */
 import { createClient } from "@/lib/supabase/server";
 import type { Certification } from "@/lib/database.types";
 

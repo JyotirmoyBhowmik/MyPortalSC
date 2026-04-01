@@ -6,7 +6,7 @@ import {
     getAllStrategicAreas,
     getInitiativeStats,
 } from "@/lib/data/initiatives";
-import InitiativesGrid from "@/components/initiatives/InitiativesGrid";
+import InitiativesViewToggle from "@/components/initiatives/InitiativesViewToggle";
 
 export const revalidate = 60;
 
@@ -73,7 +73,7 @@ export default async function InitiativesPage() {
             {/* Initiatives Grid */}
             <section className="py-16 px-4">
                 <div className="max-w-6xl mx-auto">
-                    <InitiativesGrid
+                    <InitiativesViewToggle
                         initiatives={initiatives.map((i) => ({
                             ...i,
                             programCode: i.programs?.code ?? "",

@@ -1,3 +1,8 @@
+/**
+ * Achievements Data Access Layer — Supabase queries for career achievements.
+ * Used by the achievements page and admin panel. Ordered by order_index
+ * to support drag-and-drop reordering from the admin interface.
+ */
 import { createClient } from "@/lib/supabase/server";
 import type { Achievement } from "@/lib/database.types";
 

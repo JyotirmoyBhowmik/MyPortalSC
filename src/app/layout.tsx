@@ -1,3 +1,8 @@
+/**
+ * Root Layout — The top-level server component that wraps every page.
+ * Responsible for: loading fonts, fetching global settings from Supabase,
+ * and nesting all context providers (Theme → I18n → Settings) in the correct order.
+ */
 import type { Metadata } from "next";
 import { Inter, JetBrains_Mono } from "next/font/google";
 import Navbar from "@/components/layout/Navbar";
@@ -12,6 +17,9 @@ import { SettingsProvider } from "@/components/SettingsProvider";
 import RetroToggle from "@/components/RetroToggle";
 import "./globals.css";
 
+// Inter is the primary body font; JetBrains Mono provides monospace accents
+// for code snippets and technical data. Both use display: "swap" to prevent
+// invisible text during font loading (CLS optimization).
 const inter = Inter({
   variable: "--font-inter",
   subsets: ["latin"],
@@ -26,6 +34,9 @@ const jetbrainsMono = JetBrains_Mono({
 
 import { getSiteSettingsMap } from "@/lib/data/settings";
 
+// generateMetadata is an async function that runs server-side before rendering.
+// It fetches feature flags from the DB to conditionally include OG images —
+// this prevents 404s on /api/og if the OG image generation flag is disabled.
 export async function generateMetadata(): Promise<Metadata> {
   const settings = await getSiteSettingsMap();
   const useOg = settings.feature_og_images;
@@ -76,21 +87,26 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-// ... imports
-
 import ProgressBar from "@/components/layout/ProgressBar";
 
+// RootLayout is an async Server Component — it fetches all settings once per
+// request and passes them down. This avoids N+1 queries from individual components.
 export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   const settings = await getSiteSettingsMap();
-  const flags = settings as Record<string, boolean>; // Component compatibility
+  // Cast to boolean record for component compatibility; non-boolean values
+  // (like site_template string) are spread separately where needed.
+  const flags = settings as Record<string, boolean>;
 
   return (
+    // suppressHydrationWarning: Theme class is set by ThemeProvider on mount,
+    // which will differ from the server-rendered "dark" — this is intentional.
     <html lang="en" className="dark" suppressHydrationWarning>
       <head>
+        {/* PWA manifest link is conditionally injected based on feature flag */}
         {flags.feature_pwa && <link rel="manifest" href="/manifest.webmanifest" />}
         {flags.feature_jsonld && (
           <script
@@ -112,16 +128,23 @@ export default async function RootLayout({
         className={`${inter.variable} ${jetbrainsMono.variable} font-sans antialiased`}
         data-template={((settings["site_template"] as string) || "classic").replace(/"/g, "")}
       >
+        {/* ProgressBar sits outside providers — it only needs navigation events */}
         <ProgressBar />
+        {/* Provider nesting order matters:
+            ThemeProvider (visual) → I18nProvider (language) → SettingsProvider (flags)
+            Each inner provider can access the context of its parent. */}
         <ThemeProvider>
           <I18nProvider>
             <SettingsProvider settings={flags}>
               <RetroToggle />
               <Navbar settings={settings} />
               <PageTransition enabled={!!flags.feature_page_transitions}>
+                {/* md:pl-16 offsets content for the fixed sidebar navbar on desktop */}
                 <main className="min-h-screen md:pl-16">{children}</main>
               </PageTransition>
               <Footer flags={flags} />
+              {/* These 3 components are invisible (render null or floating UI).
+                  They're placed at the end to avoid layout shifts during hydration. */}
               <VisitorTracker />
               <VoiceWidget />
               <ChatWidget />

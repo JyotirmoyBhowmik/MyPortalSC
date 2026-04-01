@@ -194,55 +194,77 @@ export default async function ProjectDetailPage({ params }: Props) {
                         </div>
                     )}
 
-                    {/* Documents */}
-                    {(project as any).documents &&
-                        ((project as any).documents as any[]).length > 0 && (
-                            <div className="glass rounded-xl p-8 mb-8">
-                                <h2 className="text-xl font-semibold mb-4">
-                                    Project Documents
-                                </h2>
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    {((project as any).documents as any[]).map(
-                                        (doc: any, i: number) => (
-                                            <a
-                                                key={i}
-                                                href={doc.url}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                className="flex items-center gap-3 p-4 rounded-lg border border-border hover:bg-surface/50 transition-colors group"
-                                            >
-                                                <div className="w-10 h-10 rounded bg-primary/10 text-primary flex items-center justify-center font-bold text-xs">
-                                                    DOC
+                    {/* ─── Case Study Deep Dive ─── */}
+                    {(project.challenge || project.approach || project.architecture_notes || project.outcome) && (
+                        <div className="space-y-6 mb-8">
+                            <h2 className="text-2xl font-bold flex items-center gap-3">
+                                <span className="w-2 h-8 bg-primary rounded-full" />
+                                Case Study <span className="gradient-text">Deep Dive</span>
+                            </h2>
+
+                            {/* The Challenge */}
+                            {project.challenge && (
+                                <div className="rounded-xl p-6 sm:p-8 border border-danger/20 bg-danger/5 backdrop-blur-sm">
+                                    <div className="flex items-center gap-3 mb-4">
+                                        <div className="w-10 h-10 rounded-lg bg-danger/10 flex items-center justify-center text-danger text-lg">⚠️</div>
+                                        <h3 className="text-lg font-bold text-danger">The Challenge</h3>
+                                    </div>
+                                    <p className="text-muted-foreground leading-relaxed whitespace-pre-line">{project.challenge}</p>
+                                </div>
+                            )}
+
+                            {/* Our Approach */}
+                            {project.approach && (
+                                <div className="rounded-xl p-6 sm:p-8 border border-accent/20 bg-accent/5 backdrop-blur-sm">
+                                    <div className="flex items-center gap-3 mb-4">
+                                        <div className="w-10 h-10 rounded-lg bg-accent/10 flex items-center justify-center text-accent text-lg">🎯</div>
+                                        <h3 className="text-lg font-bold text-accent">Our Approach</h3>
+                                    </div>
+                                    <p className="text-muted-foreground leading-relaxed whitespace-pre-line">{project.approach}</p>
+                                </div>
+                            )}
+
+                            {/* Architecture */}
+                            {project.architecture_notes && (
+                                <div className="rounded-xl p-6 sm:p-8 border border-primary/20 bg-primary/5 backdrop-blur-sm">
+                                    <div className="flex items-center gap-3 mb-4">
+                                        <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary text-lg">🏗️</div>
+                                        <h3 className="text-lg font-bold text-primary">Architecture & Implementation</h3>
+                                    </div>
+                                    <div className="font-mono text-sm text-muted-foreground leading-relaxed whitespace-pre-line bg-background/50 rounded-lg p-4 border border-border/50">
+                                        {project.architecture_notes}
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Outcome & Impact */}
+                            {project.outcome && (
+                                <div className="rounded-xl p-6 sm:p-8 border border-success/20 bg-success/5 backdrop-blur-sm">
+                                    <div className="flex items-center gap-3 mb-4">
+                                        <div className="w-10 h-10 rounded-lg bg-success/10 flex items-center justify-center text-success text-lg">✅</div>
+                                        <h3 className="text-lg font-bold text-success">Outcome & Impact</h3>
+                                    </div>
+                                    <p className="text-muted-foreground leading-relaxed whitespace-pre-line mb-4">{project.outcome}</p>
+
+                                    {/* Before/After Metric Chips */}
+                                    {project.key_metrics && Array.isArray(project.key_metrics) && (project.key_metrics as any[]).length > 0 && (
+                                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 mt-4 pt-4 border-t border-success/10">
+                                            {(project.key_metrics as any[]).map((metric: any, idx: number) => (
+                                                <div key={idx} className="glass rounded-lg p-4 text-center">
+                                                    <p className="text-xs text-muted-foreground mb-2 font-medium">{metric.label}</p>
+                                                    <div className="flex items-center justify-center gap-2">
+                                                        <span className="text-sm line-through text-danger/70">{metric.before}</span>
+                                                        <span className="text-muted-foreground">→</span>
+                                                        <span className="text-sm font-bold text-success">{metric.after}</span>
+                                                    </div>
                                                 </div>
-                                                <div className="flex-1 min-w-0">
-                                                    <p className="font-medium truncate group-hover:text-primary transition-colors">
-                                                        {doc.name}
-                                                    </p>
-                                                    {doc.size && (
-                                                        <p className="text-xs text-muted-foreground">
-                                                            {(doc.size / 1024).toFixed(1)} KB
-                                                        </p>
-                                                    )}
-                                                </div>
-                                                <svg
-                                                    className="w-5 h-5 text-muted-foreground group-hover:text-primary transition-colors"
-                                                    fill="none"
-                                                    viewBox="0 0 24 24"
-                                                    stroke="currentColor"
-                                                >
-                                                    <path
-                                                        strokeLinecap="round"
-                                                        strokeLinejoin="round"
-                                                        strokeWidth={2}
-                                                        d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
-                                                    />
-                                                </svg>
-                                            </a>
-                                        )
+                                            ))}
+                                        </div>
                                     )}
                                 </div>
-                            </div>
-                        )}
+                            )}
+                        </div>
+                    )}
 
                     {/* Technologies */}
                     {project.technologies && project.technologies.length > 0 && (

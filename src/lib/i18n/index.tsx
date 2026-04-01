@@ -1,3 +1,9 @@
+/**
+ * Internationalization (i18n) Provider — Client-side language switching.
+ * Supports English, Hindi, and Bengali with localStorage persistence.
+ * Provides useTranslation() hook for static strings and tDB() helper
+ * for database fields that have locale-suffixed columns (e.g., title_hi).
+ */
 "use client";
 
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";

@@ -1,3 +1,8 @@
+/**
+ * Admin Panel Layout — The root layout for all /admin routes.
+ * Forces dynamic rendering (no SSR/SSG build-time caching) because admin routes
+ * require fresh auth state and Supabase environment variables on every request.
+ */
 import AdminShell from "@/components/admin/AdminShell";
 import { getFeatureFlag } from "@/lib/data/settings";
 

@@ -850,3 +850,18 @@ html[data-retro="true"] .retro-cursor::after {
 html[data-retro="true"] .glow-border:hover {
   box-shadow: 0 0 15px rgba(0, 255, 65, 0.3);
 }
+
+/* ============================================================
+   Smooth Theme Morphing — applied briefly during theme change
+   ============================================================ */
+.theme-transitioning,
+.theme-transitioning *,
+.theme-transitioning *::before,
+.theme-transitioning *::after {
+  transition: background-color 0.5s ease,
+              color 0.3s ease,
+              border-color 0.4s ease,
+              box-shadow 0.4s ease,
+              fill 0.3s ease,
+              stroke 0.3s ease !important;
+}

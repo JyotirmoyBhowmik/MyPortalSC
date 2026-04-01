@@ -1,3 +1,8 @@
+/**
+ * Navbar Router Component — Dynamically loads the selected navbar variant.
+ * Currently defaults to NavbarSidebar cleanly, but structured to support
+ * swapping out standard classic/minimal variants based on settings later.
+ */
 "use client";
 
 import dynamic from "next/dynamic";

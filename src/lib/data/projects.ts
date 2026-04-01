@@ -1,3 +1,8 @@
+/**
+ * Projects Data Access Layer — Supabase queries for portfolio projects.
+ * Provides filtered reads (published, featured, by slug) used across
+ * public pages and admin panel. All queries respect status filtering.
+ */
 import { createClient } from "@/lib/supabase/server";
 import type { Project } from "@/lib/database.types";
 

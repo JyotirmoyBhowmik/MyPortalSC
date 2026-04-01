@@ -1,3 +1,8 @@
+/**
+ * Supabase Browser Client — Creates a client-side Supabase instance.
+ * Used in "use client" components (forms, realtime subscriptions, analytics).
+ * Falls back to a dummy client if env vars are missing (prevents build crashes).
+ */
 import { createBrowserClient } from "@supabase/ssr";
 
 export function createClient() {

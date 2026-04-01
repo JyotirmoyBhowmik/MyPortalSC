@@ -5,6 +5,9 @@ import dynamic from "next/dynamic";
 const GlobalOperationsDashboard = dynamic(() => import("@/components/visuals/GlobalOperationsDashboard"), {
     loading: () => <div className="w-full h-[450px] animate-pulse bg-surface/10 rounded-xl" />
 });
+const PingDashboard = dynamic(() => import("@/components/visuals/PingDashboard"), {
+    loading: () => <div className="w-full h-[200px] animate-pulse bg-surface/10 rounded-xl" />
+});
 import ContactForm from "@/components/forms/ContactForm";
 
 export const revalidate = 60;
@@ -87,6 +90,9 @@ export default async function ContactPage() {
                         <p className="text-muted-foreground text-sm">{globalOpsDesc}</p>
                     </div>
                     <GlobalOperationsDashboard />
+                    <div className="mt-6">
+                        <PingDashboard />
+                    </div>
                 </div>
             </section>
 

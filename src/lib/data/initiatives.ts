@@ -1,6 +1,9 @@
-/* ─────────────────────────────────────────────────────
-   Initiatives Data — Supabase-backed (DB-first)
-   ───────────────────────────────────────────────────── */
+/**
+ * Initiatives & Programs Data Access Layer — Supabase queries for IT initiatives.
+ * The largest data module: handles programs, initiatives (with foreign key joins),
+ * fiscal year filtering, strategic area grouping, and aggregate statistics.
+ * Programs are parent categories; initiatives are individual deliverables.
+ */
 import { createClient } from "@/lib/supabase/server";
 import type { Initiative, InitiativeWithProgram, Program } from "@/lib/database.types";
 

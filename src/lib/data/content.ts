@@ -1,3 +1,9 @@
+/**
+ * CMS Content Data Access Layer — JSONB page content from Supabase.
+ * Each page (home, about, etc.) stores editable fields as JSONB in
+ * the content_pages table. Helpers safely extract typed fields from
+ * the unstructured JSON to prevent runtime errors.
+ */
 import { createClient } from "@/lib/supabase/server";
 import type { ContentPage, Json } from "@/lib/database.types";
 
