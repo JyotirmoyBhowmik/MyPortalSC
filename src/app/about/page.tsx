@@ -9,7 +9,7 @@ import { getAllAchievements } from "@/lib/data/achievements";
 import Link from "next/link";
 import VideoPlayer from "@/components/visuals/VideoPlayer";
 import dynamic from "next/dynamic";
-import { getFeatureFlag } from "@/lib/data/settings";
+import { getFeatureFlag, getSetting } from "@/lib/data/settings";
 
 const NetworkTopology = dynamic(() => import("@/components/visuals/NetworkTopology"), {
     loading: () => <div className="w-full h-[400px] animate-pulse bg-surface/10 rounded-xl" />
@@ -117,6 +117,8 @@ export default async function AboutPage() {
 
     const showTopology = await getFeatureFlag("feature_network_topology");
     const showCostComparison = await getFeatureFlag("feature_cost_comparison");
+    const infraCostConfigStr = await getSetting("config_infra_cost");
+    const infraCostConfig = typeof infraCostConfigStr === "string" ? JSON.parse(infraCostConfigStr) : infraCostConfigStr;
 
     const biography = getContentField(pageContent?.content, "biography");
     const dbVision = getContentField(pageContent?.content, "vision_statement");
@@ -258,7 +260,7 @@ export default async function AboutPage() {
                     {/* Infrastructure Cost Model */}
                     {showCostComparison && (
                         <div className="mb-16">
-                            <CostComparison />
+                            <CostComparison initialCategories={infraCostConfig || undefined} />
                         </div>
                     )}
 

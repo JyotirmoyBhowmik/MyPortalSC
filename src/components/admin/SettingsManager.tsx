@@ -3,6 +3,7 @@
 import { useState, useTransition } from "react";
 import { updateSettingValue } from "@/app/admin/actions/settings";
 import type { SiteSetting } from "@/lib/data/settings";
+import InfraCostEditor from "./InfraCostEditor";
 
 const settingGroups = [
     {
@@ -100,6 +101,7 @@ interface Props {
 }
 
 export default function SettingsManager({ grouped }: Props) {
+    const [activeTab, setActiveTab] = useState<"toggles" | "configs">("toggles");
     const [isPending, startTransition] = useTransition();
     const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
 
@@ -149,17 +151,35 @@ export default function SettingsManager({ grouped }: Props) {
                 </div>
             )}
 
-            {/* Stats bar */}
-            <div className="flex items-center gap-6 mb-2">
-                <div className="text-sm text-muted-foreground">
-                    <span className="font-semibold text-foreground">
-                        {Object.values(localState).filter(val => val === true).length}
-                    </span>{" "}
-                    of {Object.keys(localState).length} boolean features enabled
-                </div>
+            {/* Tabs */}
+            <div className="flex items-center gap-2 border-b border-border mb-6 pb-2">
+                <button
+                    onClick={() => setActiveTab("toggles")}
+                    className={`px-4 py-2 text-sm font-medium transition-all border-b-2 -mb-[9px] ${activeTab === "toggles" ? "border-primary text-primary" : "border-transparent text-muted-foreground hover:text-foreground"}`}
+                >
+                    Feature Flags
+                </button>
+                <button
+                    onClick={() => setActiveTab("configs")}
+                    className={`px-4 py-2 text-sm font-medium transition-all border-b-2 -mb-[9px] ${activeTab === "configs" ? "border-primary text-primary" : "border-transparent text-muted-foreground hover:text-foreground"}`}
+                >
+                    Component Configurations
+                </button>
             </div>
 
-            {settingGroups.map((group) => {
+            {activeTab === "toggles" ? (
+                <>
+                    {/* Stats bar */}
+                    <div className="flex items-center gap-6 mb-2">
+                        <div className="text-sm text-muted-foreground">
+                            <span className="font-semibold text-foreground">
+                                {Object.values(localState).filter(val => val === true).length}
+                            </span>{" "}
+                            of {Object.keys(localState).length} boolean features enabled
+                        </div>
+                    </div>
+
+                    {settingGroups.map((group) => {
                 const groupSettings = group.keys.map(k => flatSettingsMap[k]).filter(Boolean);
                 const enabledCount = groupSettings.filter(s => localState[s.key] === true).length;
                 const totalBooleans = groupSettings.filter(s => typeof localState[s.key] === 'boolean').length;
@@ -264,10 +284,28 @@ export default function SettingsManager({ grouped }: Props) {
                                     );
                                 })}
                             </div>
-                        ) : null}
+                        ) : (
+                            <div className="px-6 py-8 text-center text-muted-foreground text-sm flex flex-col items-center">
+                                <span className="text-3xl mb-2 grayscale opacity-50">{group.icon}</span>
+                                No flags active in this category
+                            </div>
+                        )}
                     </div>
                 );
             })}
+                </>
+            ) : (
+                <div className="glass rounded-xl p-6 bg-gradient-to-br from-purple-500/10 to-pink-500/10">
+                    <InfraCostEditor 
+                        settingKey="config_infra_cost"
+                        initialConfig={
+                            typeof flatSettingsMap["config_infra_cost"]?.value === "string" 
+                            ? JSON.parse(flatSettingsMap["config_infra_cost"].value as string)
+                            : (flatSettingsMap["config_infra_cost"]?.value || [])
+                        } 
+                    />
+                </div>
+            )}
         </div>
     );
 }

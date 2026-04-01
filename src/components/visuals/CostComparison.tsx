@@ -4,6 +4,7 @@ import { useState, useMemo } from "react";
 import { motion } from "framer-motion";
 
 interface CostCategory {
+    id?: string;
     name: string;
     onPrem: number;
     cloud: number;
@@ -11,7 +12,7 @@ interface CostCategory {
     icon: string;
 }
 
-const categories: CostCategory[] = [
+const defaultCategories: CostCategory[] = [
     { name: "Compute", onPrem: 450, cloud: 280, hybrid: 340, icon: "⚡" },
     { name: "Storage", onPrem: 120, cloud: 85, hybrid: 95, icon: "💾" },
     { name: "Networking", onPrem: 80, cloud: 45, hybrid: 60, icon: "🌐" },
@@ -28,8 +29,9 @@ const modelColors = {
     hybrid: { bar: "bg-green-500", text: "text-green-400" },
 };
 
-export default function CostComparison() {
+export default function CostComparison({ initialCategories }: { initialCategories?: CostCategory[] }) {
     const [serverCount, setServerCount] = useState(20);
+    const categories = initialCategories || defaultCategories;
 
     const totals = useMemo(() => {
         const onPrem = categories.reduce((s, c) => s + c.onPrem, 0) * serverCount;
