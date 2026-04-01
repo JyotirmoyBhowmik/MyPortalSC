@@ -17,20 +17,40 @@ const nextConfig: NextConfig = {
   },
   poweredByHeader: false,
   async headers() {
+    const securityHeaders = [
+      {
+        key: 'X-Content-Type-Options',
+        value: 'nosniff'
+      },
+      {
+        key: 'Strict-Transport-Security',
+        value: 'max-age=63072000; includeSubDomains; preload'
+      },
+      {
+        key: 'X-Frame-Options',
+        value: 'SAMEORIGIN'
+      }
+    ];
     return [
       {
-        // Apply strict baseline headers to all statically served Next.js files
         source: '/_next/static/:path*',
-        headers: [
-          {
-            key: 'X-Content-Type-Options',
-            value: 'nosniff'
-          },
-          {
-            key: 'Strict-Transport-Security',
-            value: 'max-age=63072000; includeSubDomains; preload'
-          }
-        ]
+        headers: securityHeaders
+      },
+      {
+        source: '/robots.txt',
+        headers: securityHeaders
+      },
+      {
+        source: '/sitemap.xml',
+        headers: securityHeaders
+      },
+      {
+        source: '/manifest.webmanifest',
+        headers: securityHeaders
+      },
+      {
+        source: '/favicon.ico',
+        headers: securityHeaders
       }
     ];
   }

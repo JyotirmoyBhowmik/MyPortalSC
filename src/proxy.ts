@@ -65,45 +65,49 @@ export async function proxy(request: NextRequest) {
         }
     }
 
+    // Strip technology fingerprint headers
+    response.headers.delete("X-Powered-By");
+    response.headers.delete("Server");
+
     // Always apply standard baseline headers
     response.headers.set("X-DNS-Prefetch-Control", "on");
     response.headers.set("Strict-Transport-Security", "max-age=63072000; includeSubDomains; preload");
-    response.headers.set("X-XSS-Protection", "1; mode=block"); // Addresses UpGuard XSS vulnerability flag
+    response.headers.set("X-XSS-Protection", "1; mode=block");
     response.headers.set("X-Content-Type-Options", "nosniff");
     response.headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
     response.headers.set("Permissions-Policy", "camera=(), microphone=(), geolocation=()");
 
     if (isStrictSecurityEnabled) {
-        // Strict Setup: Block framing and strict CSP without unsafe-eval
         response.headers.set("X-Frame-Options", "SAMEORIGIN");
         
         const csp = `
             default-src 'self';
             script-src 'self' 'unsafe-inline' https://vercel.live https://static.cloudflareinsights.com https://challenges.cloudflare.com;
             style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
-            img-src 'self' data: https: blob:;
+            img-src 'self' data: blob: https://cqtluudfmigefqphmfbb.supabase.co https://commondatastorage.googleapis.com;
             font-src 'self' data: https://fonts.gstatic.com;
             object-src 'none';
             base-uri 'self';
+            form-action 'self';
             frame-ancestors 'self';
             frame-src 'self' https://challenges.cloudflare.com;
             worker-src 'self' blob:;
-            media-src 'self' blob: https://*.supabase.co mediastream:;
+            media-src 'self' blob: https://cqtluudfmigefqphmfbb.supabase.co mediastream:;
             connect-src 'self' https://vercel.live https://*.supabase.co wss://*.supabase.co wss://*.googleapis.com https://*.googleapis.com;
+            upgrade-insecure-requests;
         `.replace(/\s{2,}/g, ' ').trim();
         
         response.headers.set("Content-Security-Policy", csp);
     } else {
-        // Relaxed fallback for debugging mode or if disabled by Admin
         response.headers.set("X-Frame-Options", "ALLOWALL");
     }
 
     return response;
 }
 
-// Ensure middleware only fires on active user pages to optimize performance
+// Apply to all routes including /api so security headers are universal
 export const config = {
     matcher: [
-        '/((?!api|_next/static|_next/image|favicon.ico).*)',
+        '/((?!_next/static|_next/image|favicon.ico).*)',
     ],
 };
