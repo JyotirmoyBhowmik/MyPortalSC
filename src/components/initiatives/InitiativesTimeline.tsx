@@ -35,8 +35,8 @@ export default function InitiativesTimeline({ initiatives }: Props) {
             if (!map[fy]) map[fy] = [];
             map[fy].push(init);
         }
-        // Sort fiscal years
-        return Object.entries(map).sort(([a], [b]) => a.localeCompare(b));
+        // Sort fiscal years (newest first)
+        return Object.entries(map).sort(([a], [b]) => b.localeCompare(a));
     }, [initiatives]);
 
     return (

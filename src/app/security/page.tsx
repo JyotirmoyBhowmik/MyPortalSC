@@ -15,7 +15,12 @@ export const metadata: Metadata = {
         "Live security posture assessment for jyotirmoyb.com — HTTP headers, CSP, HSTS, and more.",
 };
 
-export default function SecurityPage() {
+import { getFeatureFlag } from "@/lib/data/settings";
+import { notFound } from "next/navigation";
+
+export default async function SecurityPage() {
+    const isEnabled = await getFeatureFlag("feature_security_scorecard");
+    if (!isEnabled) notFound();
     return (
         <main className="min-h-screen pt-24 pb-16">
             <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">

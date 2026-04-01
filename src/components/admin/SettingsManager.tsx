@@ -18,6 +18,7 @@ const settingGroups = [
             "feature_drag_drop",
             "feature_content_versioning",
             "feature_scheduled_publish",
+            "feature_case_studies",
         ]
     },
     {
@@ -39,6 +40,7 @@ const settingGroups = [
             "feature_contact_crm",
             "feature_downloads",
             "feature_newsletter",
+            "feature_ping_dashboard",
         ]
     },
     {
@@ -74,6 +76,9 @@ const settingGroups = [
             "feature_jsonld",
             "feature_og_images",
             "feature_pwa",
+            "feature_network_topology",
+            "feature_cost_comparison",
+            "feature_security_scorecard",
         ]
     },
     {
@@ -83,7 +88,6 @@ const settingGroups = [
         color: "from-orange-500/10 to-red-500/10",
         keys: [
             "feature_blog",
-            "feature_case_studies",
             "feature_testimonials",
             "feature_speaking",
             "feature_publications",

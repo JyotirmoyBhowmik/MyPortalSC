@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { getPageContent, getContentField } from "@/lib/data/content";
+import { getFeatureFlag } from "@/lib/data/settings";
 import dynamic from "next/dynamic";
 
 const GlobalOperationsDashboard = dynamic(() => import("@/components/visuals/GlobalOperationsDashboard"), {
@@ -60,6 +61,8 @@ export default async function ContactPage() {
     const globalOpsTitle = getContentField(pageContent?.content, "global_ops_title") || "Global Operations";
     const globalOpsDesc = getContentField(pageContent?.content, "global_ops_desc") || "Delivering excellence across borders.";
 
+    const showPingDashboard = await getFeatureFlag("feature_ping_dashboard");
+
     const socialUrls: Record<string, string> = { github, linkedin, twitter };
 
     return (
@@ -90,9 +93,11 @@ export default async function ContactPage() {
                         <p className="text-muted-foreground text-sm">{globalOpsDesc}</p>
                     </div>
                     <GlobalOperationsDashboard />
-                    <div className="mt-6">
-                        <PingDashboard />
-                    </div>
+                    {showPingDashboard && (
+                        <div className="mt-6">
+                            <PingDashboard />
+                        </div>
+                    )}
                 </div>
             </section>
 
