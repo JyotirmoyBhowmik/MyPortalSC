@@ -1,7 +1,11 @@
 import { createClient } from "@/lib/supabase/server";
 import { getFeatureFlag } from "@/lib/data/settings";
 import Link from "next/link";
-import AnalyticsDashboard from "@/components/admin/AnalyticsDashboard";
+import dynamic from "next/dynamic";
+
+const AnalyticsDashboard = dynamic(() => import("@/components/admin/AnalyticsDashboard"), {
+    loading: () => <div className="h-[400px] w-full rounded-xl bg-surface/10 animate-pulse mt-8" />
+});
 
 export default async function AdminDashboardPage() {
     const supabase = await createClient();
