@@ -1,25 +1,26 @@
 import { createClient } from "@/lib/supabase/server";
 import { getFeatureFlag } from "@/lib/data/settings";
 import Link from "next/link";
+import AnalyticsDashboard from "@/components/admin/AnalyticsDashboard";
 
 export default async function AdminDashboardPage() {
     const supabase = await createClient();
     const allowActivityFeed = await getFeatureFlag("feature_activity_feed");
 
-    // Fetch counts
-    const [projectsRes, skillsRes, certsRes, achievementsRes, analyticsRes, auditRes, initiativesRes] =
-        await Promise.all([
+    // Fetch counts and analytics
+    const [
+        projectsRes, skillsRes, certsRes, achievementsRes, 
+        analyticsRes, auditRes, initiativesRes, clicksRes, contactsRes
+    ] = await Promise.all([
             supabase.from("projects").select("id", { count: "exact", head: true }),
             supabase.from("skills").select("id", { count: "exact", head: true }),
             supabase.from("certifications").select("id", { count: "exact", head: true }),
             supabase.from("achievements").select("id", { count: "exact", head: true }),
             supabase.from("page_analytics").select("*"),
-            supabase
-                .from("audit_log")
-                .select("*")
-                .order("timestamp", { ascending: false })
-                .limit(10),
+            supabase.from("audit_log").select("*").order("timestamp", { ascending: false }).limit(10),
             supabase.from("initiatives").select("id", { count: "exact", head: true }),
+            supabase.from("click_events").select("*"),
+            supabase.from("contact_submissions").select("*").order("created_at", { ascending: false }).limit(10),
         ]);
 
     const totalViews =
@@ -145,6 +146,12 @@ export default async function AdminDashboardPage() {
                     )}
                 </div>
             )}
+
+            <AnalyticsDashboard 
+                clickEvents={clicksRes.data ?? []} 
+                pageAnalytics={analyticsRes.data ?? []} 
+                recentContacts={contactsRes.data ?? []} 
+            />
         </div>
     );
 }
