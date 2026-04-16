@@ -96,7 +96,7 @@ export default function AnalyticsDashboard({ clickEvents, pageAnalytics, recentC
                                         {i + 1}
                                     </div>
                                     <div>
-                                        <p className="text-sm font-medium">{click.target_id.replace("btn-", "")}</p>
+                                        <p className="text-sm font-medium">{(click.target_id || "").replace("btn-", "")}</p>
                                         <p className="text-[10px] text-muted-foreground font-mono">{click.path}</p>
                                     </div>
                                 </div>
