@@ -13,6 +13,10 @@ export interface DashboardBudget {
     initiative_id: string | null;
     skill_id: string | null;
     currency: string;
+    exchange_rate_to_inr?: number;
+    cost_center?: string;
+    profit_center?: string;
+    account_head?: string;
     projects?: { id: string, title: string };
     initiatives?: { id: string, title: string };
     skills?: { id: string, name: string };

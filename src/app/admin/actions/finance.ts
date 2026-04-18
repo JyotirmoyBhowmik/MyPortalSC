@@ -22,6 +22,12 @@ export async function createBudget(formData: FormData) {
     const skill_id = formData.get("skill_id") as string || null;
     
     const currency = formData.get("currency") as string || "USD";
+    const exchange_rate_to_inr = parseFloat(formData.get("exchange_rate_to_inr") as string || "1");
+    
+    // IT Department fields
+    const cost_center = formData.get("cost_center") as string || null;
+    const profit_center = formData.get("profit_center") as string || null;
+    const account_head = formData.get("account_head") as string || null;
 
     const { error } = await supabase.from("financial_budgets").insert({
         title,
@@ -35,6 +41,10 @@ export async function createBudget(formData: FormData) {
         initiative_id,
         skill_id,
         currency,
+        exchange_rate_to_inr,
+        cost_center,
+        profit_center,
+        account_head,
     });
 
     if (error) {
@@ -62,6 +72,11 @@ export async function updateBudget(id: string, formData: FormData) {
     const skill_id = formData.get("skill_id") as string || null;
     
     const currency = formData.get("currency") as string || "USD";
+    const exchange_rate_to_inr = parseFloat(formData.get("exchange_rate_to_inr") as string || "1");
+    
+    const cost_center = formData.get("cost_center") as string || null;
+    const profit_center = formData.get("profit_center") as string || null;
+    const account_head = formData.get("account_head") as string || null;
 
     const { error } = await supabase
         .from("financial_budgets")
@@ -77,6 +92,10 @@ export async function updateBudget(id: string, formData: FormData) {
             initiative_id,
             skill_id,
             currency,
+            exchange_rate_to_inr,
+            cost_center,
+            profit_center,
+            account_head,
         })
         .eq("id", id);
 
