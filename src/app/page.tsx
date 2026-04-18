@@ -11,6 +11,7 @@ import { getActiveCertifications } from "@/lib/data/certifications";
 import { getPageContent, getContentField } from "@/lib/data/content";
 import { getFeatureFlag } from "@/lib/data/settings";
 import { getAllBudgets } from "@/lib/data/finances";
+import { convertToINR } from "@/lib/utils/currency";
 import Badge from "@/components/ui/Badge";
 import dynamic from "next/dynamic";
 import AnimatedSection, { AnimatedCard } from "@/components/animations/AnimatedSection";
@@ -45,8 +46,10 @@ export default async function HomePage() {
 
   // Calculate generic total spend
   const totalSpend = budgets.reduce((sum, b) => {
-      const rate = (b.exchange_rate_to_inr && b.exchange_rate_to_inr !== 1) ? b.exchange_rate_to_inr : 83.5; 
-      return sum + (b.expense_amount * rate);
+      const rate = (b.exchange_rate_to_inr && b.exchange_rate_to_inr > 0 && b.currency !== 'INR') 
+          ? b.exchange_rate_to_inr 
+          : undefined;
+      return sum + (rate ? b.expense_amount * rate : convertToINR(b.expense_amount, b.currency || 'INR'));
   }, 0);
 
   let formattedSpend = "0";

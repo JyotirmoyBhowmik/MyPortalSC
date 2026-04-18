@@ -21,6 +21,7 @@ export async function createFiscalYear(formData: FormData) {
         return { success: false, error: error.message };
     }
 
+    revalidatePath("/admin/calendar");
     revalidatePath("/admin/finances");
     return { success: true };
 }
@@ -37,6 +38,7 @@ export async function deleteFiscalYear(id: string) {
         return { success: false, error: error.message };
     }
 
+    revalidatePath("/admin/calendar");
     revalidatePath("/admin/finances");
     return { success: true };
 }

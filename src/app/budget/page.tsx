@@ -1,6 +1,6 @@
 import { Metadata } from "next";
 import { getAllBudgets } from "@/lib/data/finances";
-import { formatINR } from "@/lib/utils/currency";
+import { formatINR, convertToINR } from "@/lib/utils/currency";
 import AnimatedSection, { AnimatedCard } from "@/components/animations/AnimatedSection";
 import Badge from "@/components/ui/Badge";
 
@@ -19,21 +19,17 @@ export default async function BudgetPage() {
         (a.cost_center || "").localeCompare(b.cost_center || "")
     );
 
-    // Calculate generic total spend explicitly logic
-    const totalSpend = budgets.reduce((sum, b) => {
-        const rate = (b.exchange_rate_to_inr && b.exchange_rate_to_inr !== 1) ? b.exchange_rate_to_inr : (b.currency === 'USD' ? 83.5 : 90.0); 
-        return sum + (b.expense_amount * rate);
-    }, 0);
+    // Shared helper to get INR value per row
+    const getINR = (amount: number, b: typeof budgets[0]) => {
+        if (b.exchange_rate_to_inr && b.exchange_rate_to_inr > 0 && b.currency !== 'INR') {
+            return amount * b.exchange_rate_to_inr;
+        }
+        return convertToINR(amount, b.currency || 'INR');
+    };
 
-    const capexSpend = budgets.filter(b => b.investment_model === 'CapEx').reduce((sum, b) => {
-        const rate = (b.exchange_rate_to_inr && b.exchange_rate_to_inr !== 1) ? b.exchange_rate_to_inr : (b.currency === 'USD' ? 83.5 : 90.0); 
-        return sum + (b.expense_amount * rate);
-    }, 0);
-
-    const opexSpend = budgets.filter(b => b.investment_model === 'OpEx').reduce((sum, b) => {
-        const rate = (b.exchange_rate_to_inr && b.exchange_rate_to_inr !== 1) ? b.exchange_rate_to_inr : (b.currency === 'USD' ? 83.5 : 90.0); 
-        return sum + (b.expense_amount * rate);
-    }, 0);
+    const totalSpend = budgets.reduce((sum, b) => sum + getINR(b.expense_amount, b), 0);
+    const capexSpend = budgets.filter(b => b.investment_model === 'CapEx').reduce((sum, b) => sum + getINR(b.expense_amount, b), 0);
+    const opexSpend = budgets.filter(b => b.investment_model === 'OpEx').reduce((sum, b) => sum + getINR(b.expense_amount, b), 0);
 
     let formattedSpend = "0";
     if (totalSpend >= 10000000) formattedSpend = `₹${(totalSpend / 10000000).toFixed(1)}Cr+`;
@@ -101,6 +97,9 @@ export default async function BudgetPage() {
                                     </div>
                                 </AnimatedCard>
                             ))}
+                            {budgets.filter(b => b.investment_model === 'CapEx').length === 0 && (
+                                <p className="col-span-full text-center py-8 text-muted-foreground italic">No capital expenditure entries found.</p>
+                            )}
                         </div>
                     </div>
 
@@ -127,6 +126,9 @@ export default async function BudgetPage() {
                                     </div>
                                 </AnimatedCard>
                             ))}
+                            {budgets.filter(b => b.investment_model === 'OpEx').length === 0 && (
+                                <p className="col-span-full text-center py-8 text-muted-foreground italic">No operational expenditure entries found.</p>
+                            )}
                         </div>
                     </div>
 

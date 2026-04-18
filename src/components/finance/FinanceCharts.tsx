@@ -19,10 +19,10 @@ export default function FinanceCharts({ budgets }: Props) {
 
     // Helper using row's custom INR rate if available, fallbacks to static rate
     const safelyGetINR = (amount: number, row: DashboardBudget) => {
-        if (row.exchange_rate_to_inr && row.exchange_rate_to_inr !== 1) {
+        if (row.exchange_rate_to_inr && row.exchange_rate_to_inr > 0 && row.currency !== 'INR') {
             return amount * row.exchange_rate_to_inr;
         }
-        return convertToINR(amount, row.currency || "USD");
+        return convertToINR(amount, row.currency || "INR");
     };
 
     // Calculate Totals specifically
@@ -65,10 +65,6 @@ export default function FinanceCharts({ budgets }: Props) {
         .map(([name, data]) => ({ name, opex: data.opex, capex: data.capex, total: data.opex + data.capex }))
         .sort((a, b) => b.total - a.total);
 
-    // Sort top 3 generic items
-    const topBudgets = [...budgets].sort((a, b) => 
-        safelyGetINR(b.expense_amount, b) - safelyGetINR(a.expense_amount, a)
-    ).slice(0, 3);
 
     return (
         <section className="print:break-inside-avoid print:mt-8">

@@ -71,10 +71,10 @@ export default function FinanceManager({ budgets, projects, initiatives, skills,
 
     // Helper using row's custom INR rate if available
     const getRowINR = (amount: number, row: DashboardBudget) => {
-        if (row.exchange_rate_to_inr && row.exchange_rate_to_inr !== 1) {
+        if (row.exchange_rate_to_inr && row.exchange_rate_to_inr > 0 && row.currency !== 'INR') {
             return amount * row.exchange_rate_to_inr;
         }
-        return convertToINR(amount, row.currency || "USD");
+        return convertToINR(amount, row.currency || "INR");
     };
 
     // Advanced Table Aggregations in INR
