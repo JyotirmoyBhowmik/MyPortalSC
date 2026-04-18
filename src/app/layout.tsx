@@ -139,8 +139,8 @@ export default async function RootLayout({
               <RetroToggle />
               <Navbar settings={settings} />
               <PageTransition enabled={!!flags.feature_page_transitions}>
-                {/* md:pl-16 offsets content for the fixed sidebar navbar on desktop */}
-                <main className="min-h-screen md:pl-16">{children}</main>
+                {/* md:pl-14 for tablet collapsed sidebar (56px), lg:pl-56 for desktop always-open sidebar (224px) */}
+                <main className="min-h-screen md:pl-14 lg:pl-56">{children}</main>
               </PageTransition>
               <Footer flags={flags} />
               {/* These 3 components are invisible (render null or floating UI).
