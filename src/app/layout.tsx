@@ -15,6 +15,7 @@ import VoiceWidget from "@/components/chat/VoiceWidget";
 import PageTransition from "@/components/animations/PageTransition";
 import { SettingsProvider } from "@/components/SettingsProvider";
 import RetroToggle from "@/components/RetroToggle";
+import SearchProvider from "@/components/search/SearchProvider";
 import "./globals.css";
 
 // Inter is the primary body font; JetBrains Mono provides monospace accents
@@ -148,6 +149,7 @@ export default async function RootLayout({
               <VisitorTracker />
               <VoiceWidget />
               <ChatWidget />
+              <SearchProvider />
             </SettingsProvider>
           </I18nProvider>
         </ThemeProvider>

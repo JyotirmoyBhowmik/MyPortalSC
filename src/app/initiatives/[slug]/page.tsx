@@ -5,6 +5,8 @@ import {
     getInitiativeBySlug,
     getInitiativesByProgram,
 } from "@/lib/data/initiatives";
+import { getAllBudgets } from "@/lib/data/finances";
+import { formatINR, convertToINR } from "@/lib/utils/currency";
 
 export const revalidate = 60;
 
@@ -29,9 +31,19 @@ const criticalityColors: Record<string, string> = {
     Low: "bg-gray-500/15 text-gray-400 border-gray-500/30",
 };
 
+function toINR(b: any): number {
+    if (b.exchange_rate_to_inr && b.exchange_rate_to_inr > 0 && b.currency !== "INR") {
+        return b.expense_amount * b.exchange_rate_to_inr;
+    }
+    return convertToINR(b.expense_amount, b.currency || "INR");
+}
+
 export default async function InitiativeDetailPage({ params }: Props) {
     const { slug } = await params;
-    const initiative = await getInitiativeBySlug(slug);
+    const [initiative, budgets] = await Promise.all([
+        getInitiativeBySlug(slug),
+        getAllBudgets(),
+    ]);
     if (!initiative) notFound();
 
     const program = initiative.programs;
@@ -40,6 +52,10 @@ export default async function InitiativeDetailPage({ params }: Props) {
             .filter((i) => i.id !== initiative.id)
             .slice(0, 6)
         : [];
+
+    // Find budget entries linked to this initiative
+    const linkedBudgets = budgets.filter(b => b.initiative_id === initiative.id);
+    const totalBudgetINR = linkedBudgets.reduce((s, b) => s + toINR(b), 0);
 
     return (
         <>
@@ -148,6 +164,42 @@ export default async function InitiativeDetailPage({ params }: Props) {
                             <p className="text-muted-foreground leading-relaxed">
                                 {program.description}
                             </p>
+                        </div>
+                    )}
+
+                    {/* Budget Allocation */}
+                    {linkedBudgets.length > 0 && (
+                        <div className="glass rounded-xl p-8 mb-8 border-l-4 border-emerald-500/40">
+                            <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
+                                <span className="text-2xl">💰</span>
+                                Budget Allocation
+                                <span className="ml-auto text-lg font-bold font-mono text-emerald-400">{formatINR(totalBudgetINR)}</span>
+                            </h2>
+                            <div className="space-y-3">
+                                {linkedBudgets.map(b => (
+                                    <div key={b.id} className="flex items-center justify-between p-3 rounded-lg bg-surface/50 border border-border/30">
+                                        <div>
+                                            <div className="text-sm font-medium text-foreground">{b.title}</div>
+                                            <div className="flex items-center gap-3 mt-1 text-[10px] text-muted-foreground">
+                                                <span className={`px-1.5 py-0.5 rounded text-[9px] font-bold ${b.investment_model === "CapEx" ? "bg-purple-500/10 text-purple-400" : "bg-blue-500/10 text-blue-400"}`}>
+                                                    {b.investment_model}
+                                                </span>
+                                                <span>FY {b.fiscal_year}</span>
+                                                {b.cost_center && <span>CC: {b.cost_center}</span>}
+                                            </div>
+                                        </div>
+                                        <div className="text-right">
+                                            <div className="text-sm font-bold font-mono text-foreground">{formatINR(toINR(b))}</div>
+                                            {b.currency !== "INR" && (
+                                                <div className="text-[10px] text-muted-foreground font-mono">{b.currency} {Number(b.expense_amount).toLocaleString()}</div>
+                                            )}
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                            <div className="mt-4 text-right">
+                                <Link href="/budget" className="text-xs text-primary hover:underline">View Full IT Budget Ledger →</Link>
+                            </div>
                         </div>
                     )}
 

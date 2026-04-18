@@ -865,3 +865,103 @@ html[data-retro="true"] .glow-border:hover {
               fill 0.3s ease,
               stroke 0.3s ease !important;
 }
+
+/* ============================================================
+   Print Styles — Clean PDF Export for Financial Ledger
+   ============================================================ */
+@media print {
+  body {
+    background: white !important;
+    color: #111 !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  /* Hide non-essential UI */
+  aside, nav, footer,
+  [data-print-hide],
+  button[aria-label="Toggle navigation"],
+  [class*="ChatWidget"],
+  [class*="VoiceWidget"],
+  [class*="SearchProvider"] {
+    display: none !important;
+  }
+
+  /* Remove sidebar offset */
+  main {
+    padding-left: 0 !important;
+    margin-left: 0 !important;
+  }
+
+  /* Glass → solid white */
+  .glass {
+    background: white !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    border: 1px solid #ddd !important;
+    box-shadow: none !important;
+  }
+
+  /* Keep gradient text readable */
+  .gradient-text {
+    -webkit-text-fill-color: #111 !important;
+    background: none !important;
+  }
+
+  /* Table fixes */
+  table {
+    font-size: 10px !important;
+    border-collapse: collapse !important;
+  }
+
+  th, td {
+    border: 1px solid #ccc !important;
+    padding: 4px 6px !important;
+  }
+
+  /* Force colors on badges */
+  .text-purple-400 { color: #7c3aed !important; }
+  .text-blue-400 { color: #2563eb !important; }
+  .text-emerald-400 { color: #059669 !important; }
+  .text-red-400 { color: #dc2626 !important; }
+
+  /* Page breaks */
+  tr { page-break-inside: avoid; }
+  thead { display: table-header-group; }
+  tfoot { display: table-footer-group; }
+}
+
+/* ============================================================
+   Skeleton Shimmer — Loading Placeholder
+   ============================================================ */
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--surface) 25%,
+    var(--surface-hover) 50%,
+    var(--surface) 75%
+  );
+  background-size: 400% 100%;
+  animation: shimmer 2s linear infinite;
+  border-radius: 0.5rem;
+}
+
+.skeleton-text {
+  height: 0.875rem;
+  border-radius: 0.25rem;
+}
+
+.skeleton-title {
+  height: 1.5rem;
+  width: 60%;
+  border-radius: 0.375rem;
+}
+
+.skeleton-card {
+  height: 10rem;
+  border-radius: 1rem;
+}
+
+.skeleton-circle {
+  border-radius: 50%;
+}
