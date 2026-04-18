@@ -1,138 +1,292 @@
 import { Metadata } from "next";
 import { getAllBudgets } from "@/lib/data/finances";
 import { formatINR, convertToINR } from "@/lib/utils/currency";
-import AnimatedSection, { AnimatedCard } from "@/components/animations/AnimatedSection";
-import Badge from "@/components/ui/Badge";
+import AnimatedSection from "@/components/animations/AnimatedSection";
 
 export const metadata: Metadata = {
-    title: "IT Budgets & Financials",
-    description: "Overview of enterprise IT operational expenditures, capital investments, and mapped initiatives.",
+    title: "Enterprise IT Financial Ledger — SOW/Budget Tracker",
+    description: "10-year IT Roadmap financial view: CAPEX & OPEX breakdown by fiscal year with project & regular expense mapping.",
 };
 
-export const revalidate = 60; // ISR cache
+export const revalidate = 60;
+
+// Categorize a budget item
+function categorize(b: any): "capex_project" | "capex_regular" | "opex_project" | "opex_regular" {
+    const isProject = !!(b.initiative_id || b.project_id);
+    if (b.investment_model === "CapEx") return isProject ? "capex_project" : "capex_regular";
+    return isProject ? "opex_project" : "opex_regular";
+}
+
+// Row INR conversion
+function toINR(b: any): number {
+    if (b.exchange_rate_to_inr && b.exchange_rate_to_inr > 0 && b.currency !== "INR") {
+        return b.expense_amount * b.exchange_rate_to_inr;
+    }
+    return convertToINR(b.expense_amount, b.currency || "INR");
+}
+function planINR(b: any): number {
+    if (b.exchange_rate_to_inr && b.exchange_rate_to_inr > 0 && b.currency !== "INR") {
+        return b.planning_amount * b.exchange_rate_to_inr;
+    }
+    return convertToINR(b.planning_amount, b.currency || "INR");
+}
+
+function fmtLakhs(n: number): string {
+    if (n >= 10000000) return `${(n / 10000000).toFixed(1)}Cr`;
+    if (n >= 100000) return `${(n / 100000).toFixed(1)}L`;
+    if (n >= 1000) return `${(n / 1000).toFixed(0)}K`;
+    return n.toLocaleString("en-IN");
+}
+
+// FY ordering helper
+const FY_ORDER = [
+    "2016-17","2017-18","2018-19","2019-20","2020-21",
+    "2021-22","2022-23","2023-24","2024-25","2025-26",
+    "2026-27","2027-28","2028-29","2029-30","2030-31"
+];
 
 export default async function BudgetPage() {
-    const rawBudgets = await getAllBudgets();
-    
-    // Sort logically by cost center or alphabetically
-    const budgets = [...rawBudgets].sort((a, b) => 
-        (a.cost_center || "").localeCompare(b.cost_center || "")
-    );
+    const budgets = await getAllBudgets();
 
-    // Shared helper to get INR value per row
-    const getINR = (amount: number, b: typeof budgets[0]) => {
-        if (b.exchange_rate_to_inr && b.exchange_rate_to_inr > 0 && b.currency !== 'INR') {
-            return amount * b.exchange_rate_to_inr;
-        }
-        return convertToINR(amount, b.currency || 'INR');
-    };
+    // Group by FY
+    const byFY: Record<string, any[]> = {};
+    budgets.forEach(b => {
+        if (!byFY[b.fiscal_year]) byFY[b.fiscal_year] = [];
+        byFY[b.fiscal_year].push(b);
+    });
 
-    const totalSpend = budgets.reduce((sum, b) => sum + getINR(b.expense_amount, b), 0);
-    const capexSpend = budgets.filter(b => b.investment_model === 'CapEx').reduce((sum, b) => sum + getINR(b.expense_amount, b), 0);
-    const opexSpend = budgets.filter(b => b.investment_model === 'OpEx').reduce((sum, b) => sum + getINR(b.expense_amount, b), 0);
+    const sortedFYs = FY_ORDER.filter(fy => byFY[fy]);
 
-    let formattedSpend = "0";
-    if (totalSpend >= 10000000) formattedSpend = `₹${(totalSpend / 10000000).toFixed(1)}Cr+`;
-    else if (totalSpend >= 100000) formattedSpend = `₹${(totalSpend / 100000).toFixed(0)}L+`;
-    else formattedSpend = `₹${totalSpend.toLocaleString()}`;
+    // Grand totals
+    const grandPlan = budgets.reduce((s, b) => s + planINR(b), 0);
+    const grandExpense = budgets.reduce((s, b) => s + toINR(b), 0);
+    const capexTotal = budgets.filter(b => b.investment_model === "CapEx").reduce((s, b) => s + toINR(b), 0);
+    const opexTotal = budgets.filter(b => b.investment_model === "OpEx").reduce((s, b) => s + toINR(b), 0);
 
     return (
-        <div className="py-24 px-4 min-h-screen relative">
-            <div className="absolute top-0 right-0 p-32 opacity-5 pointer-events-none">
-                 <svg className="w-96 h-96" fill="currentColor" viewBox="0 0 24 24"><path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/></svg>
+        <div className="py-20 px-4 min-h-screen relative">
+            {/* Background watermark */}
+            <div className="absolute top-0 right-0 p-20 opacity-[0.03] pointer-events-none">
+                <svg className="w-80 h-80" fill="currentColor" viewBox="0 0 24 24"><path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/></svg>
             </div>
             
-            <div className="max-w-6xl mx-auto relative z-10">
+            <div className="max-w-[1400px] mx-auto relative z-10">
+                {/* Header */}
                 <AnimatedSection>
-                    <div className="text-center mb-16">
-                        <h1 className="text-4xl sm:text-5xl font-black mb-6 tracking-tight">
+                    <div className="text-center mb-12">
+                        <div className="inline-block px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-xs font-bold text-primary uppercase tracking-widest mb-4">
+                            IT Financial Controller View
+                        </div>
+                        <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black mb-4 tracking-tight">
                             Enterprise <span className="gradient-text">Financial Ledger</span>
                         </h1>
-                        <p className="text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-                            Comprehensive mapping of IT expenditure, capital investments, and subscription infrastructure directly tied to active enterprise initiatives. 
+                        <p className="text-base text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+                            10-Year IT Roadmap SOW — Statement of Work & Budget Tracker.<br/>
+                            <span className="text-xs opacity-70">Showing {budgets.length} budget line items across {sortedFYs.length} fiscal years</span>
                         </p>
                     </div>
                 </AnimatedSection>
 
-                {/* Aggregation Bar */}
+                {/* KPI Summary Bar */}
                 <AnimatedSection delay={0.1}>
-                   <div className="glass rounded-xl p-6 sm:p-8 mb-16 border-primary/20 bg-primary/5 flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-border/50 items-center justify-center shadow-lg gap-8 md:gap-0">
-                        <div className="text-center px-8 w-full md:w-1/3">
-                            <div className="text-sm text-muted-foreground uppercase tracking-widest font-bold mb-2">Total Managed Budget</div>
-                            <div className="text-4xl sm:text-5xl font-black gradient-text">{formattedSpend}</div>
+                    <div className="glass rounded-2xl p-6 mb-10 border-primary/20 bg-primary/5 shadow-lg">
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+                            <div className="text-center">
+                                <div className="text-[10px] text-muted-foreground uppercase tracking-[0.15em] font-bold mb-1">Total Budget Plan</div>
+                                <div className="text-2xl sm:text-3xl font-black gradient-text">{formatINR(grandPlan)}</div>
+                            </div>
+                            <div className="text-center">
+                                <div className="text-[10px] text-muted-foreground uppercase tracking-[0.15em] font-bold mb-1">Total Spent</div>
+                                <div className="text-2xl sm:text-3xl font-black text-foreground">{formatINR(grandExpense)}</div>
+                            </div>
+                            <div className="text-center">
+                                <div className="text-[10px] text-purple-400 uppercase tracking-[0.15em] font-bold mb-1">CAPEX Total</div>
+                                <div className="text-xl sm:text-2xl font-bold font-mono text-purple-400">{formatINR(capexTotal)}</div>
+                            </div>
+                            <div className="text-center">
+                                <div className="text-[10px] text-blue-400 uppercase tracking-[0.15em] font-bold mb-1">OPEX Total</div>
+                                <div className="text-xl sm:text-2xl font-bold font-mono text-blue-400">{formatINR(opexTotal)}</div>
+                            </div>
                         </div>
-                        <div className="text-center px-8 pt-6 md:pt-0 w-full md:w-1/3">
-                            <div className="text-sm text-muted-foreground uppercase tracking-widest font-bold mb-2 text-purple-400">CapEx Execution</div>
-                            <div className="text-2xl font-bold font-mono text-purple-300">{formatINR(capexSpend)}</div>
-                        </div>
-                        <div className="text-center px-8 pt-6 md:pt-0 w-full md:w-1/3">
-                            <div className="text-sm text-muted-foreground uppercase tracking-widest font-bold mb-2 text-blue-400">OpEx Operations</div>
-                            <div className="text-2xl font-bold font-mono text-blue-300">{formatINR(opexSpend)}</div>
-                        </div>
-                   </div>
+                    </div>
                 </AnimatedSection>
 
-                {/* Ledger Listing */}
-                <div className="space-y-12">
-                    {/* CapEx Section */}
-                    <div>
-                        <div className="flex items-center gap-3 mb-6 border-b border-border/50 pb-2">
-                             <div className="w-8 h-8 rounded bg-purple-500/10 flex items-center justify-center"><span className="text-purple-500 font-bold">C</span></div>
-                             <h2 className="text-2xl font-bold text-foreground">Capital Expenditures (Projects)</h2>
-                        </div>
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                            {budgets.filter(b => b.investment_model === 'CapEx').map((budget, idx) => (
-                                <AnimatedCard key={budget.id} delay={idx * 0.05} className="glass rounded-xl p-5 hover:border-primary/50 transition-colors flex flex-col h-full">
-                                    <div className="flex justify-between items-start mb-3">
-                                         <Badge variant="outline" className="border-purple-500/30 text-purple-400">{budget.fiscal_year}</Badge>
-                                         <span className="font-mono font-bold text-sm bg-surface px-2 py-1 rounded">{budget.currency} {Number(budget.expense_amount).toLocaleString()}</span>
-                                    </div>
-                                    <h3 className="font-bold text-lg mb-2 text-foreground line-clamp-2">{budget.title}</h3>
-                                    <p className="text-sm text-muted-foreground mb-4 font-mono">
-                                        CC: <span className="text-foreground">{budget.cost_center || 'Unassigned'}</span><br/>
-                                        Head: <span className="text-foreground">{budget.account_head || 'Generic'}</span>
-                                    </p>
-                                    <div className="mt-auto pt-4 border-t border-border/50 text-xs text-muted-foreground">
-                                        {budget.projects?.title ? `Project: ${budget.projects.title}` : (budget.project_id ? 'Unmapped Project' : 'Independent Asset')}
-                                    </div>
-                                </AnimatedCard>
-                            ))}
-                            {budgets.filter(b => b.investment_model === 'CapEx').length === 0 && (
-                                <p className="col-span-full text-center py-8 text-muted-foreground italic">No capital expenditure entries found.</p>
-                            )}
+                {/* Main Table */}
+                <AnimatedSection delay={0.2}>
+                    <div className="glass rounded-2xl overflow-hidden shadow-xl">
+                        <div className="overflow-x-auto">
+                            <table className="w-full text-sm border-collapse">
+                                {/* Dual-row header */}
+                                <thead>
+                                    <tr className="bg-surface/80">
+                                        <th rowSpan={2} className="text-left p-4 font-bold text-foreground border-b-2 border-r border-border w-28 sticky left-0 bg-surface/95 z-10">
+                                            Fiscal Year
+                                        </th>
+                                        <th colSpan={2} className="text-center p-3 font-bold text-purple-400 border-b border-r border-border bg-purple-500/5">
+                                            <div className="flex items-center justify-center gap-2">
+                                                <span className="w-2.5 h-2.5 rounded-full bg-purple-500"></span>
+                                                CAPEX (Capital Expenditure)
+                                            </div>
+                                        </th>
+                                        <th colSpan={2} className="text-center p-3 font-bold text-blue-400 border-b border-r border-border bg-blue-500/5">
+                                            <div className="flex items-center justify-center gap-2">
+                                                <span className="w-2.5 h-2.5 rounded-full bg-blue-500"></span>
+                                                OPEX (Operating Expenditure)
+                                            </div>
+                                        </th>
+                                        <th rowSpan={2} className="text-right p-4 font-bold text-foreground border-b-2 border-border w-32 bg-surface/80">
+                                            FY Total (₹)
+                                        </th>
+                                    </tr>
+                                    <tr className="bg-surface/60 text-xs">
+                                        <th className="text-center p-2.5 font-semibold text-purple-300/80 border-b-2 border-r border-border/50 w-[22%]">Projects & Initiatives</th>
+                                        <th className="text-center p-2.5 font-semibold text-purple-300/60 border-b-2 border-r border-border/50 w-[14%]">Regular / Non-Project</th>
+                                        <th className="text-center p-2.5 font-semibold text-blue-300/80 border-b-2 border-r border-border/50 w-[22%]">Projects & Initiatives</th>
+                                        <th className="text-center p-2.5 font-semibold text-blue-300/60 border-b-2 border-r border-border/50 w-[14%]">Regular / Non-Project</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {sortedFYs.map((fy, fyIdx) => {
+                                        const items = byFY[fy];
+                                        const cp = items.filter(b => categorize(b) === "capex_project");
+                                        const cr = items.filter(b => categorize(b) === "capex_regular");
+                                        const op = items.filter(b => categorize(b) === "opex_project");
+                                        const or2 = items.filter(b => categorize(b) === "opex_regular");
+                                        const fyTotal = items.reduce((s: number, b: any) => s + toINR(b), 0);
+                                        const isCurrent = fy === "2024-25";
+
+                                        return (
+                                            <tr key={fy} className={`border-b border-border/40 align-top transition-colors hover:bg-surface/40 ${isCurrent ? "bg-primary/[0.03] ring-1 ring-inset ring-primary/10" : fyIdx % 2 === 0 ? "bg-transparent" : "bg-surface/20"}`}>
+                                                {/* FY Label */}
+                                                <td className={`p-4 font-bold text-foreground border-r border-border/50 sticky left-0 z-10 ${isCurrent ? "bg-primary/[0.06]" : fyIdx % 2 === 0 ? "bg-background/95" : "bg-surface/40"}`}>
+                                                    <div className="flex flex-col items-start gap-1">
+                                                        <span className="text-base font-black">{fy}</span>
+                                                        {isCurrent && <span className="text-[9px] px-1.5 py-0.5 rounded bg-primary/20 text-primary font-bold uppercase">Current</span>}
+                                                        <span className="text-[10px] text-muted-foreground font-mono mt-1">₹{fmtLakhs(fyTotal)}</span>
+                                                    </div>
+                                                </td>
+                                                {/* CAPEX Projects */}
+                                                <td className="p-3 border-r border-border/30 align-top">
+                                                    <div className="space-y-1.5">
+                                                        {cp.map(b => (
+                                                            <div key={b.id} className="flex justify-between items-start gap-2 text-xs group">
+                                                                <span className="text-foreground/90 leading-tight group-hover:text-purple-300 transition-colors">• {b.title}</span>
+                                                                <span className="text-muted-foreground font-mono shrink-0 text-[10px]">₹{fmtLakhs(toINR(b))}</span>
+                                                            </div>
+                                                        ))}
+                                                        {cp.length === 0 && <span className="text-muted-foreground/40 italic text-xs">—</span>}
+                                                    </div>
+                                                    {cp.length > 0 && (
+                                                        <div className="mt-2 pt-1.5 border-t border-purple-500/10 text-right">
+                                                            <span className="text-[10px] font-bold font-mono text-purple-400/70">₹{fmtLakhs(cp.reduce((s: number, b: any) => s + toINR(b), 0))}</span>
+                                                        </div>
+                                                    )}
+                                                </td>
+                                                {/* CAPEX Regular */}
+                                                <td className="p-3 border-r border-border/30 align-top">
+                                                    <div className="space-y-1.5">
+                                                        {cr.map(b => (
+                                                            <div key={b.id} className="flex justify-between items-start gap-2 text-xs group">
+                                                                <span className="text-foreground/70 leading-tight group-hover:text-purple-300 transition-colors">• {b.title}</span>
+                                                                <span className="text-muted-foreground font-mono shrink-0 text-[10px]">₹{fmtLakhs(toINR(b))}</span>
+                                                            </div>
+                                                        ))}
+                                                        {cr.length === 0 && <span className="text-muted-foreground/40 italic text-xs">—</span>}
+                                                    </div>
+                                                    {cr.length > 0 && (
+                                                        <div className="mt-2 pt-1.5 border-t border-purple-500/10 text-right">
+                                                            <span className="text-[10px] font-bold font-mono text-purple-400/70">₹{fmtLakhs(cr.reduce((s: number, b: any) => s + toINR(b), 0))}</span>
+                                                        </div>
+                                                    )}
+                                                </td>
+                                                {/* OPEX Projects */}
+                                                <td className="p-3 border-r border-border/30 align-top">
+                                                    <div className="space-y-1.5">
+                                                        {op.map(b => (
+                                                            <div key={b.id} className="flex justify-between items-start gap-2 text-xs group">
+                                                                <span className="text-foreground/90 leading-tight group-hover:text-blue-300 transition-colors">• {b.title}</span>
+                                                                <span className="text-muted-foreground font-mono shrink-0 text-[10px]">₹{fmtLakhs(toINR(b))}</span>
+                                                            </div>
+                                                        ))}
+                                                        {op.length === 0 && <span className="text-muted-foreground/40 italic text-xs">—</span>}
+                                                    </div>
+                                                    {op.length > 0 && (
+                                                        <div className="mt-2 pt-1.5 border-t border-blue-500/10 text-right">
+                                                            <span className="text-[10px] font-bold font-mono text-blue-400/70">₹{fmtLakhs(op.reduce((s: number, b: any) => s + toINR(b), 0))}</span>
+                                                        </div>
+                                                    )}
+                                                </td>
+                                                {/* OPEX Regular */}
+                                                <td className="p-3 border-r border-border/30 align-top">
+                                                    <div className="space-y-1.5">
+                                                        {or2.map(b => (
+                                                            <div key={b.id} className="flex justify-between items-start gap-2 text-xs group">
+                                                                <span className="text-foreground/70 leading-tight group-hover:text-blue-300 transition-colors">• {b.title}</span>
+                                                                <span className="text-muted-foreground font-mono shrink-0 text-[10px]">₹{fmtLakhs(toINR(b))}</span>
+                                                            </div>
+                                                        ))}
+                                                        {or2.length === 0 && <span className="text-muted-foreground/40 italic text-xs">—</span>}
+                                                    </div>
+                                                    {or2.length > 0 && (
+                                                        <div className="mt-2 pt-1.5 border-t border-blue-500/10 text-right">
+                                                            <span className="text-[10px] font-bold font-mono text-blue-400/70">₹{fmtLakhs(or2.reduce((s: number, b: any) => s + toINR(b), 0))}</span>
+                                                        </div>
+                                                    )}
+                                                </td>
+                                                {/* FY Total */}
+                                                <td className="p-4 text-right align-top">
+                                                    <div className="font-bold font-mono text-foreground text-sm">{formatINR(fyTotal)}</div>
+                                                    <div className="text-[9px] text-muted-foreground mt-1">
+                                                        {items.length} items
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        );
+                                    })}
+                                </tbody>
+                                {/* Footer totals */}
+                                <tfoot>
+                                    <tr className="bg-surface/80 border-t-2 border-border font-bold">
+                                        <td className="p-4 font-black text-foreground border-r border-border sticky left-0 bg-surface/95 z-10">
+                                            GRAND TOTAL
+                                        </td>
+                                        <td className="p-4 text-right border-r border-border/50 font-mono text-purple-400">
+                                            {formatINR(budgets.filter(b => categorize(b) === "capex_project").reduce((s, b) => s + toINR(b), 0))}
+                                        </td>
+                                        <td className="p-4 text-right border-r border-border/50 font-mono text-purple-400/70">
+                                            {formatINR(budgets.filter(b => categorize(b) === "capex_regular").reduce((s, b) => s + toINR(b), 0))}
+                                        </td>
+                                        <td className="p-4 text-right border-r border-border/50 font-mono text-blue-400">
+                                            {formatINR(budgets.filter(b => categorize(b) === "opex_project").reduce((s, b) => s + toINR(b), 0))}
+                                        </td>
+                                        <td className="p-4 text-right border-r border-border/50 font-mono text-blue-400/70">
+                                            {formatINR(budgets.filter(b => categorize(b) === "opex_regular").reduce((s, b) => s + toINR(b), 0))}
+                                        </td>
+                                        <td className="p-4 text-right">
+                                            <div className="text-lg font-black font-mono gradient-text">{formatINR(grandExpense)}</div>
+                                        </td>
+                                    </tr>
+                                </tfoot>
+                            </table>
                         </div>
                     </div>
+                </AnimatedSection>
 
-                    {/* OpEx Section */}
-                     <div>
-                        <div className="flex items-center gap-3 mb-6 border-b border-border/50 pb-2">
-                             <div className="w-8 h-8 rounded bg-blue-500/10 flex items-center justify-center"><span className="text-blue-500 font-bold">O</span></div>
-                             <h2 className="text-2xl font-bold text-foreground">Operational Expenditures (Initiatives)</h2>
+                {/* Legend */}
+                <AnimatedSection delay={0.3}>
+                    <div className="mt-8 glass rounded-xl p-5 text-xs text-muted-foreground">
+                        <div className="font-bold text-foreground mb-3 uppercase tracking-wider text-[10px]">Classification Logic Applied</div>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-2">
+                            <div><span className="text-purple-400 font-bold">CAPEX Projects:</span> One-time, tangible strategic deployments — Network, Storage, Security, Surveillance, DR infrastructure.</div>
+                            <div><span className="text-purple-400/70 font-bold">CAPEX Regular:</span> Recurring hardware assets — Laptops, Desktops, Printers, UPS, Spares. Capitalized but non-strategic.</div>
+                            <div><span className="text-blue-400 font-bold">OPEX Projects:</span> Professional services & consulting — Cloud Migration, Assessments, Blueprints, Audits, Application Development.</div>
+                            <div><span className="text-blue-400/70 font-bold">OPEX Regular:</span> Recurring operational — SaaS Subscriptions, AMC, Internet, Hosting, Repair & Maintenance, Managed Services.</div>
                         </div>
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                            {budgets.filter(b => b.investment_model === 'OpEx').map((budget, idx) => (
-                                <AnimatedCard key={budget.id} delay={idx * 0.05} className="glass rounded-xl p-5 hover:border-primary/50 transition-colors flex flex-col h-full">
-                                    <div className="flex justify-between items-start mb-3">
-                                         <Badge variant="outline" className="border-blue-500/30 text-blue-400">{budget.fiscal_year}</Badge>
-                                         <span className="font-mono font-bold text-sm bg-surface px-2 py-1 rounded">{budget.currency} {Number(budget.expense_amount).toLocaleString()}</span>
-                                    </div>
-                                    <h3 className="font-bold text-lg mb-2 text-foreground line-clamp-2">{budget.title}</h3>
-                                    <p className="text-sm text-muted-foreground mb-4 font-mono">
-                                        CC: <span className="text-foreground">{budget.cost_center || 'Unassigned'}</span><br/>
-                                        Head: <span className="text-foreground">{budget.account_head || 'Generic'}</span>
-                                    </p>
-                                    <div className="mt-auto pt-4 border-t border-border/50 text-xs text-muted-foreground">
-                                        {budget.initiatives?.title ? `Initiative: ${budget.initiatives.title}` : (budget.initiative_id ? 'Unmapped Initiative' : 'Independent Subs')}
-                                    </div>
-                                </AnimatedCard>
-                            ))}
-                            {budgets.filter(b => b.investment_model === 'OpEx').length === 0 && (
-                                <p className="col-span-full text-center py-8 text-muted-foreground italic">No operational expenditure entries found.</p>
-                            )}
+                        <div className="mt-3 pt-3 border-t border-border/30 italic">
+                            All amounts converted to INR using row-level exchange rates. FY format: April–March (Indian fiscal year). Showing {budgets.length} of 88+ mapped initiatives.
                         </div>
                     </div>
-
-                </div>
+                </AnimatedSection>
             </div>
         </div>
     );
