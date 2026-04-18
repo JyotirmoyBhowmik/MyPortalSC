@@ -10,6 +10,7 @@ import { getSkillsByCategory } from "@/lib/data/skills";
 import { getActiveCertifications } from "@/lib/data/certifications";
 import { getPageContent, getContentField } from "@/lib/data/content";
 import { getFeatureFlag } from "@/lib/data/settings";
+import { getAllBudgets } from "@/lib/data/finances";
 import Badge from "@/components/ui/Badge";
 import dynamic from "next/dynamic";
 import AnimatedSection, { AnimatedCard } from "@/components/animations/AnimatedSection";
@@ -29,16 +30,29 @@ export default async function HomePage() {
     skillsByCategory,
     certifications,
     pageContent,
-    featureParticleBg
+    featureParticleBg,
+    budgets
   ] = await Promise.all([
     getFeaturedProjects(3),
     getSkillsByCategory(),
     getActiveCertifications(),
     getPageContent("home"),
-    getFeatureFlag("feature_particle_bg")
+    getFeatureFlag("feature_particle_bg"),
+    getAllBudgets()
   ]);
 
   const totalSkills = Object.values(skillsByCategory).flat().length;
+
+  // Calculate generic total spend
+  const totalSpend = budgets.reduce((sum, b) => {
+      const rate = (b.exchange_rate_to_inr && b.exchange_rate_to_inr !== 1) ? b.exchange_rate_to_inr : 83.5; 
+      return sum + (b.expense_amount * rate);
+  }, 0);
+
+  let formattedSpend = "0";
+  if (totalSpend >= 10000000) formattedSpend = `₹${(totalSpend / 10000000).toFixed(1)}Cr+`;
+  else if (totalSpend >= 100000) formattedSpend = `₹${(totalSpend / 100000).toFixed(0)}L+`;
+  else formattedSpend = `₹${totalSpend.toLocaleString()}`;
 
   const heroTitle = getContentField(pageContent?.content, "hero_title");
   const heroSubtitle = getContentField(pageContent?.content, "hero_subtitle");
@@ -147,6 +161,17 @@ export default async function HomePage() {
 
           {/* Stats row */}
           <div className="grid grid-cols-2 md:flex md:flex-row items-center justify-center gap-8 md:gap-12 mt-12 md:mt-16 animate-fade-in stagger-4">
+            {budgets.length > 0 && (
+                <>
+                <div className="text-center">
+                  <div className="text-3xl sm:text-4xl font-bold gradient-text">
+                    {formattedSpend}
+                  </div>
+                  <div className="text-xs text-muted-foreground mt-1">IT Budget Spend</div>
+                </div>
+                <div className="hidden md:block w-px h-10 bg-border" />
+                </>
+            )}
             <div className="text-center">
               <div className="text-3xl sm:text-4xl font-bold gradient-text">
                 88+

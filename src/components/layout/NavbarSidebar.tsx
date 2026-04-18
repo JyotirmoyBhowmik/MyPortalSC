@@ -45,7 +45,6 @@ export default function NavbarSidebar({ flags = {} }: { flags?: Record<string, b
 
     const navLinks = [
         { href: "/", label: "Home", visible: true },
-        { href: "/executive-summary", label: "Executive Summary", visible: flags["feature_executive_summary"] },
         { href: "/testimonials", label: "Testimonials", visible: flags["feature_testimonials"] },
         { href: "/timeline", label: "Timeline", visible: flags["feature_timeline"] },
         { href: "/about", label: "About", visible: true },
@@ -56,6 +55,7 @@ export default function NavbarSidebar({ flags = {} }: { flags?: Record<string, b
         { href: "/case-studies", label: "Case Studies", visible: flags["feature_case_studies"] },
         { href: "/speaking", label: "Speaking", visible: flags["feature_speaking"] },
         { href: "/publications", label: "Publications", visible: flags["feature_publications"] },
+        { href: "/executive-summary", label: "Financials & Exec View", visible: flags["feature_executive_summary"] },
         { href: "/downloads", label: "Downloads", visible: flags["feature_downloads"] },
         { href: "/contact", label: "Contact", visible: true },
     ].filter(link => link.visible);
