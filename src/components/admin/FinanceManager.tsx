@@ -121,7 +121,7 @@ export default function FinanceManager({ budgets, projects, initiatives, skills,
                                     required
                                 >
                                     <option value="">-- Select Master FY --</option>
-                                    {fiscalYears.map(f => <option key={f.id} value={f.id}>{f.label}</option>)}
+                                    {fiscalYears.map(f => <option key={f.id} value={f.label}>{f.label}</option>)}
                                 </select>
                             </div>
                             <div className="space-y-1">

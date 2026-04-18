@@ -195,8 +195,11 @@ export default async function BudgetPage() {
                                                 {/* FY Label */}
                                                 <td className={`p-4 font-bold text-foreground border-r border-border/50 sticky left-0 z-10 ${isCurrent ? "bg-primary/[0.06]" : fyIdx % 2 === 1 ? "bg-surface/20" : "bg-background/95"}`}>
                                                     <div className="flex flex-col items-start gap-1">
-                                                        <span className="text-base font-black">{fy}</span>
-                                                        {isCurrent && <span className="text-[9px] px-1.5 py-0.5 rounded bg-primary/20 text-primary font-bold uppercase">Current</span>}
+                                                        <span className="text-base font-black">FY {fy}</span>
+                                                        <span className="text-[10px] text-muted-foreground font-medium uppercase tracking-wider mb-1">
+                                                            Apr {fy.split('-')[0]} - Mar 20{fy.split('-')[1]}
+                                                        </span>
+                                                        {isCurrent && <span className="text-[9px] px-1.5 py-0.5 rounded bg-primary/20 text-primary font-bold uppercase mb-1">Current</span>}
                                                         <span className="text-[10px] text-muted-foreground font-mono mt-1">₹{fmtLakhs(fyTotal)}</span>
                                                         {fyPlan > 0 && fyTotal > 0 && (
                                                             <span className={`text-[9px] font-mono ${fyVariance > 0 ? "text-red-400" : "text-emerald-400"}`}>
