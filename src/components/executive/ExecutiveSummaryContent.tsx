@@ -9,6 +9,9 @@ const DownloadPdfButton = dynamic(() => import("@/components/pdf/DownloadPdfButt
     loading: () => <button className="fixed bottom-8 right-8 z-50 p-4 rounded-full bg-primary/20 animate-pulse shadow-lg print:hidden"><div className="w-6 h-6" /></button>
 });
 
+import FinanceCharts from "@/components/finance/FinanceCharts";
+import type { DashboardBudget } from "@/lib/data/finances";
+
 interface KPI {
     key: string;
     value: string;
@@ -34,6 +37,7 @@ interface Testimonial {
 interface Props {
     kpis: KPI[];
     testimonials: Testimonial[];
+    budgets?: DashboardBudget[];
     allowPdf?: boolean;
 }
 
@@ -82,7 +86,7 @@ function AnimatedCounter({ value, suffix }: { value: string; suffix: string | nu
 }
 
 /* ─── Main Component ─── */
-export default function ExecutiveSummaryContent({ kpis, testimonials, allowPdf }: Props) {
+export default function ExecutiveSummaryContent({ kpis, testimonials, budgets = [], allowPdf }: Props) {
     const { locale, t } = useTranslation();
 
     function getLabel(kpi: KPI): string {
@@ -134,6 +138,11 @@ export default function ExecutiveSummaryContent({ kpis, testimonials, allowPdf }
                         ))}
                     </div>
                 </section>
+
+                {/* Financial Overview */}
+                {budgets && budgets.length > 0 && (
+                     <FinanceCharts budgets={budgets} />
+                )}
 
                 {/* Key Competencies */}
                 <section className="print:break-inside-avoid">

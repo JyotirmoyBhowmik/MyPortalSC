@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import ExecutiveSummaryContent from "@/components/executive/ExecutiveSummaryContent";
 import { getFeatureFlag } from "@/lib/data/settings";
+import { getAllBudgets } from "@/lib/data/finances";
 import { notFound } from "next/navigation";
 
 export const revalidate = 60;
@@ -18,9 +19,10 @@ export default async function ExecutiveSummaryPage() {
 
     const supabase = await createClient();
 
-    const [kpisRes, testimonialsRes] = await Promise.all([
+    const [kpisRes, testimonialsRes, budgets] = await Promise.all([
         supabase.from("executive_kpis").select("*").eq("is_published", true).order("sort_order"),
         supabase.from("testimonials").select("*").eq("is_published", true).eq("featured", true).order("sort_order"),
+        getAllBudgets()
     ]);
 
     return (
@@ -29,6 +31,7 @@ export default async function ExecutiveSummaryPage() {
                 <ExecutiveSummaryContent
                     kpis={kpisRes.data ?? []}
                     testimonials={testimonialsRes.data ?? []}
+                    budgets={budgets}
                     allowPdf={allowPdf}
                 />
             </div>
