@@ -20,6 +20,7 @@ const navIcons: Record<string, string> = {
     "/speaking": "🎤",
     "/publications": "📰",
     "/downloads": "📥",
+    "/budget": "💰",
     "/contact": "✉️",
 };
 
@@ -56,6 +57,7 @@ export default function NavbarSidebar({ flags = {} }: { flags?: Record<string, b
         { href: "/speaking", label: "Speaking", visible: flags["feature_speaking"] },
         { href: "/publications", label: "Publications", visible: flags["feature_publications"] },
         { href: "/executive-summary", label: "Financials & Exec View", visible: flags["feature_executive_summary"] },
+        { href: "/budget", label: "IT Budgets", visible: true },
         { href: "/downloads", label: "Downloads", visible: flags["feature_downloads"] },
         { href: "/contact", label: "Contact", visible: true },
     ].filter(link => link.visible);
