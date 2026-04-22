@@ -4,9 +4,10 @@ import { useEffect, useRef } from "react";
 
 interface Props {
     className?: string;
+    rgbColor?: string;
 }
 
-export default function ParticleBackground({ className = "" }: Props) {
+export default function ParticleBackground({ className = "", rgbColor = "99, 220, 163" }: Props) {
     const canvasRef = useRef<HTMLCanvasElement>(null);
 
     useEffect(() => {
@@ -53,7 +54,7 @@ export default function ParticleBackground({ className = "" }: Props) {
 
                 ctx.beginPath();
                 ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-                ctx.fillStyle = `rgba(99, 220, 163, ${p.opacity})`;
+                ctx.fillStyle = `rgba(${rgbColor}, ${p.opacity})`;
                 ctx.fill();
             }
 
@@ -68,7 +69,7 @@ export default function ParticleBackground({ className = "" }: Props) {
                         ctx.beginPath();
                         ctx.moveTo(particles[i].x, particles[i].y);
                         ctx.lineTo(particles[j].x, particles[j].y);
-                        ctx.strokeStyle = `rgba(99, 220, 163, ${opacity})`;
+                        ctx.strokeStyle = `rgba(${rgbColor}, ${opacity})`;
                         ctx.lineWidth = 0.5;
                         ctx.stroke();
                     }

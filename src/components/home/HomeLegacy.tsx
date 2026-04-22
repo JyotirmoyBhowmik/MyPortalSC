@@ -20,6 +20,7 @@ interface HomeLegacyProps {
     heroTitle: string;
     heroSubtitle: string;
     heroDescription: string;
+    template?: string;
 }
 
 export default function HomeLegacy(props: HomeLegacyProps) {
@@ -31,7 +32,8 @@ export default function HomeLegacy(props: HomeLegacyProps) {
         budgets,
         formattedSpend,
         heroTitle,
-        heroDescription
+        heroDescription,
+        template
     } = props;
 
     return (
@@ -40,7 +42,7 @@ export default function HomeLegacy(props: HomeLegacyProps) {
             <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden">
                 {/* Background effects */}
                 {featureParticleBg ? (
-                    <ParticleBackground />
+                    <ParticleBackground rgbColor={template === 'ceramic' || template === 'light-modern' ? '20, 184, 166' : '99, 220, 163'} />
                 ) : (
                     <div className="absolute inset-0 dot-pattern opacity-30" />
                 )}

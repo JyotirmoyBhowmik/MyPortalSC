@@ -14,8 +14,6 @@ import { getAllBudgets } from "@/lib/data/finances";
 import { convertToINR } from "@/lib/utils/currency";
 
 import HomeLegacy from "@/components/home/HomeLegacy";
-import HomeCeramic from "@/components/home/HomeCeramic";
-import HomeGlassDark from "@/components/home/HomeGlassDark";
 
 export const revalidate = 60;
 
@@ -69,19 +67,7 @@ export default async function HomePage() {
       heroDescription
   };
 
-  // Render Multi-UI architecture
-  if (template === "glass-dark") {
-      return <HomeGlassDark {...props} />;
-  }
-  
-  if (template === "ceramic") {
-      return <HomeCeramic {...props} />;
-  }
-  
-  if (template === "light-modern") {
-      return <HomeLegacy {...props} />;
-  }
-
-  // Fallback / legacy UI
-  return <HomeLegacy {...props} />;
+  // All themes use the Legacy structural layout and animations. 
+  // CSS data-template handles the styling differences.
+  return <HomeLegacy template={template} {...props} />;
 }
