@@ -246,9 +246,10 @@ export default function SettingsManager({ grouped }: Props) {
                                                     disabled={isPending}
                                                     className="bg-surface border border-border rounded-lg text-xs px-2 py-1 focus:ring-2 focus:ring-primary/50 outline-none"
                                                 >
-                                                    <option value="classic">Classic</option>
-                                                    <option value="premium">Premium</option>
-                                                    <option value="glass">Glass</option>
+                                                    <option value="classic">Old UI (Legacy)</option>
+                                                    <option value="ceramic">New Ceramic UI (Default)</option>
+                                                    <option value="glass-dark">Glass Exec Dark (Secondary)</option>
+                                                    <option value="premium">Premium Themes Ext.</option>
                                                 </select>
                                             ) : setting.key === "navbar_style" ? (
                                                 <select

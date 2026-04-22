@@ -385,6 +385,103 @@ h6 {
 }
 
 /* ============================================================
+   Template: Ceramic UI (Executive Portfolio Default)
+   ============================================================ */
+[data-template="ceramic"] {
+  --background: #fafafb;
+  --foreground: #64748b;
+  --surface: #ffffff;
+  --surface-hover: #f8fafc;
+  --border-color: #e8edf3;
+  --border-hover: #cbd5e1;
+  --primary: #14b8a6; /* Teal */
+  --primary-hover: #0d9488;
+  --primary-fg: #ffffff;
+  --accent: #3b82f6; /* Blue Accent */
+  --accent-hover: #2563eb;
+  --muted: #f1f5f9;
+  --muted-fg: #94a3b8;
+  --success: #10b981;
+  --warning: #f59e0b;
+  --danger: #ef4444;
+  --card-bg: #ffffff;
+  --card-hover: rgba(255, 255, 255, 0.95);
+  --gradient-primary: linear-gradient(135deg, #14b8a6 0%, #3b82f6 100%);
+  --gradient-subtle: linear-gradient(135deg, rgba(20, 184, 166, 0.05) 0%, transparent 100%);
+  --gradient-hero: radial-gradient(ellipse at 30% 0%, rgba(20, 184, 166, 0.04) 0%, transparent 70%),
+    radial-gradient(ellipse at 70% 100%, rgba(59, 130, 246, 0.03) 0%, transparent 60%);
+  --gradient-card: linear-gradient(145deg, #ffffff 0%, rgba(255, 255, 255, 0.95) 100%);
+  /* Ceramic card effect: solid white with very soft diffuse shadow, no transparency */
+  --glass-bg: #ffffff;
+  --glass-border: #e8edf3;
+  --glass-blur: 0px; 
+  --heading: #0f172a;
+}
+
+/* Base adjustments specifically for Ceramic */
+[data-template="ceramic"] .glass {
+  box-shadow: 0 8px 30px rgba(15, 23, 42, 0.06);
+  border-radius: 24px;
+}
+[data-template="ceramic"] .hover-lift:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 40px rgba(15, 23, 42, 0.08);
+}
+[data-template="ceramic"] h1, [data-template="ceramic"] h2, [data-template="ceramic"] h3 {
+  font-weight: 800;
+  letter-spacing: -0.03em;
+}
+
+/* ============================================================
+   Template: Glass Executive Dark UI (Secondary Theme)
+   ============================================================ */
+[data-template="glass-dark"] {
+  --background: #0B0F14;
+  --foreground: #E6EDF3;
+  --surface: rgba(255, 255, 255, 0.05);
+  --surface-hover: rgba(255, 255, 255, 0.08);
+  --border-color: rgba(255, 255, 255, 0.08);
+  --border-hover: rgba(255, 255, 255, 0.15);
+  --primary: #14B8A6; /* Teal */
+  --primary-hover: #0D9488;
+  --primary-fg: #0B0F14;
+  --accent: #14B8A6; 
+  --accent-hover: #0D9488;
+  --muted: rgba(255, 255, 255, 0.03);
+  --muted-fg: #9BA6B2;
+  --success: #14B8A6;
+  --warning: #F59E0B;
+  --danger: #EF4444;
+  --card-bg: rgba(255, 255, 255, 0.03);
+  --card-hover: rgba(255, 255, 255, 0.06);
+  --gradient-primary: linear-gradient(135deg, #14B8A6 0%, #0D9488 100%);
+  --gradient-subtle: linear-gradient(135deg, rgba(20, 184, 166, 0.1) 0%, transparent 100%);
+  --gradient-hero: linear-gradient(180deg, #0B0F14 0%, #0F172A 100%);
+  --gradient-card: linear-gradient(145deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.02) 100%);
+  
+  --glass-bg: rgba(255, 255, 255, 0.05);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --glass-blur: 12px; 
+  --heading: #E6EDF3;
+}
+
+/* Base adjustments specifically for Glass Executive Dark */
+[data-template="glass-dark"] .glass {
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+  border-radius: 20px;
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+}
+[data-template="glass-dark"] .hover-lift:hover {
+  transform: scale(1.02);
+  box-shadow: 0 15px 50px rgba(0, 0, 0, 0.5);
+}
+[data-template="glass-dark"] h1, [data-template="glass-dark"] h2, [data-template="glass-dark"] h3 {
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+/* ============================================================
    Base Styles
    ============================================================ */
 * {
