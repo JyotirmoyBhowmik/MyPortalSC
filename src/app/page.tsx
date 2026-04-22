@@ -77,6 +77,10 @@ export default async function HomePage() {
   if (template === "ceramic") {
       return <HomeCeramic {...props} />;
   }
+  
+  if (template === "light-modern") {
+      return <HomeLegacy {...props} />;
+  }
 
   // Fallback / legacy UI
   return <HomeLegacy {...props} />;

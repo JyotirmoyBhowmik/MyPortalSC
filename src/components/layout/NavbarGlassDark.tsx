@@ -12,7 +12,6 @@ const links = [
   { href: "/projects", label: "Projects" },
   { href: "/skills", label: "Skills" },
   { href: "/contact", label: "Contact" },
-  { href: "/admin", label: "Admin" },
 ];
 
 export default function NavbarGlassDark({ flags }: { flags: Record<string, boolean> }) {

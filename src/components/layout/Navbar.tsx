@@ -22,6 +22,10 @@ export default function Navbar({ settings = {} }: { settings?: Record<string, un
         return <NavbarGlassDark flags={flags} />;
     }
 
+    if (template === "light-modern") {
+        return <NavbarCeramic flags={flags} />;
+    }
+
     // Default to the Legacy sidebar UI
     return <NavbarSidebar flags={flags} />;
 }

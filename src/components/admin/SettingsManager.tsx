@@ -249,6 +249,7 @@ export default function SettingsManager({ grouped }: Props) {
                                                     <option value="classic">Old UI (Legacy)</option>
                                                     <option value="ceramic">New Ceramic UI (Default)</option>
                                                     <option value="glass-dark">Glass Exec Dark (Secondary)</option>
+                                                    <option value="light-modern">Light Exec Modern Legacy</option>
                                                     <option value="premium">Premium Themes Ext.</option>
                                                 </select>
                                             ) : setting.key === "navbar_style" ? (
