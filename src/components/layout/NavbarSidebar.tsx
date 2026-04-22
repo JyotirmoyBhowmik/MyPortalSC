@@ -107,7 +107,7 @@ export default function NavbarSidebar({ flags = {} }: { flags?: Record<string, b
                 { href: "/skills", label: "Skills", visible: true },
                 { href: "/initiatives", label: "Initiatives", visible: true },
                 { href: "/projects", label: "Projects", visible: true },
-                { href: "/timeline", label: "Timeline", visible: !!flags["feature_timeline"] },
+                { href: "/timeline", label: "Timeline", visible: true },
                 { href: "/testimonials", label: "Testimonials", visible: !!flags["feature_testimonials"] },
             ]
         },
