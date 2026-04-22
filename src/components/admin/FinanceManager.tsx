@@ -111,7 +111,20 @@ export default function FinanceManager({ budgets, projects, initiatives, skills,
                             defaultValue={editItem?.title || ""}
                             required
                         />
-                        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                        <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+                            <div className="space-y-1">
+                                <label className="text-sm font-medium text-foreground">Status</label>
+                                <select
+                                    name="status"
+                                    defaultValue={editItem?.status || "Draft"}
+                                    className="w-full bg-background border border-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 transition-shadow appearance-none"
+                                >
+                                    <option value="Draft">Draft</option>
+                                    <option value="Submitted">Submitted</option>
+                                    <option value="Approved">Approved</option>
+                                    <option value="Closed">Closed</option>
+                                </select>
+                            </div>
                             <div className="space-y-1">
                                 <label className="text-sm font-medium text-foreground">Fiscal Year</label>
                                 <select
@@ -298,6 +311,12 @@ export default function FinanceManager({ budgets, projects, initiatives, skills,
                                         <div className="text-xs text-muted-foreground gap-1 flex items-center mt-1">
                                             <span className={`px-1.5 py-0.5 rounded text-[10px] font-bold ${b.investment_model === 'OpEx' ? 'bg-blue-500/10 text-blue-500' : 'bg-purple-500/10 text-purple-500'}`}>{b.investment_model}</span>
                                             {b.fiscal_year}
+                                            <span className={`px-1.5 py-0.5 rounded text-[10px] font-bold ml-2 ${
+                                                b.status === 'Approved' ? 'bg-emerald-500/10 text-emerald-500' :
+                                                b.status === 'Submitted' ? 'bg-blue-500/10 text-blue-500' :
+                                                b.status === 'Closed' ? 'bg-slate-500/10 text-slate-500' :
+                                                'bg-yellow-500/10 text-yellow-500'
+                                            }`}>{b.status || 'Draft'}</span>
                                         </div>
                                         {b.cost_center && (
                                             <div className="text-[10px] text-muted-foreground mt-1 tracking-wider uppercase">

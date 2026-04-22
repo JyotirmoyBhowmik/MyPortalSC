@@ -28,6 +28,9 @@ export async function createBudget(formData: FormData) {
     const cost_center = formData.get("cost_center") as string || null;
     const profit_center = formData.get("profit_center") as string || null;
     const account_head = formData.get("account_head") as string || null;
+    
+    // Status
+    const status = formData.get("status") as string || "Draft";
 
     const { error } = await supabase.from("financial_budgets").insert({
         title,
@@ -45,6 +48,7 @@ export async function createBudget(formData: FormData) {
         cost_center,
         profit_center,
         account_head,
+        status,
     });
 
     if (error) {
@@ -77,6 +81,8 @@ export async function updateBudget(id: string, formData: FormData) {
     const cost_center = formData.get("cost_center") as string || null;
     const profit_center = formData.get("profit_center") as string || null;
     const account_head = formData.get("account_head") as string || null;
+    
+    const status = formData.get("status") as string || "Draft";
 
     const { error } = await supabase
         .from("financial_budgets")
@@ -96,6 +102,7 @@ export async function updateBudget(id: string, formData: FormData) {
             cost_center,
             profit_center,
             account_head,
+            status,
         })
         .eq("id", id);
 

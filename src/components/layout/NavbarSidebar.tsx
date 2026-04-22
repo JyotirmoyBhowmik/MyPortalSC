@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import ThemeSwitcher from "@/components/ThemeSwitcher";
 import LanguageSwitcher from "@/components/layout/LanguageSwitcher";
@@ -39,6 +39,7 @@ type ScreenSize = "mobile" | "tablet" | "desktop";
 
 export default function NavbarSidebar({ flags = {} }: { flags?: Record<string, boolean> }) {
     const pathname = usePathname();
+    const router = useRouter();
     const [mobileOpen, setMobileOpen] = useState(false);
     const [screenSize, setScreenSize] = useState<ScreenSize>("desktop");
     const [hovered, setHovered] = useState(false);
@@ -62,6 +63,26 @@ export default function NavbarSidebar({ flags = {} }: { flags?: Record<string, b
     useEffect(() => {
         if (screenSize === "mobile") setMobileOpen(false);
     }, [pathname, screenSize]);
+
+    useEffect(() => {
+        const handleKeyDown = (e: KeyboardEvent) => {
+            // Ignore if user is typing in an input or textarea
+            if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
+            
+            // Allow ⌘K for CommandPalette, so don't interfere with modifier keys
+            if (e.metaKey || e.ctrlKey || e.altKey) return;
+
+            const key = e.key.toLowerCase();
+            if (key === 'b') router.push('/budget');
+            else if (key === 'i') router.push('/initiatives');
+            else if (key === 'h') router.push('/');
+            else if (key === 'p') router.push('/projects');
+            else if (key === 'a') router.push('/about');
+        };
+
+        window.addEventListener('keydown', handleKeyDown);
+        return () => window.removeEventListener('keydown', handleKeyDown);
+    }, [router]);
 
     const isExpanded =
         screenSize === "desktop" ? true :

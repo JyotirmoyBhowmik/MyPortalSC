@@ -3,6 +3,7 @@ import { getAllBudgets } from "@/lib/data/finances";
 import { formatINR, convertToINR } from "@/lib/utils/currency";
 import AnimatedSection from "@/components/animations/AnimatedSection";
 import { BudgetVarianceChart, BudgetTrendChart, PrintExportButton } from "@/components/budget/BudgetCharts";
+import Link from "next/link";
 
 export const metadata: Metadata = {
     title: "Enterprise IT Financial Ledger — SOW/Budget Tracker",
@@ -46,8 +47,48 @@ const FY_ORDER = [
     "2020-21","2019-20","2018-19","2017-18","2016-17"
 ];
 
-export default async function BudgetPage() {
-    const budgets = await getAllBudgets();
+const renderStatusDot = (status: string | undefined) => {
+    if (status === 'Approved') return 'bg-emerald-500';
+    if (status === 'Submitted') return 'bg-blue-500';
+    if (status === 'Closed') return 'bg-slate-500';
+    return 'bg-yellow-500';
+};
+
+export default async function BudgetPage({ searchParams }: { searchParams: { role?: string, forecast?: string } }) {
+    const rawBudgets = await getAllBudgets();
+    
+    // Point 15: Budget Forecasting
+    const budgets = [...rawBudgets];
+    const isForecast = searchParams.forecast === 'true';
+    if (isForecast) {
+        // Calculate average historical CapEx and OpEx
+        const histCapEx = budgets.filter(b => b.investment_model === 'CapEx').reduce((s, b) => s + b.expense_amount, 0);
+        const histOpEx = budgets.filter(b => b.investment_model === 'OpEx').reduce((s, b) => s + b.expense_amount, 0);
+        const histYears = new Set(budgets.map(b => b.fiscal_year)).size || 1;
+        
+        const avgCapEx = histCapEx / histYears;
+        const avgOpEx = histOpEx / histYears;
+        
+        const forecastYears = ["2026-27", "2027-28", "2028-29", "2029-30", "2030-31"];
+        forecastYears.forEach((fy, idx) => {
+            if (!budgets.some(b => b.fiscal_year === fy)) {
+                // Add 5% YoY growth
+                const growth = Math.pow(1.05, idx + 1);
+                budgets.push({
+                    id: `forecast-capex-${fy}`, title: `Forecasted CapEx Plan`, fiscal_year: fy, investment_model: 'CapEx',
+                    planning_amount: avgCapEx * growth, expense_amount: 0, carry_over_amount: 0, outlook_amount: 0,
+                    project_id: null, initiative_id: null, skill_id: null, currency: 'USD', status: 'Draft', created_at: '', updated_at: ''
+                });
+                budgets.push({
+                    id: `forecast-opex-${fy}`, title: `Forecasted OpEx Run-Rate`, fiscal_year: fy, investment_model: 'OpEx',
+                    planning_amount: avgOpEx * growth, expense_amount: 0, carry_over_amount: 0, outlook_amount: 0,
+                    project_id: null, initiative_id: null, skill_id: null, currency: 'USD', status: 'Draft', created_at: '', updated_at: ''
+                });
+            }
+        });
+    }
+
+    const role = searchParams.role || 'CFO';
 
     // Group by FY
     const byFY: Record<string, any[]> = {};
@@ -85,8 +126,8 @@ export default async function BudgetPage() {
             <div className="max-w-[1400px] mx-auto relative z-10">
                 {/* Header */}
                 <AnimatedSection>
-                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-12">
-                        <div className="text-center sm:text-left flex-1">
+                    <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-12">
+                        <div className="text-center md:text-left flex-1">
                             <div className="inline-block px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-xs font-bold text-primary uppercase tracking-widest mb-4">
                                 IT Financial Controller View
                             </div>
@@ -98,7 +139,19 @@ export default async function BudgetPage() {
                                 <span className="text-xs opacity-70">Showing {budgets.length} budget line items across {sortedFYs.length} fiscal years</span>
                             </p>
                         </div>
-                        <PrintExportButton />
+                        <div className="flex flex-col gap-3 items-end">
+                            <div className="flex bg-surface border border-border rounded-lg p-1 print:hidden">
+                                <Link href={`?role=CTO${isForecast ? '&forecast=true' : ''}`} className={`px-4 py-1.5 rounded-md text-sm font-medium transition-colors ${role === 'CTO' ? 'bg-primary text-primary-foreground' : 'hover:bg-background text-muted-foreground'}`}>CTO View</Link>
+                                <Link href={`?role=CFO${isForecast ? '&forecast=true' : ''}`} className={`px-4 py-1.5 rounded-md text-sm font-medium transition-colors ${role === 'CFO' ? 'bg-primary text-primary-foreground' : 'hover:bg-background text-muted-foreground'}`}>CFO View</Link>
+                                <Link href={`?role=IT_MANAGER${isForecast ? '&forecast=true' : ''}`} className={`px-4 py-1.5 rounded-md text-sm font-medium transition-colors ${role === 'IT_MANAGER' ? 'bg-primary text-primary-foreground' : 'hover:bg-background text-muted-foreground'}`}>IT Manager</Link>
+                            </div>
+                            <div className="flex gap-2">
+                                <Link href={`?role=${role}${!isForecast ? '&forecast=true' : ''}`} className={`px-3 py-1.5 rounded border text-xs font-bold transition-colors print:hidden ${isForecast ? 'bg-purple-500/20 text-purple-400 border-purple-500/50' : 'bg-surface border-border text-muted-foreground hover:bg-background'}`}>
+                                    {isForecast ? '🔮 Forecasting Active' : '🔮 Auto-Forecast'}
+                                </Link>
+                                <PrintExportButton />
+                            </div>
+                        </div>
                     </div>
                 </AnimatedSection>
 
@@ -137,12 +190,14 @@ export default async function BudgetPage() {
                 </AnimatedSection>
 
                 {/* Charts Row */}
-                <AnimatedSection delay={0.15}>
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-10 print:hidden">
-                        <BudgetVarianceChart data={chartData} />
-                        <BudgetTrendChart data={chartData} />
-                    </div>
-                </AnimatedSection>
+                {role !== 'IT_MANAGER' && (
+                    <AnimatedSection delay={0.15}>
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-10 print:hidden">
+                            <BudgetVarianceChart data={chartData} />
+                            <BudgetTrendChart data={chartData} />
+                        </div>
+                    </AnimatedSection>
+                )}
 
                 {/* Main Table */}
                 <AnimatedSection delay={0.2}>
@@ -213,7 +268,10 @@ export default async function BudgetPage() {
                                                     <div className="space-y-1.5">
                                                         {cp.map(b => (
                                                             <div key={b.id} className="flex justify-between items-start gap-2 text-xs group">
-                                                                <span className="text-foreground/90 leading-tight group-hover:text-purple-300 transition-colors">• {b.title}</span>
+                                                                <span className="text-foreground/90 leading-tight group-hover:text-purple-300 transition-colors flex items-center gap-1.5">
+                                                                    <span className={`w-1.5 h-1.5 rounded-full ${renderStatusDot(b.status)}`} title={b.status || 'Draft'}></span>
+                                                                    {b.cost_center ? <Link href={`/budget/cost-center/${encodeURIComponent(b.cost_center)}`} className="hover:underline">{b.title}</Link> : b.title}
+                                                                </span>
                                                                 <span className="text-muted-foreground font-mono shrink-0 text-[10px]">₹{fmtLakhs(toINR(b))}</span>
                                                             </div>
                                                         ))}
@@ -226,28 +284,36 @@ export default async function BudgetPage() {
                                                     )}
                                                 </td>
                                                 {/* CAPEX Regular */}
-                                                <td className="p-3 border-r border-border/30 align-top">
-                                                    <div className="space-y-1.5">
-                                                        {cr.map(b => (
-                                                            <div key={b.id} className="flex justify-between items-start gap-2 text-xs group">
-                                                                <span className="text-foreground/70 leading-tight group-hover:text-purple-300 transition-colors">• {b.title}</span>
-                                                                <span className="text-muted-foreground font-mono shrink-0 text-[10px]">₹{fmtLakhs(toINR(b))}</span>
-                                                            </div>
-                                                        ))}
-                                                        {cr.length === 0 && <span className="text-muted-foreground/40 italic text-xs">—</span>}
-                                                    </div>
-                                                    {cr.length > 0 && (
-                                                        <div className="mt-2 pt-1.5 border-t border-purple-500/10 text-right">
-                                                            <span className="text-[10px] font-bold font-mono text-purple-400/70">₹{fmtLakhs(cr.reduce((s: number, b: any) => s + toINR(b), 0))}</span>
+                                                {role !== 'CTO' && (
+                                                    <td className="p-3 border-r border-border/30 align-top">
+                                                        <div className="space-y-1.5">
+                                                            {cr.map(b => (
+                                                                <div key={b.id} className="flex justify-between items-start gap-2 text-xs group">
+                                                                    <span className="text-foreground/70 leading-tight group-hover:text-purple-300 transition-colors flex items-center gap-1.5">
+                                                                        <span className={`w-1.5 h-1.5 rounded-full ${renderStatusDot(b.status)}`} title={b.status || 'Draft'}></span>
+                                                                        {b.cost_center ? <Link href={`/budget/cost-center/${encodeURIComponent(b.cost_center)}`} className="hover:underline">{b.title}</Link> : b.title}
+                                                                    </span>
+                                                                    <span className="text-muted-foreground font-mono shrink-0 text-[10px]">₹{fmtLakhs(toINR(b))}</span>
+                                                                </div>
+                                                            ))}
+                                                            {cr.length === 0 && <span className="text-muted-foreground/40 italic text-xs">—</span>}
                                                         </div>
-                                                    )}
-                                                </td>
+                                                        {cr.length > 0 && (
+                                                            <div className="mt-2 pt-1.5 border-t border-purple-500/10 text-right">
+                                                                <span className="text-[10px] font-bold font-mono text-purple-400/70">₹{fmtLakhs(cr.reduce((s: number, b: any) => s + toINR(b), 0))}</span>
+                                                            </div>
+                                                        )}
+                                                    </td>
+                                                )}
                                                 {/* OPEX Projects */}
                                                 <td className="p-3 border-r border-border/30 align-top">
                                                     <div className="space-y-1.5">
                                                         {op.map(b => (
                                                             <div key={b.id} className="flex justify-between items-start gap-2 text-xs group">
-                                                                <span className="text-foreground/90 leading-tight group-hover:text-blue-300 transition-colors">• {b.title}</span>
+                                                                <span className="text-foreground/90 leading-tight group-hover:text-blue-300 transition-colors flex items-center gap-1.5">
+                                                                    <span className={`w-1.5 h-1.5 rounded-full ${renderStatusDot(b.status)}`} title={b.status || 'Draft'}></span>
+                                                                    {b.cost_center ? <Link href={`/budget/cost-center/${encodeURIComponent(b.cost_center)}`} className="hover:underline">{b.title}</Link> : b.title}
+                                                                </span>
                                                                 <span className="text-muted-foreground font-mono shrink-0 text-[10px]">₹{fmtLakhs(toINR(b))}</span>
                                                             </div>
                                                         ))}
@@ -260,22 +326,27 @@ export default async function BudgetPage() {
                                                     )}
                                                 </td>
                                                 {/* OPEX Regular */}
-                                                <td className="p-3 border-r border-border/30 align-top">
-                                                    <div className="space-y-1.5">
-                                                        {or2.map(b => (
-                                                            <div key={b.id} className="flex justify-between items-start gap-2 text-xs group">
-                                                                <span className="text-foreground/70 leading-tight group-hover:text-blue-300 transition-colors">• {b.title}</span>
-                                                                <span className="text-muted-foreground font-mono shrink-0 text-[10px]">₹{fmtLakhs(toINR(b))}</span>
-                                                            </div>
-                                                        ))}
-                                                        {or2.length === 0 && <span className="text-muted-foreground/40 italic text-xs">—</span>}
-                                                    </div>
-                                                    {or2.length > 0 && (
-                                                        <div className="mt-2 pt-1.5 border-t border-blue-500/10 text-right">
-                                                            <span className="text-[10px] font-bold font-mono text-blue-400/70">₹{fmtLakhs(or2.reduce((s: number, b: any) => s + toINR(b), 0))}</span>
+                                                {role !== 'CTO' && (
+                                                    <td className="p-3 border-r border-border/30 align-top">
+                                                        <div className="space-y-1.5">
+                                                            {or2.map(b => (
+                                                                <div key={b.id} className="flex justify-between items-start gap-2 text-xs group">
+                                                                    <span className="text-foreground/70 leading-tight group-hover:text-blue-300 transition-colors flex items-center gap-1.5">
+                                                                        <span className={`w-1.5 h-1.5 rounded-full ${renderStatusDot(b.status)}`} title={b.status || 'Draft'}></span>
+                                                                        {b.cost_center ? <Link href={`/budget/cost-center/${encodeURIComponent(b.cost_center)}`} className="hover:underline">{b.title}</Link> : b.title}
+                                                                    </span>
+                                                                    <span className="text-muted-foreground font-mono shrink-0 text-[10px]">₹{fmtLakhs(toINR(b))}</span>
+                                                                </div>
+                                                            ))}
+                                                            {or2.length === 0 && <span className="text-muted-foreground/40 italic text-xs">—</span>}
                                                         </div>
-                                                    )}
-                                                </td>
+                                                        {or2.length > 0 && (
+                                                            <div className="mt-2 pt-1.5 border-t border-blue-500/10 text-right">
+                                                                <span className="text-[10px] font-bold font-mono text-blue-400/70">₹{fmtLakhs(or2.reduce((s: number, b: any) => s + toINR(b), 0))}</span>
+                                                            </div>
+                                                        )}
+                                                    </td>
+                                                )}
                                                 {/* FY Total */}
                                                 <td className="p-4 text-right align-top">
                                                     <div className="font-bold font-mono text-foreground text-sm">{formatINR(fyTotal)}</div>
@@ -296,15 +367,19 @@ export default async function BudgetPage() {
                                         <td className="p-4 text-right border-r border-border/50 font-mono text-purple-400">
                                             {formatINR(budgets.filter(b => categorize(b) === "capex_project").reduce((s, b) => s + toINR(b), 0))}
                                         </td>
-                                        <td className="p-4 text-right border-r border-border/50 font-mono text-purple-400/70">
-                                            {formatINR(budgets.filter(b => categorize(b) === "capex_regular").reduce((s, b) => s + toINR(b), 0))}
-                                        </td>
+                                        {role !== 'CTO' && (
+                                            <td className="p-4 text-right border-r border-border/50 font-mono text-purple-400/70">
+                                                {formatINR(budgets.filter(b => categorize(b) === "capex_regular").reduce((s, b) => s + toINR(b), 0))}
+                                            </td>
+                                        )}
                                         <td className="p-4 text-right border-r border-border/50 font-mono text-blue-400">
                                             {formatINR(budgets.filter(b => categorize(b) === "opex_project").reduce((s, b) => s + toINR(b), 0))}
                                         </td>
-                                        <td className="p-4 text-right border-r border-border/50 font-mono text-blue-400/70">
-                                            {formatINR(budgets.filter(b => categorize(b) === "opex_regular").reduce((s, b) => s + toINR(b), 0))}
-                                        </td>
+                                        {role !== 'CTO' && (
+                                            <td className="p-4 text-right border-r border-border/50 font-mono text-blue-400/70">
+                                                {formatINR(budgets.filter(b => categorize(b) === "opex_regular").reduce((s, b) => s + toINR(b), 0))}
+                                            </td>
+                                        )}
                                         <td className="p-4 text-right">
                                             <div className="text-lg font-black font-mono gradient-text">{formatINR(grandExpense)}</div>
                                         </td>
