@@ -77,12 +77,12 @@ export default async function BudgetPage({ searchParams }: { searchParams: { rol
                 budgets.push({
                     id: `forecast-capex-${fy}`, title: `Forecasted CapEx Plan`, fiscal_year: fy, investment_model: 'CapEx',
                     planning_amount: avgCapEx * growth, expense_amount: 0, carry_over_amount: 0, outlook_amount: 0,
-                    project_id: null, initiative_id: null, skill_id: null, currency: 'USD', status: 'Draft', created_at: '', updated_at: ''
+                    project_id: null, initiative_id: null, skill_id: null, currency: 'USD', status: 'Draft'
                 });
                 budgets.push({
                     id: `forecast-opex-${fy}`, title: `Forecasted OpEx Run-Rate`, fiscal_year: fy, investment_model: 'OpEx',
                     planning_amount: avgOpEx * growth, expense_amount: 0, carry_over_amount: 0, outlook_amount: 0,
-                    project_id: null, initiative_id: null, skill_id: null, currency: 'USD', status: 'Draft', created_at: '', updated_at: ''
+                    project_id: null, initiative_id: null, skill_id: null, currency: 'USD', status: 'Draft'
                 });
             }
         });
