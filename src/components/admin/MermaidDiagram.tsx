@@ -2,6 +2,7 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import mermaid from 'mermaid';
+import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 
 interface MermaidDiagramProps {
     chart: string;
@@ -72,8 +73,24 @@ export default function MermaidDiagram({ chart, id = "mermaid-diagram" }: Mermai
     return (
         <div 
             ref={containerRef}
-            className="mermaid-container w-full overflow-auto bg-surface/50 border border-border rounded-xl p-6 shadow-inner custom-scrollbar"
-            dangerouslySetInnerHTML={{ __html: svgCode }}
-        />
+            className="mermaid-container w-full h-full min-h-[400px] bg-surface/50 border border-border rounded-xl shadow-inner relative overflow-hidden group"
+        >
+            <TransformWrapper
+                initialScale={1}
+                minScale={0.2}
+                maxScale={4}
+                centerOnInit={true}
+                wheel={{ step: 0.1 }}
+            >
+                <TransformComponent wrapperClass="w-full h-full cursor-grab active:cursor-grabbing !w-full !h-full" contentClass="w-full h-full flex items-center justify-center min-h-[400px]">
+                    <div dangerouslySetInnerHTML={{ __html: svgCode }} className="w-full h-full" />
+                </TransformComponent>
+            </TransformWrapper>
+            
+            <div className="absolute top-4 right-4 text-xs text-muted-foreground bg-background/80 backdrop-blur px-3 py-1.5 rounded-lg border border-border flex items-center gap-2 z-10 pointer-events-none opacity-50 group-hover:opacity-100 transition-opacity">
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7" /></svg>
+                Scroll to Zoom, Drag to Pan
+            </div>
+        </div>
     );
 }

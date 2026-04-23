@@ -4,7 +4,7 @@ import React from 'react';
 import MermaidDiagram from '@/components/admin/MermaidDiagram';
 import AnimatedSection from '@/components/animations/AnimatedSection';
 
-const chartData = `
+export const chartData = `
 graph TD
     %% Core Nodes
     subgraph "UI Component Library"

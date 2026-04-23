@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Metadata } from "next";
-
+import { chartData } from "@/app/admin/sitemap/page";
+import MermaidDiagram from "@/components/admin/MermaidDiagram";
 export const metadata: Metadata = {
     title: "Site Map | Jyotirmoy Bhowmik",
     description: "Overview of all pages and sections on Jyotirmoy Bhowmik's professional portfolio.",
@@ -73,6 +74,22 @@ export default function SitemapPage() {
                             </ul>
                         </div>
                     ))}
+                </div>
+            </div>
+
+            {/* Architectural Diagram */}
+            <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mt-16 md:mt-24">
+                <div className="mb-6 md:mb-8 text-center">
+                    <h2 className="text-2xl md:text-4xl font-bold mb-3 md:mb-4 tracking-tight">
+                        Architecture <span className="gradient-text">Diagram</span>
+                    </h2>
+                    <p className="text-lg text-muted-foreground">
+                        An interactive dependency graph of the codebase modules and their connections. 
+                        You can zoom and pan to explore the structure.
+                    </p>
+                </div>
+                <div className="bg-surface/30 p-2 md:p-4 rounded-2xl border border-border shadow-xl h-[600px] overflow-hidden">
+                    <MermaidDiagram chart={chartData} id="public-architecture-map" />
                 </div>
             </div>
         </div>
