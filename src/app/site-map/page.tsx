@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Metadata } from "next";
-import { chartData } from "@/app/admin/sitemap/page";
+import { chartData } from "@/lib/data/architecture";
 import MermaidDiagram from "@/components/admin/MermaidDiagram";
 export const metadata: Metadata = {
     title: "Site Map | Jyotirmoy Bhowmik",

@@ -15,7 +15,8 @@ export default function NavbarClassic({ flags = {} }: { flags?: Record<string, b
         // Tier 1
         { href: "/executive-summary", label: "Executive Summary", visible: flags["feature_executive_summary"] },
         { href: "/testimonials", label: "Testimonials", visible: flags["feature_testimonials"] },
-        { href: "/timeline", label: "Timeline", visible: flags["feature_timeline"] },
+        { href: "/timeline", label: "Timeline", visible: true },
+        { href: "/budget", label: "Budget", visible: true },
         // Standard
         { href: "/about", label: "About", visible: true },
         { href: "/skills", label: "Skills", visible: true },
