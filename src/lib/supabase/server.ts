@@ -43,7 +43,12 @@ export async function createClient() {
 }
 
 function createFallbackClient(url: string, key: string) {
-    return createServerClient(url, key, {
+    // Use placeholders if actual values are missing to prevent createServerClient from throwing.
+    // This allows the build to proceed during static generation even if env vars are not set.
+    const safeUrl = url || "https://placeholder.supabase.co";
+    const safeKey = key || "dummy-key";
+
+    return createServerClient(safeUrl, safeKey, {
         cookies: {
             getAll() { return []; },
             setAll() { }
