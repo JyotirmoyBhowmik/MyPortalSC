@@ -93,6 +93,14 @@
 
   "rewrites": [
     {
+      "source": "/notes",
+      "destination": "https://my-notev2-rj7k.vercel.app/"
+    },
+    {
+      "source": "/notes/:path*",
+      "destination": "https://my-notev2-rj7k.vercel.app/:path*"
+    },
+    {
       "source": "/sitemap.xml",
       "destination": "/sitemap"
     },
