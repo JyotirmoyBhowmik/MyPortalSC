@@ -7,6 +7,7 @@ import { createClient } from "@/lib/supabase/client";
 import ThemeSwitcher from "@/components/ThemeSwitcher";
 import RealtimeNotifications from "./RealtimeNotifications";
 import { ToastProvider } from "@/components/ui/ToastProvider";
+import AdminSearch from "./AdminSearch";
 
 /* ─── Sidebar link definitions ─── */
 const sidebarSections = [
@@ -101,6 +102,15 @@ const sidebarSections = [
                 icon: (
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                ),
+            },
+            {
+                href: "/admin/profile",
+                label: "Profile Photo",
+                icon: (
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
                 ),
             },
@@ -235,6 +245,15 @@ const sidebarSections = [
                 icon: (
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                    </svg>
+                ),
+            },
+            {
+                href: "/admin/inactive-pages",
+                label: "Inactive Pages",
+                icon: (
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
                     </svg>
                 ),
             },
@@ -499,13 +518,8 @@ export default function AdminShell({
 
                             {/* Right: Theme switcher */}
                             <div className="flex items-center gap-2">
-                                {allowAdminSearch && (
-                                    <div className="relative hidden sm:block mr-2">
-                                        <svg className="absolute left-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                                        </svg>
-                                        <input type="text" placeholder="Search admin..." className="w-64 pl-9 pr-4 py-1.5 bg-surface border border-border rounded-lg text-sm transition-shadow text-foreground focus:outline-none focus:ring-1 focus:ring-primary placeholder-muted-foreground" />
-                                    </div>
+                            {allowAdminSearch && (
+                                    <AdminSearch sections={sidebarSections} />
                                 )}
                                 <ThemeSwitcher />
                             </div>

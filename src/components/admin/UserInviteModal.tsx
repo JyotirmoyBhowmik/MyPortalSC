@@ -10,6 +10,7 @@ interface UserInviteModalProps {
 
 export default function UserInviteModal({ isOpen, onClose }: UserInviteModalProps) {
     const [email, setEmail] = useState("");
+    const [fullName, setFullName] = useState("");
     const [role, setRole] = useState("viewer");
     const [loading, setLoading] = useState(false);
     const [status, setStatus] = useState<{ success?: boolean; message?: string } | null>(null);
@@ -22,12 +23,13 @@ export default function UserInviteModal({ isOpen, onClose }: UserInviteModalProp
         setStatus(null);
 
         try {
-            const result = await inviteUser(email, role);
+            const result = await inviteUser(email, role, fullName.trim() || undefined);
             if (result.success) {
                 setStatus({ success: true, message: "Invitation sent successfully!" });
                 setTimeout(() => {
                     onClose();
                     setEmail("");
+                    setFullName("");
                     setStatus(null);
                 }, 1500);
             } else {
@@ -51,6 +53,18 @@ export default function UserInviteModal({ isOpen, onClose }: UserInviteModalProp
                 </div>
 
                 <form onSubmit={handleSubmit} className="space-y-4">
+                    <div>
+                        <label className="block text-sm font-medium mb-1">Full Name</label>
+                        <input
+                            type="text"
+                            value={fullName}
+                            onChange={(e) => setFullName(e.target.value)}
+                            className="admin-input w-full"
+                            placeholder="John Doe (optional)"
+                        />
+                        <p className="text-xs text-muted-foreground mt-1">Auto-derived from email if left blank.</p>
+                    </div>
+
                     <div>
                         <label className="block text-sm font-medium mb-1">Email Address</label>
                         <input

@@ -1,23 +1,23 @@
 export const chartData = `
 graph TD
     %% Core Nodes
-    subgraph "UI Component Library"
-        Layout[App Layouts & Navigation]
-        Anim[Animations & Effects]
-        Visuals[Charts & Data Visualizations]
+    subgraph UILib["UI Component Library"]
+        Layout[App Layouts and Navigation]
+        Anim[Animations and Effects]
+        Visuals[Charts and Data Visualizations]
         CoreUI[Core UI Components]
     end
 
-    subgraph "Business Logic & Pages"
+    subgraph BizLogic["Business Logic and Pages"]
         Home[Home Page Routing]
         AdminCMS[Admin CMS Dashboard]
         Finance[Enterprise Financial Ledger]
-        Portfolio[Portfolio & Projects View]
-        Knowledge[Knowledge Base & Blog]
+        Portfolio[Portfolio and Projects View]
+        Knowledge[Knowledge Base and Blog]
     end
 
-    subgraph "Data & Auth Layer"
-        SupabaseClient[Supabase Auth & Client]
+    subgraph DataLayer["Data and Auth Layer"]
+        SupabaseClient[Supabase Auth and Client]
         DatabaseTypes[DB TypeScript Schema]
         Actions[Server Actions CRUD]
         FinData[Finance Data Fetchers]
@@ -35,7 +35,7 @@ graph TD
     Finance --> CoreUI
     Portfolio --> CoreUI
     Knowledge --> CoreUI
-    
+
     Finance --> Anim
     Finance --> Visuals
     Portfolio --> Visuals
@@ -52,9 +52,9 @@ graph TD
 
     SupabaseClient --> DatabaseTypes
 
-    %% Implicit/Invisible Connections (Dashed)
+    %% Implicit Connections
     DB[(PostgreSQL Database)]
-    SupabaseClient -.->|Reads/Writes| DB
+    SupabaseClient -.->|Reads and Writes| DB
     Actions -.->|Mutations| DB
 
     %% Hotspots Styling

@@ -128,6 +128,12 @@ export default async function AboutPage() {
     const dbEducation = getContentData(pageContent?.content, "education");
     const dbVideoLink = getContentField(pageContent?.content, "videoLink");
 
+    // Profile photo — use DB-managed URL, fall back to static file
+    const profilePhotoUrl = await getSetting("profile_photo_url");
+    const profilePhotoSrc = (typeof profilePhotoUrl === "string" && profilePhotoUrl.trim()) 
+        ? profilePhotoUrl.trim() 
+        : "/images/profile.jpg";
+
     const displayVision = dbVision || visionStatement;
     const displayExperience = dbExperience || experience;
     const displayEducation = dbEducation || education;
@@ -163,13 +169,13 @@ export default async function AboutPage() {
                             <div className="hidden sm:block flex-shrink-0">
                                 <div className="relative w-24 h-24 rounded-2xl overflow-hidden ring-2 ring-primary/30 ring-offset-2 ring-offset-background shadow-xl">
                                     <Image
-                                        src="/images/profile.jpg"
+                                        src={profilePhotoSrc}
                                         alt="Jyotirmoy Bhowmik — Professional Photo"
                                         fill
                                         className="object-cover"
                                         sizes="96px"
                                         priority
-                                        onError={undefined}
+                                        unoptimized={profilePhotoSrc.startsWith("blob:")}
                                     />
                                     {/* Fallback initials overlay — hidden when image loads */}
                                     <div className="absolute inset-0 gradient-bg flex items-center justify-center text-white text-2xl font-bold select-none" aria-hidden="true">

@@ -4,7 +4,7 @@ import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
 import { createClient as createSupabaseClient } from "@supabase/supabase-js";
 
-export async function inviteUser(email: string, role: string) {
+export async function inviteUser(email: string, role: string, providedFullName?: string) {
     const supabase = await createClient();
 
     try {
@@ -48,9 +48,17 @@ export async function inviteUser(email: string, role: string) {
 
         // 2. Add the user to the admin_users table with the selected role
         // We use adminAuthClient here to bypass RLS, since we just created the user
+        // Derive a display name from the email (e.g. "john.doe@example.com" → "John Doe")
+        const namePart = (providedFullName || email.split('@')[0]).replace(/[._-]+/g, ' ');
+        const fullName = namePart
+            .split(' ')
+            .map((w: string) => w.charAt(0).toUpperCase() + w.slice(1))
+            .join(' ') || 'Admin User';
+
         const { error: insertError } = await adminAuthClient.from("admin_users").insert({
             user_id: inviteData.user.id,
-            role: role
+            role: role,
+            full_name: fullName,
         });
 
         if (insertError) {
