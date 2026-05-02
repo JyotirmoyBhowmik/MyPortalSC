@@ -54,12 +54,13 @@ const renderStatusDot = (status: string | undefined) => {
     return 'bg-yellow-500';
 };
 
-export default async function BudgetPage({ searchParams }: { searchParams: { role?: string, forecast?: string } }) {
+export default async function BudgetPage({ searchParams }: { searchParams: Promise<{ role?: string; forecast?: string }> }) {
     const rawBudgets = await getAllBudgets();
-    
+    const params = await searchParams;
+
     // Point 15: Budget Forecasting
     const budgets = [...rawBudgets];
-    const isForecast = searchParams.forecast === 'true';
+    const isForecast = params.forecast === 'true';
     if (isForecast) {
         // Calculate average historical CapEx and OpEx
         const histCapEx = budgets.filter(b => b.investment_model === 'CapEx').reduce((s, b) => s + b.expense_amount, 0);
@@ -88,7 +89,7 @@ export default async function BudgetPage({ searchParams }: { searchParams: { rol
         });
     }
 
-    const role = searchParams.role || 'CFO';
+    const role = params.role || 'CFO';
 
     // Group by FY
     const byFY: Record<string, any[]> = {};

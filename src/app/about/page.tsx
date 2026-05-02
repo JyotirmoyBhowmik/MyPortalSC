@@ -7,9 +7,11 @@ import {
 import { getSkillsByCategory } from "@/lib/data/skills";
 import { getAllAchievements } from "@/lib/data/achievements";
 import Link from "next/link";
+import Image from "next/image";
 import VideoPlayer from "@/components/visuals/VideoPlayer";
 import dynamic from "next/dynamic";
 import { getFeatureFlag, getSetting } from "@/lib/data/settings";
+import CredlyBadge from "@/components/ui/CredlyBadge";
 
 const NetworkTopology = dynamic(() => import("@/components/visuals/NetworkTopology"), {
     loading: () => <div className="w-full h-[400px] animate-pulse bg-surface/10 rounded-xl" />
@@ -44,7 +46,7 @@ const experience = [
     {
         role: "Project Manager & IT Infrastructure Team Lead",
         company: "ITC Infotech India Ltd. (Seconded to Surya Nepal Pvt. Ltd.)",
-        location: "Kathmandu, Nepal",
+        location: "Kolkata, India",
         period: "Sep 2016 – Present",
         description:
             "Lead infrastructure operations and project delivery for enterprise Data Center, Disaster Recovery, ICS/SCADA and SAP ERP environments; manage vendors and coordinate global project teams to align technology outcomes with business objectives.\n\n• Own end-to-end infrastructure delivery and operations across data center, DR, server platforms, and network/security services.\n• Drive cloud modernization—migrated enterprise productivity to Microsoft 365 (E3/E5) with SharePoint/OneDrive.\n• Modernized security posture with Zscaler SASE, replacing legacy proxy/VPN.\n• Led DR migration from traditional to hybrid virtual design with landing-zone approach.\n• Deployed 30+ RPA bots across IT service desk and finance/reporting processes.\n• Built Tableau/Power BI dashboards for sales, inventory, and performance reporting.\n• Delivered IT/OT connectivity improvements for SCADA environments and sustainability initiatives.",
@@ -157,9 +159,23 @@ export default async function AboutPage() {
                 <div className="max-w-4xl mx-auto">
                     <div className="glass rounded-xl p-8 sm:p-12 mb-12">
                         <div className="flex items-start gap-6">
-                            {/* Avatar placeholder */}
-                            <div className="hidden sm:flex w-20 h-20 rounded-xl gradient-bg flex-shrink-0 items-center justify-center text-white text-2xl font-bold">
-                                JB
+                            {/* Profile Photo */}
+                            <div className="hidden sm:block flex-shrink-0">
+                                <div className="relative w-24 h-24 rounded-2xl overflow-hidden ring-2 ring-primary/30 ring-offset-2 ring-offset-background shadow-xl">
+                                    <Image
+                                        src="/images/profile.jpg"
+                                        alt="Jyotirmoy Bhowmik — Professional Photo"
+                                        fill
+                                        className="object-cover"
+                                        sizes="96px"
+                                        priority
+                                        onError={undefined}
+                                    />
+                                    {/* Fallback initials overlay — hidden when image loads */}
+                                    <div className="absolute inset-0 gradient-bg flex items-center justify-center text-white text-2xl font-bold select-none" aria-hidden="true">
+                                        JB
+                                    </div>
+                                </div>
                             </div>
                             <div>
                                 <h2 className="text-2xl font-bold mb-2">Jyotirmoy Bhowmik</h2>
@@ -375,6 +391,42 @@ export default async function AboutPage() {
                             <p className="text-lg text-foreground font-medium">
                                 Hindi, English, Bengali (Fluent)
                             </p>
+                        </div>
+                    </div>
+
+                    {/* Certifications & Credly Badges */}
+                    <div className="mb-16">
+                        <h2 className="text-3xl font-bold mb-8 flex items-center gap-3">
+                            <span className="w-2 h-8 bg-accent rounded-full" />
+                            Certifications &amp; <span className="gradient-text">Badges</span>
+                        </h2>
+                        <div className="glass rounded-xl p-8">
+                            <p className="text-sm text-muted-foreground mb-6 leading-relaxed">
+                                Verified digital credentials issued by industry-recognized certification bodies.
+                            </p>
+                            <div className="flex flex-wrap gap-8 items-start">
+                                {/* Credly Badge — Google IT Support */}
+                                <div className="flex flex-col items-center gap-2">
+                                    <CredlyBadge
+                                        badgeId="a2220b94-78b5-40ec-903a-4df93599bff4"
+                                        width={150}
+                                        height={270}
+                                    />
+                                </div>
+                            </div>
+                            <div className="mt-6 pt-4 border-t border-border/30">
+                                <a
+                                    href="https://www.credly.com/users/jyotirmoy-bhowmik/badges"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="inline-flex items-center gap-2 text-sm text-primary hover:text-primary-hover font-medium transition-colors"
+                                >
+                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                                    </svg>
+                                    View all badges on Credly
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>

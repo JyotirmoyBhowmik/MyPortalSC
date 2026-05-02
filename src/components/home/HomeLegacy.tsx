@@ -4,6 +4,7 @@ import Badge from "@/components/ui/Badge";
 import AnimatedSection, { AnimatedCard } from "@/components/animations/AnimatedSection";
 import type { Project } from "@/lib/database.types";
 import FeaturedProjectsFilter from "@/components/projects/FeaturedProjectsFilter";
+import CredlyBadge from "@/components/ui/CredlyBadge";
 
 const ParticleBackground = dynamic(() => import("@/components/animations/ParticleBackground"));
 const TypewriterText = dynamic(() => import("@/components/animations/TypewriterText"));
@@ -21,6 +22,7 @@ interface HomeLegacyProps {
     heroSubtitle: string;
     heroDescription: string;
     template?: string;
+    availableForOpportunities?: boolean;
 }
 
 export default function HomeLegacy(props: HomeLegacyProps) {
@@ -33,7 +35,8 @@ export default function HomeLegacy(props: HomeLegacyProps) {
         formattedSpend,
         heroTitle,
         heroDescription,
-        template
+        template,
+        availableForOpportunities = true,
     } = props;
 
     return (
@@ -55,13 +58,15 @@ export default function HomeLegacy(props: HomeLegacyProps) {
                 <div className="absolute bottom-20 right-10 w-96 h-96 bg-accent/8 rounded-full blur-3xl animate-float" style={{ animationDelay: "3s" }} />
 
                 <div className="relative z-10 w-full max-w-4xl mx-auto px-4 sm:px-6 text-center">
-                    {/* Status badge */}
-                    <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 mb-8 animate-fade-in">
-                        <span className="w-2 h-2 rounded-full bg-success animate-pulse" />
-                        <span className="text-xs font-medium text-primary">
-                            Available for opportunities
-                        </span>
-                    </div>
+                    {/* Status badge — conditionally shown based on admin setting */}
+                    {availableForOpportunities && (
+                        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 mb-8 animate-fade-in">
+                            <span className="w-2 h-2 rounded-full bg-success animate-pulse" />
+                            <span className="text-xs font-medium text-primary">
+                                Available for opportunities
+                            </span>
+                        </div>
+                    )}
 
                     {/* Name */}
                     <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black tracking-tight mb-4 animate-slide-up">
@@ -86,9 +91,7 @@ export default function HomeLegacy(props: HomeLegacyProps) {
 
                     {/* Contact Info Line */}
                     <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-4 text-sm sm:text-base text-muted-foreground mb-8 animate-slide-up stagger-2">
-                        <span>Kathmandu, Nepal</span>
-                        <span className="hidden sm:inline">•</span>
-                        <span>+977-9801009825</span>
+                        <span>India</span>
                         <span className="hidden sm:inline">•</span>
                         <span>+91-9774135614</span>
                         <span className="hidden sm:inline">•</span>
@@ -380,6 +383,19 @@ export default function HomeLegacy(props: HomeLegacyProps) {
                                 )}
                             </AnimatedCard>
                         ))}
+                        {/* Credly Verified Badge */}
+                        <AnimatedCard
+                            delay={certifications.length * 0.12}
+                            className="glass rounded-xl p-6 glow-border flex flex-col items-center justify-center"
+                        >
+                            <p className="text-xs font-semibold text-primary uppercase tracking-wider mb-4 text-center">Credly Verified</p>
+                            <CredlyBadge
+                                badgeId="a2220b94-78b5-40ec-903a-4df93599bff4"
+                                width={150}
+                                height={270}
+                                showPublicLink={true}
+                            />
+                        </AnimatedCard>
                     </div>
                 </div>
             </section>

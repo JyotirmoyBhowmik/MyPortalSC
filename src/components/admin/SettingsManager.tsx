@@ -20,6 +20,7 @@ const settingGroups = [
             "feature_content_versioning",
             "feature_scheduled_publish",
             "feature_case_studies",
+            "feature_available_for_opportunities",
         ]
     },
     {
@@ -52,6 +53,7 @@ const settingGroups = [
         keys: [
             "navbar_style",
             "site_template",
+            "feature_retro_mode",
             "feature_i18n",
             "feature_pdf_export",
             "feature_2fa",

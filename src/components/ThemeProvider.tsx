@@ -37,9 +37,9 @@ export function useTheme() {
     return useContext(ThemeContext);
 }
 
-export function ThemeProvider({ children }: { children: ReactNode }) {
+export function ThemeProvider({ children, initialRetro = false }: { children: ReactNode; initialRetro?: boolean }) {
     const [theme, setThemeState] = useState<ThemeName>("deep-navy");
-    const [isRetro, setIsRetro] = useState(false);
+    const [isRetro, setIsRetro] = useState(initialRetro);
     const [mounted, setMounted] = useState(false);
 
     useEffect(() => {
@@ -49,12 +49,15 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
             setThemeState(stored);
             document.documentElement.setAttribute("data-theme", stored);
         }
-        const retroStored = localStorage.getItem("portfolio-retro");
-        if (retroStored === "true") {
+        // Retro mode: DB setting (initialRetro) is authoritative; localStorage is ignored
+        // so it's purely admin-controlled
+        if (initialRetro) {
             setIsRetro(true);
             document.documentElement.setAttribute("data-retro", "true");
+        } else {
+            document.documentElement.removeAttribute("data-retro");
         }
-    }, []);
+    }, [initialRetro]);
 
     function setTheme(t: ThemeName) {
         setThemeState(t);

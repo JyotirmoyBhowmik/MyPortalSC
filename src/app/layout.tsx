@@ -14,7 +14,6 @@ import ChatWidget from "@/components/chat/ChatWidget";
 import VoiceWidget from "@/components/chat/VoiceWidget";
 import PageTransition from "@/components/animations/PageTransition";
 import { SettingsProvider } from "@/components/SettingsProvider";
-import RetroToggle from "@/components/RetroToggle";
 import SearchProvider from "@/components/search/SearchProvider";
 import "./globals.css";
 
@@ -48,7 +47,7 @@ export async function generateMetadata(): Promise<Metadata> {
       template: "%s | Jyotirmoy Bhowmik",
     },
     description:
-      "Portfolio of Jyotirmoy Bhowmik – Project Manager, IT Infrastructure & Network | Security | Cloud. 15+ years delivering secure, resilient enterprise infrastructure and technology programs across India and Nepal.",
+      "Portfolio of Jyotirmoy Bhowmik – Project Manager, IT Infrastructure & Network | Security | Cloud. 15+ years delivering secure, resilient enterprise infrastructure and technology programs across India with multi-country coordination exposure (Nepal, Singapore, Malaysia, Bangladesh, Australia).",
     keywords: [
       "Jyotirmoy Bhowmik",
       "IT Infrastructure",
@@ -134,10 +133,9 @@ export default async function RootLayout({
         {/* Provider nesting order matters:
             ThemeProvider (visual) → I18nProvider (language) → SettingsProvider (flags)
             Each inner provider can access the context of its parent. */}
-        <ThemeProvider>
+        <ThemeProvider initialRetro={!!flags.feature_retro_mode}>
           <I18nProvider>
             <SettingsProvider settings={flags}>
-              <RetroToggle />
               <Navbar settings={settings} />
               <PageTransition enabled={!!flags.feature_page_transitions}>
                 {/* md:pl-14 for tablet collapsed sidebar (56px), lg:pl-56 for desktop always-open sidebar (224px) */}

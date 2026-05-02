@@ -25,7 +25,8 @@ export default async function HomePage() {
     pageContent,
     featureParticleBg,
     budgets,
-    settingsMap
+    settingsMap,
+    availableForOpportunities
   ] = await Promise.all([
     getFeaturedProjects(3),
     getSkillsByCategory(),
@@ -33,7 +34,8 @@ export default async function HomePage() {
     getPageContent("home"),
     getFeatureFlag("feature_particle_bg"),
     getAllBudgets(),
-    getSiteSettingsMap()
+    getSiteSettingsMap(),
+    getFeatureFlag("feature_available_for_opportunities"),
   ]);
 
   // Calculate generic total spend
@@ -64,7 +66,8 @@ export default async function HomePage() {
       formattedSpend,
       heroTitle,
       heroSubtitle,
-      heroDescription
+      heroDescription,
+      availableForOpportunities,
   };
 
   // All themes use the Legacy structural layout and animations. 
