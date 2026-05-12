@@ -386,7 +386,7 @@ export default function VoiceWidget() {
                                     className={`w-2 rounded-t-sm transition-all duration-100 ease-linear ${status === 'Speaking' ? 'bg-primary' :
                                         status === 'Listening' ? 'bg-accent/60' : 'bg-muted'
                                         }`}
-                                    style={{ height: `${Math.max(8, status === 'Idle' || status === 'Connecting' ? 8 : (status === 'Speaking' ? Math.random() * 100 : f))}%` }}
+                                    style={{ height: `${Math.max(8, status === 'Idle' || status === 'Connecting' ? 8 : (status === 'Speaking' ? (i % 2 === 0 ? 80 : 40) : f))}%` }}
                                 />
                             ))}
                         </div>

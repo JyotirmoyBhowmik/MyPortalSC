@@ -45,9 +45,6 @@ export default function NavbarSidebar({ flags = {} }: { flags?: Record<string, b
     const [hovered, setHovered] = useState(false);
     const [collapsedGroups, setCollapsedGroups] = useState<Record<string, boolean>>({});
 
-    // Skip rendering on admin pages
-    if (pathname.startsWith("/admin")) return null;
-
     useEffect(() => {
         const check = () => {
             const w = window.innerWidth;
