@@ -29,7 +29,7 @@ export async function GET() {
                 liveConnectConstraints: {
                     model: MODEL,
                     config: {
-                        responseModalities: ['AUDIO'] as any,
+                        responseModalities: ['AUDIO'] as unknown as any,
                         temperature: 0.7,
                     }
                 },
@@ -68,8 +68,8 @@ SITEMAP (Use these exact paths when redirecting users):
             model: MODEL,
             siteContext: siteContext,
         });
-    } catch (error: any) {
-        console.error('Ephemeral token error:', error.message || error);
+    } catch (error: unknown) {
+        console.error('Ephemeral token error:', error instanceof Error ? error.message : "Unknown error");
 
         // Fallback: return the raw API key if ephemeral tokens aren't supported
         // (this can happen on some API tiers)
