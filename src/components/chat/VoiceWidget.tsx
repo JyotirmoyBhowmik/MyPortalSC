@@ -315,7 +315,7 @@ export default function VoiceWidget() {
             setErrorMsg(err.message || "Unknown error occurred.");
             cleanupResources();
         }
-    }, [cleanupResources, playAudioData, status]);
+    }, [cleanupResources, playAudioData, status, router]);
 
     const toggleAssistant = useCallback((e: React.MouseEvent) => {
         e.preventDefault();
