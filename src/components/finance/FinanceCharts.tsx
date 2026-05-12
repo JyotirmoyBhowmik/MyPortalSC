@@ -12,11 +12,7 @@ export default function FinanceCharts({ budgets }: Props) {
     const [mounted, setMounted] = useState(false);
 
     useEffect(() => {
-        let isMounted = true;
-        if (isMounted) {
-            setMounted(true);
-        }
-        return () => { isMounted = false };
+        setMounted(true);
     }, []);
 
     if (!mounted) return null;

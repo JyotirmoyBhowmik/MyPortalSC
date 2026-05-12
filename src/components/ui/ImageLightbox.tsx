@@ -15,11 +15,7 @@ export default function ImageLightbox({ images, startIndex = 0, isOpen, onClose 
     const containerRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
-        let isMounted = true;
-        if (isMounted) {
-            setCurrentIndex(startIndex);
-        }
-        return () => { isMounted = false };
+        setCurrentIndex(startIndex);
     }, [startIndex, isOpen]);
 
     const goNext = useCallback(() => {

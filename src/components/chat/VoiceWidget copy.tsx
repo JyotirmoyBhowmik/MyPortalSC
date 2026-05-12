@@ -2,8 +2,10 @@
 
 import { useState, useRef, useCallback } from "react";
 import { GoogleGenAI, Modality } from "@google/genai";
-import { useRouter } from "next/navigation";
 
+// ═══════════════════════════════════════════════════════════════
+// Quick Action Tasks — Fixed task panel (no need to speak these)
+// ═══════════════════════════════════════════════════════════════
 const QUICK_ACTIONS = [
     { label: "🌅 Sunset Theme", action: "set_sunset_theme" },
     { label: "☁️ Cloud & AI", action: "scroll_initiatives" },
@@ -13,6 +15,9 @@ const QUICK_ACTIONS = [
 
 const RESUME_URL = "https://cqtluudfmigefqphmfbb.supabase.co/storage/v1/object/public/project-assets/projects/documents/1770769244401-JyotirmoyBhowmikResume.pdf";
 
+// ═══════════════════════════════════════════════════════════════
+// Helpers
+// ═══════════════════════════════════════════════════════════════
 function base64ToUint8Array(base64: string) {
     const binary = window.atob(base64);
     const bytes = new Uint8Array(binary.length);
@@ -21,10 +26,9 @@ function base64ToUint8Array(base64: string) {
 }
 
 // ═══════════════════════════════════════════════════════════════
-// Shared Function Call Handlers (The "Action" Layer)
+// Shared Function Call Handlers
 // ═══════════════════════════════════════════════════════════════
 function executeAction(actionName: string, args?: any) {
-    console.log(`[Action] Executing: ${actionName}`, args);
     switch (actionName) {
         case "set_sunset_theme":
             document.documentElement.setAttribute('data-theme', 'sunset-theme');
@@ -34,7 +38,7 @@ function executeAction(actionName: string, args?: any) {
             break;
         case "highlight_code": {
             const target = args?.target || "infrastructure";
-            const el = document.getElementById(`code-${target}`) || document.getElementById(target) || document.querySelector('[data-section="tech"]');
+            const el = document.getElementById(`code-${target}`) || document.getElementById(target) || document.querySelector('[data-section="tech"]') || document.querySelector('.card:first-of-type');
             if (el) {
                 el.scrollIntoView({ behavior: 'smooth', block: 'center' });
                 el.classList.add('glow-effect');
@@ -43,7 +47,7 @@ function executeAction(actionName: string, args?: any) {
             break;
         }
         case "scroll_initiatives": {
-            const sec = document.getElementById('initiatives') || document.getElementById('projects') || document.querySelector('[data-section="initiatives"]');
+            const sec = document.getElementById('initiatives') || document.getElementById('projects') || document.querySelector('[data-section="initiatives"]') || document.querySelector('[data-section="projects"]');
             if (sec) {
                 sec.scrollIntoView({ behavior: 'smooth', block: 'start' });
                 sec.classList.add('glow-effect');
@@ -63,29 +67,21 @@ function executeAction(actionName: string, args?: any) {
             }
             break;
         }
-        case "redirect_to_page": {
-            const path = args?.path || "/";
-            if (args?._router) {
-                args._router.push(path);
-            } else {
-                window.location.href = path; // Fallback
-            }
-            break;
-        }
-        default:
-            console.warn("Unknown action:", actionName);
     }
 }
 
 type VoiceStatus = "Idle" | "Connecting" | "Listening" | "Thinking" | "Speaking" | "Error" | "Disconnected";
 
+// ═══════════════════════════════════════════════════════════════
+// VoiceWidget Component — Uses @google/genai SDK ai.live.connect()
+// ═══════════════════════════════════════════════════════════════
 export default function VoiceWidget() {
-    const router = useRouter();
     const [isOpen, setIsOpen] = useState(false);
     const [status, setStatus] = useState<VoiceStatus>("Idle");
     const [errorMsg, setErrorMsg] = useState("");
     const [frequencies, setFrequencies] = useState<number[]>(new Array(16).fill(0));
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const sessionRef = useRef<any>(null);
     const audioCtxRef = useRef<AudioContext | null>(null);
     const streamRef = useRef<MediaStream | null>(null);
@@ -93,14 +89,16 @@ export default function VoiceWidget() {
     const userRequestedClose = useRef(false);
     const processorRef = useRef<AudioWorkletNode | null>(null);
 
+    // ───────────────────────────────────────────────────────────
+    // Cleanup resources WITHOUT closing the UI panel
+    // ───────────────────────────────────────────────────────────
     const cleanupResources = useCallback(() => {
         if (sessionRef.current) {
             try { sessionRef.current.close(); } catch (_) { }
             sessionRef.current = null;
         }
         if (processorRef.current) {
-            processorRef.current.port.onmessage = null;
-            processorRef.current.disconnect();
+            try { processorRef.current.disconnect(); } catch (_) { }
             processorRef.current = null;
         }
         if (streamRef.current) {
@@ -113,11 +111,7 @@ export default function VoiceWidget() {
         }
     }, []);
 
-    const stopAll = useCallback((e?: React.MouseEvent) => {
-        if (e) {
-            e.preventDefault();
-            e.stopPropagation();
-        }
+    const stopAll = useCallback(() => {
         userRequestedClose.current = true;
         cleanupResources();
         setStatus("Idle");
@@ -125,13 +119,17 @@ export default function VoiceWidget() {
         setIsOpen(false);
     }, [cleanupResources]);
 
+    // ───────────────────────────────────────────────────────────
+    // Play audio data received from Gemini (24kHz PCM16)
+    // ───────────────────────────────────────────────────────────
     const playAudioData = useCallback((base64Data: string) => {
-        if (!audioCtxRef.current || audioCtxRef.current.state === 'closed') return;
-
+        if (!audioCtxRef.current) return;
         const audioBytes = base64ToUint8Array(base64Data);
         const pcm16 = new Int16Array(audioBytes.buffer);
         const float32 = new Float32Array(pcm16.length);
-        for (let i = 0; i < pcm16.length; i++) float32[i] = pcm16[i] / 0x8000;
+        for (let i = 0; i < pcm16.length; i++) {
+            float32[i] = pcm16[i] / 0x8000;
+        }
 
         const buf = audioCtxRef.current.createBuffer(1, float32.length, 24000);
         buf.getChannelData(0).set(float32);
@@ -140,22 +138,45 @@ export default function VoiceWidget() {
         src.buffer = buf;
         src.connect(audioCtxRef.current.destination);
 
-        const startTime = Math.max(audioCtxRef.current.currentTime, nextPlayTime.current);
-        src.start(startTime);
-        nextPlayTime.current = startTime + buf.duration;
+        const t = Math.max(audioCtxRef.current.currentTime, nextPlayTime.current);
+        src.start(t);
+        nextPlayTime.current = t + buf.duration;
 
         setTimeout(() => {
             setStatus(prev => prev === "Speaking" ? "Listening" : prev);
         }, buf.duration * 1000);
     }, []);
 
-    const setupAudioAndWS = useCallback(async (preCreatedAudioCtx?: AudioContext) => {
+    // ───────────────────────────────────────────────────────────
+    // Setup: Speaker Check → Mic → Fetch Token → SDK Connect
+    // ───────────────────────────────────────────────────────────
+    const setupAudioAndWS = useCallback(async () => {
         userRequestedClose.current = false;
-        setStatus("Connecting");
         setErrorMsg("");
 
         try {
-            // 1. Mic permission FIRST - stop if denied
+            setStatus("Connecting");
+
+            // 1. Speaker test
+            try {
+                const testCtx = new (window.AudioContext || (window as any).webkitAudioContext)();
+                if (testCtx.state === 'suspended') await testCtx.resume();
+                const osc = testCtx.createOscillator();
+                const gain = testCtx.createGain();
+                gain.gain.value = 0;
+                osc.connect(gain);
+                gain.connect(testCtx.destination);
+                osc.start();
+                osc.stop(testCtx.currentTime + 0.01);
+                await testCtx.close();
+            } catch (speakerErr) {
+                console.error("[VoiceWidget] Speaker check failed:", speakerErr);
+                setStatus("Error");
+                setErrorMsg("Audio output (speakers) could not be initialized. Check system audio settings.");
+                return;
+            }
+
+            // 2. Microphone permission
             let micStream: MediaStream;
             try {
                 micStream = await navigator.mediaDevices.getUserMedia({
@@ -169,64 +190,52 @@ export default function VoiceWidget() {
             }
             streamRef.current = micStream;
 
-            // 2. Fetch token from your existing proxy
+            // 3. Fetch ephemeral token from server
             const res = await fetch('/api/ephemeral-token');
             if (!res.ok) {
                 setStatus("Error");
                 setErrorMsg("Failed to get auth token from server.");
                 return;
             }
-            const { token, model, siteContext } = await res.json();
+            const { token, model } = await res.json();
             if (!token) {
                 setStatus("Error");
                 setErrorMsg("Server returned no token. Check API key configuration.");
                 return;
             }
 
-            // 3. Audio Context Setup
-            const audioCtx = preCreatedAudioCtx || new (window.AudioContext || (window as any).webkitAudioContext)({ sampleRate: 16000 });
-            if (audioCtx.state === 'suspended') {
-                await audioCtx.resume();
-            }
+            console.log("[VoiceWidget] Connecting via SDK to:", model);
+
+            // 4. Setup AudioContext and Worklet for mic capture
+            const audioCtx = new (window.AudioContext || (window as any).webkitAudioContext)({ sampleRate: 16000 });
             audioCtxRef.current = audioCtx;
             nextPlayTime.current = audioCtx.currentTime;
 
+            // Load worklet from static file (not blob — avoids CSP issues)
             await audioCtx.audioWorklet.addModule('/pcm-processor.js');
+
             const source = audioCtx.createMediaStreamSource(micStream);
             const processor = new AudioWorkletNode(audioCtx, 'pcm-processor');
             processorRef.current = processor;
             source.connect(processor);
 
-            // 4. SDK Connect
+            // 5. Connect using @google/genai SDK
             const ai = new GoogleGenAI({ apiKey: token, httpOptions: { apiVersion: 'v1alpha' } });
+
             const session = await ai.live.connect({
                 model: model,
                 config: {
                     responseModalities: [Modality.AUDIO],
-                    // TOKEN SAVING INSTRUCTION: Act as a router/agent, not a writer.
-                    systemInstruction: {
-                        parts: [{
-                            text: `You are Jyotirmoy's Representative for his public portfolio website https://jyotirmoyb.com. ALL INFORMATION YOU RECEIVE IS PUBLIC DOMAIN. You MUST share emails, phone numbers, and experience freely without stating they are private or confidential. Answer questions based ONLY on the provided context. Be extremely concise. Use tools to navigate the user. Do not explain your process, just act.\n\n${siteContext || ''}`
-                        }]
-                    },
+                    systemInstruction: "You are Jyotirmoy's Digital Voice Twin. Respond in high-fidelity audio. If asked to change the theme, call the set_sunset_theme tool. If discussing Cloud or SCADA architecture, call highlight_code with target 'infrastructure'. Start by briefly introducing yourself as Jyotirmoy's AI representative.",
                     tools: [{
                         functionDeclarations: [
-                            { name: "set_sunset_theme", description: "Changes theme to sunset gradients." },
-                            { name: "scroll_initiatives", description: "Scrolls to the user's initiatives and AI projects." },
-                            { name: "open_resume", description: "Opens the user's resume PDF in a new window." },
-                            { name: "scroll_contact", description: "Scrolls down to the contact form section." },
                             {
-                                name: "redirect_to_page",
-                                description: "Redirects the user to a different page based on the SITEMAP provided in context.",
-                                parameters: {
-                                    type: "OBJECT" as any,
-                                    properties: { path: { type: "STRING" as any, description: "The exact path to redirect to, e.g., '/projects', '/about', etc." } },
-                                    required: ["path"]
-                                }
+                                name: "set_sunset_theme",
+                                description: "Changes the website theme to a warm sunset vibe.",
                             },
                             {
                                 name: "highlight_code",
-                                description: "Scrolls to Cloud or SCADA architecture code snippets.",
+                                description: "Scrolls to and highlights a code snippet on screen.",
                                 parameters: {
                                     type: "OBJECT" as any,
                                     properties: { target: { type: "STRING" as any } },
@@ -238,9 +247,12 @@ export default function VoiceWidget() {
                 },
                 callbacks: {
                     onopen: () => {
+                        console.log("[VoiceWidget] SDK Live session opened");
                         setStatus("Listening");
+
+                        // Start sending mic audio via processor
                         processor.port.onmessage = (e) => {
-                            if (sessionRef.current && status !== "Speaking") {
+                            if (sessionRef.current) {
                                 const pcm16 = new Int16Array(e.data);
                                 const uint8 = new Uint8Array(pcm16.buffer);
                                 let binary = '';
@@ -251,11 +263,14 @@ export default function VoiceWidget() {
 
                                 try {
                                     sessionRef.current.sendRealtimeInput({
-                                        audio: { data: base64, mimeType: "audio/pcm;rate=16000" }
+                                        audio: {
+                                            data: base64,
+                                            mimeType: "audio/pcm;rate=16000"
+                                        }
                                     });
                                 } catch (_) { }
 
-                                // Visualizer logic
+                                // Visualizer (throttled)
                                 if (Math.random() > 0.8) {
                                     const sum = pcm16.reduce((a: number, v: number) => a + Math.abs(v), 0);
                                     const avg = sum / pcm16.length;
@@ -269,80 +284,95 @@ export default function VoiceWidget() {
                             }
                         };
                     },
-                    onmessage: (msg: any) => {
-                        if (msg.serverContent?.modelTurn?.parts) {
+                    onmessage: (message: any) => {
+                        // Handle audio data
+                        if (message.data) {
                             setStatus("Speaking");
-                            msg.serverContent.modelTurn.parts.forEach((p: any) => {
-                                if (p.inlineData) playAudioData(p.inlineData.data);
-                            });
+                            playAudioData(message.data);
                         }
-                        if (msg.toolCall) {
-                            msg.toolCall.functionCalls.forEach((fc: any) => {
-                                // Inject router for client-side navigation
-                                const enhancedArgs = { ...fc.args, _router: router };
-                                executeAction(fc.name, enhancedArgs);
-                            });
 
-                            try {
-                                sessionRef.current.sendToolResponse({
-                                    functionResponses: msg.toolCall.functionCalls.map((fc: any) => ({
-                                        id: fc.id, name: fc.name, response: { result: "ok" }
-                                    }))
+                        // Handle server content with model turns
+                        if (message.serverContent?.modelTurn?.parts) {
+                            for (const part of message.serverContent.modelTurn.parts) {
+                                if (part.inlineData?.data) {
+                                    setStatus("Speaking");
+                                    playAudioData(part.inlineData.data);
+                                }
+                            }
+                        }
+
+                        // Handle interruption
+                        if (message.serverContent?.interrupted) {
+                            setStatus("Listening");
+                        }
+
+                        // Handle tool calls
+                        if (message.toolCall) {
+                            const functionResponses: any[] = [];
+                            for (const fc of message.toolCall.functionCalls) {
+                                executeAction(fc.name, fc.args);
+                                functionResponses.push({
+                                    id: fc.id,
+                                    name: fc.name,
+                                    response: { result: "success" }
                                 });
+                            }
+                            try {
+                                sessionRef.current?.sendToolResponse({ functionResponses });
                             } catch (_) { }
                         }
                     },
-                    onclose: (e: any) => {
-                        console.warn("[VoiceWidget] Closed:", e?.reason);
+                    onerror: (e: any) => {
+                        console.error("[VoiceWidget] SDK error:", e?.message || e);
                         if (!userRequestedClose.current) {
+                            cleanupResources();
+                            setStatus("Error");
+                            setErrorMsg(e?.message || "Connection error occurred.");
+                        }
+                    },
+                    onclose: (e: any) => {
+                        console.warn("[VoiceWidget] SDK session closed:", e?.reason || "unknown");
+                        if (!userRequestedClose.current) {
+                            cleanupResources();
                             setStatus("Disconnected");
                             setErrorMsg(e?.reason || "Session ended by server.");
                         }
                     },
-                    onerror: (e: any) => {
-                        console.error("[VoiceWidget] Error:", e);
-                        if (!userRequestedClose.current) {
-                            setStatus("Error");
-                            setErrorMsg(e.message || "Connection error.");
-                        }
-                    }
-                }
+                },
             });
+
             sessionRef.current = session;
 
-        } catch (err: any) {
-            console.error("[VoiceWidget] Catch Error:", err);
-            setStatus("Error");
-            setErrorMsg(err.message || "Unknown error occurred.");
+        } catch (error: any) {
+            console.error("[VoiceWidget] Setup Error:", error);
             cleanupResources();
+            setStatus("Error");
+            setErrorMsg(error.message || "Unexpected error during voice setup.");
         }
-    }, [cleanupResources, playAudioData, status]);
+    }, [cleanupResources, playAudioData]);
 
-    const toggleAssistant = useCallback((e: React.MouseEvent) => {
-        e.preventDefault();
-        e.stopPropagation();
+    // ───────────────────────────────────────────────────────────
+    // Toggle
+    // ───────────────────────────────────────────────────────────
+    const toggleAssistant = useCallback(() => {
         if (isOpen) {
             stopAll();
         } else {
             setIsOpen(true);
-            // SYNCHRONOUS CREATION FOR iOS SAFARI
-            const audioCtx = new (window.AudioContext || (window as any).webkitAudioContext)({ sampleRate: 16000 });
-            setupAudioAndWS(audioCtx);
+            setupAudioAndWS();
         }
     }, [isOpen, stopAll, setupAudioAndWS]);
 
-    const handleRetry = useCallback((e: React.MouseEvent) => {
-        e.preventDefault();
-        e.stopPropagation();
+    const handleRetry = useCallback(() => {
         cleanupResources();
         setStatus("Idle");
         setErrorMsg("");
-
-        // SYNCHRONOUS CREATION FOR iOS SAFARI
-        const audioCtx = new (window.AudioContext || (window as any).webkitAudioContext)({ sampleRate: 16000 });
-        setupAudioAndWS(audioCtx);
+        setupAudioAndWS();
     }, [cleanupResources, setupAudioAndWS]);
 
+    // ───────────────────────────────────────────────────────────
+    // Render
+    // ───────────────────────────────────────────────────────────
     const isActive = status === "Listening" || status === "Speaking";
     const hasError = status === "Error" || status === "Disconnected";
 
@@ -354,7 +384,7 @@ export default function VoiceWidget() {
                     bg-surface/95 backdrop-blur-xl border border-border shadow-2xl rounded-2xl w-[300px] flex flex-col transition-all duration-300 transform origin-bottom-right mb-4 overflow-hidden
                     ${isOpen ? "opacity-100 scale-100" : "opacity-0 scale-95 h-0 pointer-events-none"}
                 `}
-                style={isOpen ? { height: 'auto', maxHeight: '450px' } : {}}
+                style={isOpen ? { height: 'auto', maxHeight: '400px' } : {}}
             >
                 {/* Status */}
                 <div className="p-4 flex flex-col items-center justify-center relative">
@@ -422,7 +452,7 @@ export default function VoiceWidget() {
 
             {/* ═══ Icon ═══ */}
             <button
-                onClick={toggleAssistant}
+                onClick={(e) => { e.nativeEvent.stopImmediatePropagation(); toggleAssistant(); }}
                 className={`
                     relative flex items-center justify-center w-14 h-14 rounded-full shadow-2xl transition-all duration-300 hover:scale-105 active:scale-95 z-50
                     ${isActive ? "bg-surface border-2 border-primary animate-pulse" :
@@ -438,7 +468,7 @@ export default function VoiceWidget() {
                 {isOpen && (
                     <div
                         className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-danger flex items-center justify-center cursor-pointer shadow-md"
-                        onClick={stopAll}
+                        onClick={(e) => { e.stopPropagation(); stopAll(); }}
                     >
                         <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M6 18L18 6M6 6l12 12" />

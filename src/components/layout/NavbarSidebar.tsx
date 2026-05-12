@@ -45,6 +45,9 @@ export default function NavbarSidebar({ flags = {} }: { flags?: Record<string, b
     const [hovered, setHovered] = useState(false);
     const [collapsedGroups, setCollapsedGroups] = useState<Record<string, boolean>>({});
 
+    // Skip rendering on admin pages
+    if (pathname.startsWith("/admin")) return null;
+
     useEffect(() => {
         const check = () => {
             const w = window.innerWidth;
@@ -58,11 +61,7 @@ export default function NavbarSidebar({ flags = {} }: { flags?: Record<string, b
     }, []);
 
     useEffect(() => {
-        let isMounted = true;
-        if (screenSize === "mobile" && isMounted) {
-            setMobileOpen(false);
-        }
-        return () => { isMounted = false };
+        if (screenSize === "mobile") setMobileOpen(false);
     }, [pathname, screenSize]);
 
     useEffect(() => {

@@ -49,15 +49,11 @@ export function I18nProvider({ children }: { children: ReactNode }): React.JSX.E
     const [mounted, setMounted] = useState(false);
 
     useEffect(() => {
-        let isMounted = true;
-        if (isMounted) {
-            setMounted(true);
-            const stored = localStorage.getItem("portfolio-locale") as Locale | null;
-            if (stored && translations[stored]) {
-                setLocaleState(stored);
-            }
+        setMounted(true);
+        const stored = localStorage.getItem("portfolio-locale") as Locale | null;
+        if (stored && translations[stored]) {
+            setLocaleState(stored);
         }
-        return () => { isMounted = false };
     }, []);
 
     function setLocale(l: Locale) {

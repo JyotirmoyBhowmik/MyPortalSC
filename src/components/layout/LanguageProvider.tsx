@@ -18,12 +18,10 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
 
     useEffect(() => {
         // Load from local storage on mount
-        let isMounted = true;
         const saved = localStorage.getItem("site_locale") as Locale;
-        if (saved && ["en", "hi", "bn"].includes(saved) && isMounted) {
+        if (saved && ["en", "hi", "bn"].includes(saved)) {
             setLocaleState(saved);
         }
-        return () => { isMounted = false };
     }, []);
 
     const setLocale = (l: Locale) => {
