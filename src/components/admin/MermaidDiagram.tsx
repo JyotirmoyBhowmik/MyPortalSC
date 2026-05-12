@@ -3,6 +3,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import mermaid from 'mermaid';
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
+import DOMPurify from "isomorphic-dompurify";
 
 interface MermaidDiagramProps {
     chart: string;
@@ -18,7 +19,7 @@ export default function MermaidDiagram({ chart, id = "mermaid-diagram" }: Mermai
         mermaid.initialize({
             startOnLoad: false,
             theme: 'dark',
-            securityLevel: 'loose',
+            securityLevel: 'strict',
             fontFamily: 'monospace',
             themeVariables: {
                 primaryColor: '#7c3aed',
@@ -34,7 +35,11 @@ export default function MermaidDiagram({ chart, id = "mermaid-diagram" }: Mermai
             try {
                 if (containerRef.current) {
                     const { svg } = await mermaid.render(id, chart);
-                    setSvgCode(svg);
+                    const sanitizedSvg = DOMPurify.sanitize(svg, {
+                        USE_PROFILES: { svg: true },
+                        ADD_ATTR: ['style'] // Allow style attribute for mermaid styling
+                    });
+                    setSvgCode(sanitizedSvg);
                     setError(null);
                 }
             } catch (err: any) {
