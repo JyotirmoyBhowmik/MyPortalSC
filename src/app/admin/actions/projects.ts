@@ -4,7 +4,7 @@ import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
 import type { InsertTables, UpdateTables } from "@/lib/database.types";
 
-export async function createProject(
+export async function createProject<T extends Record<string, any>>(
     data: Omit<InsertTables<"projects">, "id" | "created_at" | "updated_at">
 ) {
     const supabase = await createClient();

@@ -3,7 +3,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
 
-export async function updatePageContent(pageKey: string, newContent: Record<string, any>) {
+export async function updatePageContent(pageKey: string, newContent: Record<string, string | number | boolean | null | undefined | Record<string, unknown> | unknown[]>) {
     const supabase = await createClient();
 
     // 1. Validate caller is an admin
