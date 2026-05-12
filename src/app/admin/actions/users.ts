@@ -70,8 +70,8 @@ export async function inviteUser(email: string, role: string, providedFullName?:
         revalidatePath("/admin/users");
         return { success: true };
 
-    } catch (error: any) {
-        return { success: false, error: error.message || "An unexpected error occurred." };
+    } catch (error: unknown) {
+        return { success: false, error: (error as Error).message || "An unexpected error occurred." };
     }
 }
 
@@ -103,7 +103,7 @@ export async function updateUserRole(userId: string, role: string) {
         .update({ role })
         .eq("user_id", userId);
 
-    if (error) return { success: false, error: error.message };
+    if (error) return { success: false, error: (error as Error).message };
     revalidatePath("/admin/users");
     return { success: true };
 }
@@ -135,7 +135,7 @@ export async function removeUser(userId: string) {
             .delete()
             .eq("user_id", userId);
 
-        if (error) return { success: false, error: error.message };
+        if (error) return { success: false, error: (error as Error).message };
     } else {
         return { success: false, error: "Service configuration missing." };
     }
