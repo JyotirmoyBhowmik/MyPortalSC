@@ -2,6 +2,7 @@
 
 import { useState, useCallback, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import Image from "next/image";
 
 interface ImageLightboxProps {
     images: { src: string; alt: string }[];
@@ -112,11 +113,14 @@ export default function ImageLightbox({ images, startIndex = 0, isOpen, onClose 
                         transition={{ duration: 0.2 }}
                         className="max-w-[90vw] max-h-[85vh] flex flex-col items-center"
                     >
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img
+                        <Image
                             src={images[currentIndex].src}
                             alt={images[currentIndex].alt}
-                            className="max-w-full max-h-[80vh] object-contain rounded-lg shadow-2xl"
+                            width={0}
+                            height={0}
+                            sizes="90vw"
+                            unoptimized={true}
+                            className="max-w-full max-h-[80vh] w-auto h-auto object-contain rounded-lg shadow-2xl"
                         />
                         <p className="text-white/70 text-sm mt-3 text-center">
                             {images[currentIndex].alt}
