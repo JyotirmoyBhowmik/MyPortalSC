@@ -23,7 +23,13 @@ function base64ToUint8Array(base64: string) {
 // ═══════════════════════════════════════════════════════════════
 // Shared Function Call Handlers (The "Action" Layer)
 // ═══════════════════════════════════════════════════════════════
-function executeAction(actionName: string, args?: any) {
+interface ActionArgs {
+    target?: string;
+    path?: string;
+    _router?: { push: (path: string) => void };
+}
+
+function executeAction(actionName: string, args?: ActionArgs) {
     console.log(`[Action] Executing: ${actionName}`, args);
     switch (actionName) {
         case "set_sunset_theme":
