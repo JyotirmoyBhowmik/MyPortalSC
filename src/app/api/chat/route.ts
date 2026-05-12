@@ -14,7 +14,7 @@ export async function POST(req: Request) {
     try {
         const formattedMessages = [
             { role: 'system', content: SYSTEM_PROMPT },
-            ...messages.map((m: any) => ({
+            ...messages.map((m: { role: string; content: string }) => ({
                 role: m.role,
                 content: m.content
             }))
@@ -53,12 +53,12 @@ export async function POST(req: Request) {
 
         return new Response(stream, { headers: { "Content-Type": "text/plain; charset=utf-8" } });
 
-    } catch (error: any) {
-        console.error("OpenRouter API Error:", error.message || error);
+    } catch (error: unknown) {
+        console.error("OpenRouter API Error:", (error as Error).message || error);
         const errorStream = new ReadableStream({
             start(controller) {
                 controller.enqueue(new TextEncoder().encode(
-                    `Error: ${error.message || 'Unknown error'}`
+                    `Error: ${(error as Error).message || 'Unknown error'}`
                 ));
                 controller.close();
             }

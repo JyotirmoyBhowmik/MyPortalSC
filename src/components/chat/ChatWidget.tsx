@@ -54,7 +54,7 @@ export default function ChatWidget() {
                 if (done) break;
 
                 // Decode chunk and append as raw text (since we use toTextStreamResponse)
-                let chunk = decoder.decode(value, { stream: true });
+                const chunk = decoder.decode(value, { stream: true });
                 setMessages((prev) => prev.map(m => m.id === assistantMsgId ? { ...m, content: m.content + chunk } : m));
             }
         } catch (error) {
