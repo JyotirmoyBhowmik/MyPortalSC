@@ -255,7 +255,7 @@ export default function VoiceWidget() {
                                 } catch (_) { }
 
                                 // Visualizer logic
-                                if (Math.random() > 0.8) {
+                                if (true) {
                                     const sum = pcm16.reduce((a: number, v: number) => a + Math.abs(v), 0);
                                     const avg = sum / pcm16.length;
                                     setFrequencies(prev => {
@@ -385,7 +385,7 @@ export default function VoiceWidget() {
                                     className={`w-2 rounded-t-sm transition-all duration-100 ease-linear ${status === 'Speaking' ? 'bg-primary' :
                                         status === 'Listening' ? 'bg-accent/60' : 'bg-muted'
                                         }`}
-                                    style={{ height: `${Math.max(8, status === 'Idle' || status === 'Connecting' ? 8 : (status === 'Speaking' ? Math.random() * 100 : f))}%` }}
+                                    style={{ height: `${Math.max(8, status === 'Idle' || status === 'Connecting' ? 8 : f)}%` }}
                                 />
                             ))}
                         </div>
