@@ -14,7 +14,7 @@ describe('content helpers', () => {
         it('should return undefined when the field exists but its value is undefined', () => {
             // By JSON definition it shouldn't really have undefined, but testing the record typing
             const content = { title: undefined };
-            expect(getContentData(content as any, 'title')).toBeUndefined();
+            expect(getContentData(content as Record<string, unknown>, 'title')).toBeUndefined();
         });
 
         it('should return null when the field exists but its value is null', () => {
