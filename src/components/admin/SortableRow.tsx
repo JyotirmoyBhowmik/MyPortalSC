@@ -24,7 +24,7 @@ export function SortableRow({ id, children, className = "", disabled = false }: 
         transform: CSS.Transform.toString(transform),
         transition,
         opacity: isDragging ? 0.5 : 1,
-        position: "relative" as "relative",
+        position: "relative" as const,
         zIndex: isDragging ? 10 : 1,
     };
 

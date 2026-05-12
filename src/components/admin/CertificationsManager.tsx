@@ -12,6 +12,46 @@ import {
 import { useConfirmDialog } from "@/components/ui/ConfirmDialog";
 import { useToast } from "@/components/ui/ToastProvider";
 
+const CertForm = ({
+    cert,
+    onSubmit,
+    onCancel,
+    loading
+}: {
+    cert?: Certification;
+    onSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
+    onCancel: () => void;
+    loading?: boolean;
+}) => (
+    <form onSubmit={onSubmit} className="glass rounded-xl p-5 mb-6 space-y-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <input name="title" className="admin-input" placeholder="Certification title" defaultValue={cert?.title || ""} required />
+            <input name="issuing_organization" className="admin-input" placeholder="Issuing organization" defaultValue={cert?.issuing_organization || ""} required />
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <input name="issue_date" type="date" className="admin-input" defaultValue={cert?.issue_date || ""} required />
+            <input name="expiry_date" type="date" className="admin-input" defaultValue={cert?.expiry_date || ""} />
+            <select name="status" className="admin-input" defaultValue={cert?.status || "active"}>
+                <option value="active">Active</option>
+                <option value="expired">Expired</option>
+                <option value="archived">Archived</option>
+            </select>
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <input name="credential_id" className="admin-input" placeholder="Credential ID" defaultValue={cert?.credential_id || ""} />
+            <input name="credential_url" type="url" className="admin-input" placeholder="Verification URL" defaultValue={cert?.credential_url || ""} />
+        </div>
+        <div className="flex gap-2">
+            <Button type="submit" variant="primary" size="sm" isLoading={loading}>
+                {cert ? "Save" : "Create"}
+            </Button>
+            <Button type="button" variant="ghost" size="sm" onClick={onCancel}>
+                Cancel
+            </Button>
+        </div>
+    </form>
+);
+
 export default function CertificationsManager({
     certifications,
 }: {
@@ -78,44 +118,6 @@ export default function CertificationsManager({
         }, { title: "Delete Certification?" });
     }
 
-    const CertForm = ({
-        cert,
-        onSubmit,
-        onCancel,
-    }: {
-        cert?: Certification;
-        onSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
-        onCancel: () => void;
-    }) => (
-        <form onSubmit={onSubmit} className="glass rounded-xl p-5 mb-6 space-y-4">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <input name="title" className="admin-input" placeholder="Certification title" defaultValue={cert?.title || ""} required />
-                <input name="issuing_organization" className="admin-input" placeholder="Issuing organization" defaultValue={cert?.issuing_organization || ""} required />
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                <input name="issue_date" type="date" className="admin-input" defaultValue={cert?.issue_date || ""} required />
-                <input name="expiry_date" type="date" className="admin-input" defaultValue={cert?.expiry_date || ""} />
-                <select name="status" className="admin-input" defaultValue={cert?.status || "active"}>
-                    <option value="active">Active</option>
-                    <option value="expired">Expired</option>
-                    <option value="archived">Archived</option>
-                </select>
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <input name="credential_id" className="admin-input" placeholder="Credential ID" defaultValue={cert?.credential_id || ""} />
-                <input name="credential_url" type="url" className="admin-input" placeholder="Verification URL" defaultValue={cert?.credential_url || ""} />
-            </div>
-            <div className="flex gap-2">
-                <Button type="submit" variant="primary" size="sm" isLoading={loading}>
-                    {cert ? "Save" : "Create"}
-                </Button>
-                <Button type="button" variant="ghost" size="sm" onClick={onCancel}>
-                    Cancel
-                </Button>
-            </div>
-        </form>
-    );
-
     return (
         <>
             {dialog}
@@ -133,7 +135,7 @@ export default function CertificationsManager({
                 </div>
 
                 {showNew && (
-                    <CertForm onSubmit={handleCreate} onCancel={() => setShowNew(false)} />
+                    <CertForm onSubmit={handleCreate} onCancel={() => setShowNew(false)} loading={loading} />
                 )}
 
                 <div className="space-y-3">
@@ -144,6 +146,7 @@ export default function CertificationsManager({
                                 cert={cert}
                                 onSubmit={(e) => handleUpdate(e, cert.id)}
                                 onCancel={() => setEditing(null)}
+                                loading={loading}
                             />
                         ) : (
                             <div

@@ -23,7 +23,7 @@ interface MediaLibraryProps {
 
 export default function MediaLibrary({ initialMedia, onSelect, selectable = false }: MediaLibraryProps) {
     const [media, setMedia] = useState<MediaItem[]>(initialMedia);
-    const [isPending, startTransition] = useTransition();
+    const [, startTransition] = useTransition();
     const [uploading, setUploading] = useState(false);
     const { dialog, confirm: confirmDelete } = useConfirmDialog();
     const { showToast } = useToast();
