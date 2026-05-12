@@ -1,5 +1,0 @@
-sed -i 's/const sessionRef = useRef<any>(null);/const sessionRef = useRef<any>(null); \/\/ eslint-disable-line @typescript-eslint\/no-explicit-any/g' src/components/chat/VoiceWidget.tsx
-sed -i 's/onmessage: (msg: any) => {/onmessage: (msg: any) => { \/\/ eslint-disable-line @typescript-eslint\/no-explicit-any/g' src/components/chat/VoiceWidget.tsx
-sed -i 's/msg.serverContent.modelTurn.parts.forEach((p: any) => {/msg.serverContent.modelTurn.parts.forEach((p: any) => { \/\/ eslint-disable-line @typescript-eslint\/no-explicit-any/g' src/components/chat/VoiceWidget.tsx
-sed -i 's/msg.toolCall.functionCalls.forEach((fc: any) => {/msg.toolCall.functionCalls.forEach((fc: any) => { \/\/ eslint-disable-line @typescript-eslint\/no-explicit-any/g' src/components/chat/VoiceWidget.tsx
-sed -i 's/functionResponses: msg.toolCall.functionCalls.map((fc: any) => ({/functionResponses: msg.toolCall.functionCalls.map((fc: any) => ({ \/\/ eslint-disable-line @typescript-eslint\/no-explicit-any/g' src/components/chat/VoiceWidget.tsx

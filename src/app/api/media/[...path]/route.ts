@@ -43,7 +43,7 @@ export async function GET(
             headers,
         });
 
-    } catch (e: any) {
+    } catch (e: unknown) {
         console.error("Proxy Media Route Error:", e);
         return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
     }
