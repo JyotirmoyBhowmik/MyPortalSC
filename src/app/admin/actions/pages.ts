@@ -3,7 +3,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
 
-export async function updatePageContent(pageKey: string, newContent: Record<string, any>) {
+export async function updatePageContent(pageKey: string, newContent: Record<string, unknown>) {
     const supabase = await createClient();
 
     // 1. Validate caller is an admin
@@ -21,7 +21,7 @@ export async function updatePageContent(pageKey: string, newContent: Record<stri
     }
 
     // 2. Fetch existing content to merge instead of overwrite wholesale
-    const { data: existingPage, error: fetchError } = await supabase
+    const { data: existingPage, error: _fetchError } = await supabase
         .from("content_pages")
         .select("content")
         .eq("page_key", pageKey)

@@ -31,8 +31,8 @@ export default async function PagesAdminHub() {
         getFeatureFlag("feature_scheduled_publish"),
     ]);
 
-    const initialAbout = (aboutRes.data?.content || {}) as Record<string, any>;
-    const initialContact = (contactRes.data?.content || {}) as Record<string, any>;
+    const initialAbout = (aboutRes.data?.content || {}) as Record<string, unknown>;
+    const initialContact = (contactRes.data?.content || {}) as Record<string, unknown>;
 
     return (
         <div className="space-y-8">

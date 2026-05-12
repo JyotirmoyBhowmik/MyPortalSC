@@ -21,13 +21,13 @@ export default async function AdminDashboardPage() {
 
     // Fetch counts and analytics
     const [
-        projectsRes, skillsRes, certsRes, achievementsRes,
+        projectsRes, skillsRes, certsRes,
         analyticsRes, auditRes, initiativesRes, clicksRes, contactsRes
     ] = await Promise.all([
         supabase.from("projects").select("id", { count: "exact", head: true }),
         supabase.from("skills").select("id", { count: "exact", head: true }),
         supabase.from("certifications").select("id", { count: "exact", head: true }),
-        supabase.from("achievements").select("id", { count: "exact", head: true }),
+
         supabase.from("page_analytics").select("*"),
         supabase.from("audit_log").select("*").order("timestamp", { ascending: false }).limit(10),
         supabase.from("initiatives").select("id", { count: "exact", head: true }),

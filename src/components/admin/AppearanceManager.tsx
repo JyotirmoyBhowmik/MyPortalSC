@@ -66,7 +66,7 @@ export default function AppearanceManager({ currentIcon }: { currentIcon: string
                     <div className="flex flex-col items-center gap-3">
                         <div className="w-24 h-24 rounded-2xl bg-surface border-2 border-dashed border-border flex items-center justify-center overflow-hidden">
                             {preview ? (
-                                <img src={preview} alt="Site icon preview" className="w-full h-full object-contain" />
+                                { /* eslint-disable-next-line @next/next/no-img-element */ } <img src={preview} alt="Site icon preview" className="w-full h-full object-contain" />
                             ) : (
                                 <div className="w-16 h-16 rounded-xl bg-[#D9F24A] flex items-center justify-center text-[#0D1B1E] font-extrabold text-xl">
                                     JB
@@ -117,7 +117,7 @@ export default function AppearanceManager({ currentIcon }: { currentIcon: string
                             <div className="text-center">
                                 <div className="w-8 h-8 rounded bg-surface border border-border flex items-center justify-center overflow-hidden mb-1">
                                     {preview ? (
-                                        <img src={preview} alt="" className="w-full h-full object-contain" />
+                                        { /* eslint-disable-next-line @next/next/no-img-element */ } <img src={preview} alt="" className="w-full h-full object-contain" />
                                     ) : (
                                         <span className="text-[6px] font-bold">JB</span>
                                     )}
@@ -127,7 +127,7 @@ export default function AppearanceManager({ currentIcon }: { currentIcon: string
                             <div className="text-center">
                                 <div className="w-12 h-12 rounded-lg bg-surface border border-border flex items-center justify-center overflow-hidden mb-1">
                                     {preview ? (
-                                        <img src={preview} alt="" className="w-full h-full object-contain" />
+                                        { /* eslint-disable-next-line @next/next/no-img-element */ } <img src={preview} alt="" className="w-full h-full object-contain" />
                                     ) : (
                                         <span className="text-xs font-bold">JB</span>
                                     )}
@@ -137,7 +137,7 @@ export default function AppearanceManager({ currentIcon }: { currentIcon: string
                             <div className="text-center">
                                 <div className="w-16 h-16 rounded-xl bg-surface border border-border flex items-center justify-center overflow-hidden mb-1">
                                     {preview ? (
-                                        <img src={preview} alt="" className="w-full h-full object-contain" />
+                                        { /* eslint-disable-next-line @next/next/no-img-element */ } <img src={preview} alt="" className="w-full h-full object-contain" />
                                     ) : (
                                         <span className="text-sm font-bold">JB</span>
                                     )}

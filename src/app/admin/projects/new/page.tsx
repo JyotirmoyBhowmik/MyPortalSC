@@ -13,7 +13,7 @@ export default function NewProjectPage() {
     const [error, setError] = useState<string | null>(null);
 
     const [image, setImage] = useState<string | null>(null);
-    const [documents, setDocuments] = useState<any[]>([]);
+    const [documents, setDocuments] = useState<{ url: string, name: string }[]>([]);
 
     async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();

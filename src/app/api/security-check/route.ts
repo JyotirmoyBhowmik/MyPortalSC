@@ -92,7 +92,7 @@ export async function GET(request: Request) {
             scannedAt: new Date().toISOString(),
             targetUrl: baseUrl,
         });
-    } catch (error) {
+    } catch {
         return NextResponse.json({ error: "Failed to perform security check" }, { status: 500 });
     }
 }

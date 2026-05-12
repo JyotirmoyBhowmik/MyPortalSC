@@ -293,7 +293,7 @@ export default async function AboutPage() {
                             Professional <span className="gradient-text">Experience</span>
                         </h2>
                         <div className="space-y-8 pl-4 border-l-2 border-border/50">
-                            {(displayExperience as any[]).map((exp: any, idx: number) => (
+                            {(displayExperience as { role: string, period: string, company: string, location?: string, description: string, techEnv?: string }[]).map((exp, idx) => (
                                 <div key={idx} className="relative pl-8">
                                     <div className="absolute top-0 left-[-9px] w-4 h-4 rounded-full bg-background border-2 border-accent" />
                                     <div className="glass p-6 rounded-xl hover-lift">
@@ -372,7 +372,7 @@ export default async function AboutPage() {
                             Education
                         </h2>
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                            {(displayEducation as any[]).map((edu: any, idx: number) => (
+                            {(displayEducation as { degree: string, institution: string, year: string }[]).map((edu: { degree: string, institution: string, year: string }, idx: number) => (
                                 <div key={idx} className="glass p-6 rounded-xl hover-lift">
                                     <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary text-xl font-bold mb-4">
                                         🎓
