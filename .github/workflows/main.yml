@@ -29,4 +29,4 @@ jobs:
       # The build step ensures statically generated pages don't crash.
       # Anonymous fallback Supabase clients ensure this runs without secrets.
       - name: Build Next.js
-        run: npm run build
+        run: NEXT_PUBLIC_SUPABASE_URL=http://localhost NEXT_PUBLIC_SUPABASE_ANON_KEY=dummy npm run build
