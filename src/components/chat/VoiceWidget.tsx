@@ -24,7 +24,6 @@ function base64ToUint8Array(base64: string) {
 // Shared Function Call Handlers (The "Action" Layer)
 // ═══════════════════════════════════════════════════════════════
 function executeAction(actionName: string, args?: any) {
-    console.log(`[Action] Executing: ${actionName}`, args);
     switch (actionName) {
         case "set_sunset_theme":
             document.documentElement.setAttribute('data-theme', 'sunset-theme');
@@ -238,7 +237,6 @@ export default function VoiceWidget() {
                 },
                 callbacks: {
                     onopen: () => {
-                        console.log("[VoiceWidget] Session opened.");
                         setStatus("Listening");
                         processor.port.onmessage = (e) => {
                             if (sessionRef.current && status !== "Speaking") {
