@@ -68,8 +68,8 @@ SITEMAP (Use these exact paths when redirecting users):
             model: MODEL,
             siteContext: siteContext,
         });
-    } catch (error: any) {
-        console.error('Ephemeral token error:', error.message || error);
+    } catch (error: unknown) {
+        console.error('Ephemeral token error:', error instanceof Error ? error.message : String(error) || error);
 
         // Fallback: return the raw API key if ephemeral tokens aren't supported
         // (this can happen on some API tiers)

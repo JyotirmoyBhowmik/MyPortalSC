@@ -23,9 +23,9 @@ interface MediaLibraryProps {
 
 export default function MediaLibrary({ initialMedia, onSelect, selectable = false }: MediaLibraryProps) {
     const [media, setMedia] = useState<MediaItem[]>(initialMedia);
-    const [isPending, startTransition] = useTransition();
+    const [, startTransition] = useTransition();
     const [uploading, setUploading] = useState(false);
-    const { dialog, confirm: confirmDelete } = useConfirmDialog();
+    const { confirm: confirmDelete } = useConfirmDialog();
     const { showToast } = useToast();
 
     const onDrop = useCallback(async (acceptedFiles: File[]) => {
@@ -82,7 +82,7 @@ export default function MediaLibrary({ initialMedia, onSelect, selectable = fals
                 window.location.reload();
             }
         }
-    }, [media, showToast]);
+    }, [showToast]);
 
     const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop, accept: { 'image/*': [] } });
 
@@ -184,6 +184,7 @@ export default function MediaLibrary({ initialMedia, onSelect, selectable = fals
 
                             {item.mime_type?.startsWith("image/") ? (
                                 <div className="h-32 bg-surface">
+                                    {/* eslint-disable-next-line @next/next/no-img-element */}
                                     <img src={item.public_url} alt={item.original_name} className="w-full h-full object-cover" />
                                 </div>
                             ) : (

@@ -54,7 +54,7 @@ export async function POST(request: Request) {
             publicUrl: `/api/media/${data.path}`, // Our new frontend proxy route
         });
 
-    } catch (e: any) {
+    } catch (e: unknown) {
         console.error("Storage Sign-Upload Error:", e);
         return NextResponse.json({ error: "Internal server error" }, { status: 500 });
     }

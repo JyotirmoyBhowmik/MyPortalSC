@@ -53,12 +53,12 @@ export async function POST(req: Request) {
 
         return new Response(stream, { headers: { "Content-Type": "text/plain; charset=utf-8" } });
 
-    } catch (error: any) {
-        console.error("OpenRouter API Error:", error.message || error);
+    } catch (error: unknown) {
+        console.error("OpenRouter API Error:", error instanceof Error ? error.message : String(error) || error);
         const errorStream = new ReadableStream({
             start(controller) {
                 controller.enqueue(new TextEncoder().encode(
-                    `Error: ${error.message || 'Unknown error'}`
+                    `Error: ${error instanceof Error ? error.message : String(error) || 'Unknown error'}`
                 ));
                 controller.close();
             }
