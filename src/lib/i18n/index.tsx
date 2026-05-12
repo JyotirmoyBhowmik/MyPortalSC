@@ -25,7 +25,7 @@ interface I18nContextValue {
     locale: Locale;
     setLocale: (l: Locale) => void;
     t: Translations;
-    tDB: (obj: any, field: string) => string;
+    tDB: (obj: Record<string, unknown>, field: string) => string;
     locales: { code: Locale; label: string }[];
 }
 
@@ -70,12 +70,12 @@ export function I18nProvider({ children }: { children: ReactNode }): React.JSX.E
 
     const t = translations[locale] || en;
 
-    const tDB = (obj: any, field: string) => {
+    const tDB = (obj: Record<string, unknown>, field: string) => {
         if (!obj) return "";
-        if (locale === "en") return obj[field] || "";
+        if (locale === "en") return (obj[field] as string) || "";
 
         const localizedField = `${field}_${locale}`;
-        return obj[localizedField] || obj[field] || ""; // Fallback to English
+        return (obj[localizedField] as string) || (obj[field] as string) || ""; // Fallback to English
     };
 
     const locales = Object.entries(localeLabels).map(([code, label]) => ({
