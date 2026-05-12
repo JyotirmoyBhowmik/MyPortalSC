@@ -1,9 +1,23 @@
 import { NextResponse } from 'next/server';
 import { Resend } from 'resend';
+import { createClient } from "@/lib/supabase/server";
 
 export async function POST(request: Request) {
     try {
+        const supabase = await createClient();
+
+        // Authenticate Request
+        const { data: { user }, error: authError } = await supabase.auth.getUser();
+
+        if (authError || !user) {
+            return NextResponse.json({ error: "Unauthorized access" }, { status: 401 });
+        }
+
         const { to, subject, html } = await request.json();
+
+        if (!to || !subject || !html) {
+            return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
+        }
 
         if (!process.env.RESEND_API_KEY) {
             console.warn("RESEND_API_KEY is not set. Skipping email send.");
