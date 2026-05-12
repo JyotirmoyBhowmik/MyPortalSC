@@ -238,7 +238,6 @@ export default function VoiceWidget() {
                 },
                 callbacks: {
                     onopen: () => {
-                        console.log("[VoiceWidget] Session opened.");
                         setStatus("Listening");
                         processor.port.onmessage = (e) => {
                             if (sessionRef.current && status !== "Speaking") {
