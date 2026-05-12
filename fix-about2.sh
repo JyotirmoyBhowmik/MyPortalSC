@@ -1,0 +1,1 @@
+sed -i 's/(displayExperience as { role: string, company: string, period: string, description: string }\[\]).map((exp, /(displayExperience as { role: string, company: string, period: string, description: string, location: string, url: string }\[\]).map((exp, /g' src/app/about/page.tsx

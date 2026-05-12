@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useCallback } from "react";
-import { GoogleGenAI, Modality } from "@google/genai";
+import { GoogleGenAI, Modality, Type } from "@google/genai";
 import { useRouter } from "next/navigation";
 
 const QUICK_ACTIONS = [
@@ -92,7 +92,7 @@ export default function VoiceWidget() {
     const [errorMsg, setErrorMsg] = useState("");
     const [frequencies, setFrequencies] = useState<number[]>(new Array(16).fill(0));
 
-    const sessionRef = useRef<any>(null);
+    const sessionRef = useRef<any>(null); // eslint-disable-line @typescript-eslint/no-explicit-any
     const audioCtxRef = useRef<AudioContext | null>(null);
     const streamRef = useRef<MediaStream | null>(null);
     const nextPlayTime = useRef<number>(0);
@@ -190,7 +190,7 @@ export default function VoiceWidget() {
             }
 
             // 3. Audio Context Setup
-            const audioCtx = preCreatedAudioCtx || new (window.AudioContext || (window as any).webkitAudioContext)({ sampleRate: 16000 });
+            const audioCtx = preCreatedAudioCtx || new (window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext)({ sampleRate: 16000 });
             if (audioCtx.state === 'suspended') {
                 await audioCtx.resume();
             }
@@ -225,8 +225,8 @@ export default function VoiceWidget() {
                                 name: "redirect_to_page",
                                 description: "Redirects the user to a different page based on the SITEMAP provided in context.",
                                 parameters: {
-                                    type: "OBJECT" as any,
-                                    properties: { path: { type: "STRING" as any, description: "The exact path to redirect to, e.g., '/projects', '/about', etc." } },
+                                    type: Type.OBJECT,
+                                    properties: { path: { type: Type.STRING, description: "The exact path to redirect to, e.g., '/projects', '/about', etc." } },
                                     required: ["path"]
                                 }
                             },
@@ -234,8 +234,8 @@ export default function VoiceWidget() {
                                 name: "highlight_code",
                                 description: "Scrolls to Cloud or SCADA architecture code snippets.",
                                 parameters: {
-                                    type: "OBJECT" as any,
-                                    properties: { target: { type: "STRING" as any } },
+                                    type: Type.OBJECT,
+                                    properties: { target: { type: Type.STRING } },
                                     required: ["target"]
                                 }
                             }
@@ -276,37 +276,37 @@ export default function VoiceWidget() {
                             }
                         };
                     },
-                    onmessage: (msg: any) => {
+                    onmessage: (msg: any) => { // eslint-disable-line @typescript-eslint/no-explicit-any
                         if (msg.serverContent?.modelTurn?.parts) {
                             setStatus("Speaking");
-                            msg.serverContent.modelTurn.parts.forEach((p: any) => {
-                                if (p.inlineData) playAudioData(p.inlineData.data);
+                            msg.serverContent.modelTurn.parts.forEach((p: any) => { // eslint-disable-line @typescript-eslint/no-explicit-any
+                                if (p.inlineData&& p.inlineData.data) playAudioData(p.inlineData.data);
                             });
                         }
-                        if (msg.toolCall) {
-                            msg.toolCall.functionCalls.forEach((fc: any) => {
+                        if (msg.toolCall && msg.toolCall.functionCalls) {
+                            msg.toolCall.functionCalls.forEach((fc: any) => { // eslint-disable-line @typescript-eslint/no-explicit-any
                                 // Inject router for client-side navigation
-                                const enhancedArgs = { ...fc.args, _router: router };
-                                executeAction(fc.name, enhancedArgs);
+                                const enhancedArgs = { ...(fc.args as Record<string, unknown>), _router: router };
+                                executeAction(fc.name || "", enhancedArgs);
                             });
 
                             try {
-                                sessionRef.current.sendToolResponse({
-                                    functionResponses: msg.toolCall.functionCalls.map((fc: any) => ({
+                                sessionRef.current?.sendToolResponse({
+                                    functionResponses: msg.toolCall.functionCalls.map((fc: any) => ({ // eslint-disable-line @typescript-eslint/no-explicit-any
                                         id: fc.id, name: fc.name, response: { result: "ok" }
                                     }))
                                 });
                             } catch (_) { }
                         }
                     },
-                    onclose: (e: any) => {
+                    onclose: (e: { reason?: string, message?: string }) => {
                         console.warn("[VoiceWidget] Closed:", e?.reason);
                         if (!userRequestedClose.current) {
                             setStatus("Disconnected");
                             setErrorMsg(e?.reason || "Session ended by server.");
                         }
                     },
-                    onerror: (e: any) => {
+                    onerror: (e: { reason?: string, message?: string }) => {
                         console.error("[VoiceWidget] Error:", e);
                         if (!userRequestedClose.current) {
                             setStatus("Error");
@@ -317,13 +317,13 @@ export default function VoiceWidget() {
             });
             sessionRef.current = session;
 
-        } catch (err: any) {
+        } catch (err: unknown) {
             console.error("[VoiceWidget] Catch Error:", err);
             setStatus("Error");
-            setErrorMsg(err.message || "Unknown error occurred.");
+            setErrorMsg(err instanceof Error ? err.message : "Unknown error occurred.");
             cleanupResources();
         }
-    }, [cleanupResources, playAudioData, status]);
+    }, [cleanupResources, playAudioData, status, router]);
 
     const toggleAssistant = useCallback((e: React.MouseEvent) => {
         e.preventDefault();
@@ -333,7 +333,7 @@ export default function VoiceWidget() {
         } else {
             setIsOpen(true);
             // SYNCHRONOUS CREATION FOR iOS SAFARI
-            const audioCtx = new (window.AudioContext || (window as any).webkitAudioContext)({ sampleRate: 16000 });
+            const audioCtx = new (window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext)({ sampleRate: 16000 });
             setupAudioAndWS(audioCtx);
         }
     }, [isOpen, stopAll, setupAudioAndWS]);
@@ -346,7 +346,7 @@ export default function VoiceWidget() {
         setErrorMsg("");
 
         // SYNCHRONOUS CREATION FOR iOS SAFARI
-        const audioCtx = new (window.AudioContext || (window as any).webkitAudioContext)({ sampleRate: 16000 });
+        const audioCtx = new (window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext)({ sampleRate: 16000 });
         setupAudioAndWS(audioCtx);
     }, [cleanupResources, setupAudioAndWS]);
 
@@ -393,7 +393,7 @@ export default function VoiceWidget() {
                                     className={`w-2 rounded-t-sm transition-all duration-100 ease-linear ${status === 'Speaking' ? 'bg-primary' :
                                         status === 'Listening' ? 'bg-accent/60' : 'bg-muted'
                                         }`}
-                                    style={{ height: `${Math.max(8, status === 'Idle' || status === 'Connecting' ? 8 : (status === 'Speaking' ? Math.random() * 100 : f))}%` }}
+                                    style={{ height: `${Math.max(8, status === 'Idle' || status === 'Connecting' ? 8 : (status === 'Speaking' ? status === 'Speaking' ? f : f : f))}%` }}
                                 />
                             ))}
                         </div>

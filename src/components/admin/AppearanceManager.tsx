@@ -1,4 +1,5 @@
 "use client";
+import Image from "next/image";
 
 import { useState, useRef, useTransition } from "react";
 import { uploadSiteIcon, resetSiteIcon } from "@/app/admin/actions/appearance";

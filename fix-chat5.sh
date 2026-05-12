@@ -1,0 +1,5 @@
+sed -i 's/import { GoogleGenAI, Modality, Type } from "@google\/genai";/import { GoogleGenAI, Modality, Type, LiveServerMessage } from "@google\/genai";/g' src/components/chat/VoiceWidget.tsx
+sed -i 's/onmessage: (msg: { serverContent?: { modelTurn?: { parts: { inlineData?: { data: string } }\[\] } }, toolCall?: { functionCalls: { id: string, name: string, args: Record<string, unknown> }\[\] } }) => {/onmessage: (msg: LiveServerMessage) => {/g' src/components/chat/VoiceWidget.tsx
+sed -i 's/msg.serverContent.modelTurn.parts.forEach((p: { inlineData?: { data: string } }) => {/msg.serverContent.modelTurn.parts.forEach((p) => {/g' src/components/chat/VoiceWidget.tsx
+sed -i 's/msg.toolCall.functionCalls.forEach((fc: { id: string, name: string, args: Record<string, unknown> }) => {/msg.toolCall.functionCalls.forEach((fc) => {/g' src/components/chat/VoiceWidget.tsx
+sed -i 's/functionResponses: msg.toolCall.functionCalls.map((fc: { id: string, name: string, args: Record<string, unknown> }) => ({/functionResponses: msg.toolCall.functionCalls.map((fc) => ({/g' src/components/chat/VoiceWidget.tsx

@@ -17,12 +17,6 @@ export default async function AdminContactsPage() {
         .select("*")
         .order("created_at", { ascending: false });
 
-    const statusColors: Record<string, string> = {
-        new: "bg-blue-500/15 text-blue-400",
-        read: "bg-amber-500/15 text-amber-400",
-        replied: "bg-green-500/15 text-green-400",
-        archived: "bg-gray-500/15 text-gray-400",
-    };
 
     return (
         <div>
