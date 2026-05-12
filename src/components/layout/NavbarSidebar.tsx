@@ -58,7 +58,11 @@ export default function NavbarSidebar({ flags = {} }: { flags?: Record<string, b
     }, []);
 
     useEffect(() => {
-        if (screenSize === "mobile") setMobileOpen(false);
+        let isMounted = true;
+        if (screenSize === "mobile" && isMounted) {
+            setMobileOpen(false);
+        }
+        return () => { isMounted = false };
     }, [pathname, screenSize]);
 
     useEffect(() => {

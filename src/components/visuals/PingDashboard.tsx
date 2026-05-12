@@ -40,13 +40,15 @@ export default function PingDashboard() {
     }, []);
 
     useEffect(() => {
+        let isMounted = true;
         if (!isRunning) {
             if (intervalRef.current) clearInterval(intervalRef.current);
             return;
         }
-        ping();
+        if (isMounted) ping();
         intervalRef.current = setInterval(ping, 5000);
         return () => {
+            isMounted = false;
             if (intervalRef.current) clearInterval(intervalRef.current);
         };
     }, [isRunning, ping]);

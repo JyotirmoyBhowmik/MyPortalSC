@@ -45,11 +45,13 @@ export default function CommandPalette({ items }: Props) {
 
     // Focus input when opened
     useEffect(() => {
-        if (open) {
+        let isMounted = true;
+        if (open && isMounted) {
             setQuery("");
             setSelectedIdx(0);
             setTimeout(() => inputRef.current?.focus(), 50);
         }
+        return () => { isMounted = false };
     }, [open]);
 
     const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
