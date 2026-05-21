@@ -15,7 +15,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
 
 export const revalidate = 60;
 
-function toINR(b: any): number {
+function toINR(b: { exchange_rate_to_inr?: number, currency?: string, expense_amount: number }): number {
     if (b.exchange_rate_to_inr && b.exchange_rate_to_inr > 0 && b.currency !== "INR") {
         return b.expense_amount * b.exchange_rate_to_inr;
     }
