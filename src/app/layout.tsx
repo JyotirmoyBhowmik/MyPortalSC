@@ -119,7 +119,7 @@ export default async function RootLayout({
                 jobTitle: "IT Infrastructure & Project Manager",
                 url: "https://jyotirmoyb.com",
                 sameAs: ["https://linkedin.com/in/jyotirmoyb"],
-              }),
+              }).replace(/</g, '\\u003c'),
             }}
           />
         )}
