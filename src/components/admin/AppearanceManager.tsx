@@ -3,6 +3,7 @@
 import { useState, useRef, useTransition } from "react";
 import { uploadSiteIcon, resetSiteIcon } from "@/app/admin/actions/appearance";
 import { updateSettingValue } from "@/app/admin/actions/settings";
+import { useAppearance, type TemplateName } from "@/components/AppearanceProvider";
 
 const templates = [
     {
@@ -20,33 +21,44 @@ const templates = [
         id: "ceramic-light",
         name: "Ceramic Light",
         tag: "New",
-        description: "Unglazed light porcelain aesthetic, generous negative space, top centered navbar, and slate blue accents.",
+        description: "Tactile unglazed light porcelain aesthetic, top-centered lookbook navigation, soft border shadows.",
         bg: "#f9f9f7",
-        primary: "#1a1c1b",
+        primary: "#000000",
         accent: "#505f76",
-        border: "#e5e5e1",
-        badge: "Porcelain"
+        border: "#e2e3e1",
+        badge: "Tactile Light"
     },
     {
         id: "glass-dark",
         name: "Glass Exec Dark",
-        tag: "Secondary",
-        description: "Premium glassmorphism effects, dark backdrop-blur container UI, and ultra-modern neon-cyan accents.",
+        tag: "Premium",
+        description: "Vibrant high-contrast glassmorphic dark canvas with neon accents, custom glowing backdrops, and outline buttons.",
         bg: "#030712",
         primary: "#22d3ee",
-        accent: "#a78bfa",
-        border: "#374151",
-        badge: "Glassmorphism"
+        accent: "#a5f3fc",
+        border: "#1f2937",
+        badge: "Glassmorphic"
     },
     {
         id: "light-modern",
         name: "Light Exec Modern",
-        tag: "Minimalist",
-        description: "Clean modern canvas, minimalist thin outlines, fluid margins, and spacious layouts.",
+        tag: "Clean",
+        description: "Bright minimalist canvas, structured borders, high-contrast text, spacious and clean corporate look.",
         bg: "#ffffff",
         primary: "#0f172a",
+        accent: "#475569",
+        border: "#cbd5e1",
+        badge: "Clean Light"
+    },
+    {
+        id: "minimal",
+        name: "Minimal Light",
+        tag: "Clean",
+        description: "Clean, ultra-spacious light-mode interface with elegant margins, thin slate-blue borders, and soft interactive shadows.",
+        bg: "#fafafa",
+        primary: "#18181b",
         accent: "#3b82f6",
-        border: "#e2e8f0",
+        border: "#e4e4e7",
         badge: "Minimalist"
     },
     {
@@ -69,6 +81,7 @@ export default function AppearanceManager({
     currentIcon: string;
     currentTemplate: string;
 }) {
+    const { setTemplate: setGlobalTemplate } = useAppearance();
     const [preview, setPreview] = useState<string>(currentIcon);
     const [template, setTemplate] = useState<string>(currentTemplate || "ceramic");
     const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
@@ -124,8 +137,8 @@ export default function AppearanceManager({
         startTransition(async () => {
             const result = await updateSettingValue("site_template", id);
             if (result.success) {
-                // Apply instantaneous data-template switch for local live preview
-                document.documentElement.setAttribute("data-template", id);
+                // Apply instantaneous data-template switch for local live preview and react context
+                setGlobalTemplate(id as TemplateName);
                 setMessage({ type: "success", text: `Template updated to "${id}" successfully! Live preview active.` });
             } else {
                 setTemplate(previousTemplate); // Revert on failure

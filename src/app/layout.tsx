@@ -8,6 +8,7 @@ import { Inter, JetBrains_Mono } from "next/font/google";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import { ThemeProvider } from "@/components/ThemeProvider";
+import { AppearanceProvider, type TemplateName } from "@/components/AppearanceProvider";
 import { I18nProvider } from "@/lib/i18n";
 import VisitorTracker from "@/components/VisitorTracker";
 import ChatWidget from "@/components/chat/ChatWidget";
@@ -100,6 +101,8 @@ export default async function RootLayout({
   // Cast to boolean record for component compatibility; non-boolean values
   // (like site_template string) are spread separately where needed.
   const flags = settings as Record<string, boolean>;
+  const rawTemplate = ((settings["site_template"] as string) || "classic").replace(/"/g, "");
+  const initialTemplate = rawTemplate as TemplateName;
 
   return (
     // suppressHydrationWarning: Theme class is set by ThemeProvider on mount,
@@ -126,35 +129,34 @@ export default async function RootLayout({
       </head>
       <body
         className={`${inter.variable} ${jetbrainsMono.variable} font-sans antialiased`}
-        data-template={((settings["site_template"] as string) || "classic").replace(/"/g, "")}
+        data-template={initialTemplate}
       >
         {/* ProgressBar sits outside providers — it only needs navigation events */}
         <ProgressBar />
         {/* Provider nesting order matters:
-            ThemeProvider (visual) → I18nProvider (language) → SettingsProvider (flags)
+            ThemeProvider (visual) → AppearanceProvider (template) → I18nProvider (language) → SettingsProvider (flags)
             Each inner provider can access the context of its parent. */}
         <ThemeProvider initialRetro={!!flags.feature_retro_mode}>
-          <I18nProvider>
-            <SettingsProvider settings={flags}>
-              <Navbar settings={settings} />
-              <PageTransition enabled={!!flags.feature_page_transitions}>
-                {/* md:pl-14 for tablet collapsed sidebar (56px), lg:pl-56 for desktop always-open sidebar (224px) */}
-                <main className={`min-h-screen ${
-                  (() => {
-                    const t = ((settings["site_template"] as string) || "classic").replace(/"/g, "");
-                    return t !== 'light-modern' && t !== 'ceramic-light';
-                  })() ? 'md:pl-14 lg:pl-56' : ''
-                }`}>{children}</main>
-              </PageTransition>
-              <Footer flags={flags} />
-              {/* These 3 components are invisible (render null or floating UI).
-                  They're placed at the end to avoid layout shifts during hydration. */}
-              <VisitorTracker />
-              <VoiceWidget />
-              <ChatWidget />
-              <SearchProvider />
-            </SettingsProvider>
-          </I18nProvider>
+          <AppearanceProvider initialTemplate={initialTemplate}>
+            <I18nProvider>
+              <SettingsProvider settings={flags}>
+                <Navbar settings={settings} />
+                <PageTransition enabled={!!flags.feature_page_transitions}>
+                  {/* md:pl-14 for tablet collapsed sidebar (56px), lg:pl-56 for desktop always-open sidebar (224px) */}
+                  <main className={`min-h-screen ${
+                    initialTemplate !== 'light-modern' && initialTemplate !== 'ceramic-light' ? 'md:pl-14 lg:pl-56' : ''
+                  }`}>{children}</main>
+                </PageTransition>
+                <Footer flags={flags} />
+                {/* These 3 components are invisible (render null or floating UI).
+                    They're placed at the end to avoid layout shifts during hydration. */}
+                <VisitorTracker />
+                <VoiceWidget />
+                <ChatWidget />
+                <SearchProvider />
+              </SettingsProvider>
+            </I18nProvider>
+          </AppearanceProvider>
         </ThemeProvider>
       </body>
     </html>

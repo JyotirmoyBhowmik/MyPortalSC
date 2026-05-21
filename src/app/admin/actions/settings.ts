@@ -1,7 +1,7 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 
 export async function toggleFeature(key: string, enabled: boolean) {
     const supabase = await createClient();
@@ -24,7 +24,8 @@ export async function toggleFeature(key: string, enabled: boolean) {
         return { success: false, error: error.message };
     }
 
-    // Revalidate everything since features affect many pages
+    // Revalidate settings cache tag and pages
+    (revalidateTag as any)("settings");
     revalidatePath("/", "layout");
     return { success: true };
 }
@@ -50,6 +51,8 @@ export async function updateSettingValue(key: string, value: unknown) {
         return { success: false, error: error.message };
     }
 
+    // Revalidate settings cache tag and pages
+    (revalidateTag as any)("settings");
     revalidatePath("/", "layout");
     return { success: true };
 }

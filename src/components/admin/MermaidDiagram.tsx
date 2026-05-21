@@ -3,6 +3,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import mermaid from 'mermaid';
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
+import { useAppearance } from '@/components/AppearanceProvider';
 
 interface MermaidDiagramProps {
     chart: string;
@@ -15,29 +16,10 @@ export default function MermaidDiagram({ chart, id = "mermaid-diagram" }: Mermai
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
 
-    const [template, setTemplate] = useState<string>("classic");
+    const { template } = useAppearance();
 
     // Generate a unique ID to avoid Mermaid render clashes
     const uniqueIdRef = useRef(`mermaid-${id.replace(/[^a-zA-Z0-9_-]/g, "")}-${Math.random().toString(36).substring(2, 9)}`);
-
-    useEffect(() => {
-        const getTemplate = () => {
-            const bodyTemplate = document.body.getAttribute("data-template");
-            const htmlTemplate = document.documentElement.getAttribute("data-template");
-            return bodyTemplate || htmlTemplate || "classic";
-        };
-        
-        setTemplate(getTemplate());
-
-        const observer = new MutationObserver(() => {
-            setTemplate(getTemplate());
-        });
-
-        observer.observe(document.body, { attributes: true, attributeFilter: ["data-template"] });
-        observer.observe(document.documentElement, { attributes: true, attributeFilter: ["data-template"] });
-
-        return () => observer.disconnect();
-    }, []);
 
     useEffect(() => {
         if (typeof window !== 'undefined') {

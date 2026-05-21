@@ -10,7 +10,7 @@ import {
     Tooltip,
 } from "recharts";
 import { useTheme as useRetroTheme } from "@/components/ThemeProvider";
-import { useEffect, useState } from "react";
+import { useAppearance } from "@/components/AppearanceProvider";
 
 interface SkillCategory {
     category: string;
@@ -24,26 +24,7 @@ interface SkillsRadarChartProps {
 
 export default function SkillsRadarChart({ data }: SkillsRadarChartProps) {
     const { isRetro } = useRetroTheme();
-    const [template, setTemplate] = useState<string>("classic");
-
-    useEffect(() => {
-        const getTemplate = () => {
-            const bodyTemplate = document.body.getAttribute("data-template");
-            const htmlTemplate = document.documentElement.getAttribute("data-template");
-            return bodyTemplate || htmlTemplate || "classic";
-        };
-        
-        setTemplate(getTemplate());
-
-        const observer = new MutationObserver(() => {
-            setTemplate(getTemplate());
-        });
-
-        observer.observe(document.body, { attributes: true, attributeFilter: ["data-template"] });
-        observer.observe(document.documentElement, { attributes: true, attributeFilter: ["data-template"] });
-
-        return () => observer.disconnect();
-    }, []);
+    const { template } = useAppearance();
 
     // Color definitions based on the active template
     let chartColor = "#64ffda";
