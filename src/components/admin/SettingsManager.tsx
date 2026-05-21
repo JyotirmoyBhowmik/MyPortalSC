@@ -108,11 +108,11 @@ export default function SettingsManager({ grouped }: Props) {
     const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
 
     // Flatten settings to map by key efficiently
-    const [localState, setLocalState] = useState<Record<string, any>>(() => {
-        const state: Record<string, any> = {};
+    const [localState, setLocalState] = useState<Record<string, unknown>>(() => {
+        const state: Record<string, unknown> = {};
         for (const categorySettings of Object.values(grouped)) {
             for (const s of categorySettings) {
-                let val = s.value;
+                let val: unknown = s.value;
                 if (val === "true") val = true;
                 if (val === "false") val = false;
                 state[s.key] = val;
@@ -128,7 +128,7 @@ export default function SettingsManager({ grouped }: Props) {
         }
     }
 
-    function handleChange(key: string, newValue: any) {
+    function handleChange(key: string, newValue: unknown) {
         const oldValue = localState[key];
         setLocalState((prev) => ({ ...prev, [key]: newValue }));
 
@@ -250,6 +250,7 @@ export default function SettingsManager({ grouped }: Props) {
                                                 >
                                                     <option value="classic">Old UI (Legacy)</option>
                                                     <option value="ceramic">New Ceramic UI (Default)</option>
+                                                    <option value="ceramic-light">Ceramic Light (Tactile Minimalism)</option>
                                                     <option value="glass-dark">Glass Exec Dark (Secondary)</option>
                                                     <option value="light-modern">Light Exec Modern Legacy</option>
                                                     <option value="premium">Premium Themes Ext.</option>

@@ -532,6 +532,58 @@ h6 {
 }
 
 /* ============================================================
+   Template: Ceramic Light UI (NEW!)
+   ============================================================ */
+[data-template="ceramic-light"] {
+  --background: #f9f9f7;
+  --foreground: #444748;
+  --surface: #ffffff;
+  --surface-hover: #f4f4f2;
+  --border-color: #e5e5e1;
+  --border-hover: #c4c7c7;
+  --primary: #1a1c1b;
+  --primary-hover: #000000;
+  --primary-fg: #ffffff;
+  --accent: #505f76;
+  --accent-hover: #38485d;
+  --muted: #eeeeec;
+  --muted-fg: #747878;
+  --success: #10b981;
+  --warning: #f59e0b;
+  --danger: #ba1a1a;
+  --card-bg: #ffffff;
+  --card-hover: #f4f4f2;
+  --gradient-primary: linear-gradient(135deg, #1a1c1b 0%, #505f76 100%);
+  --gradient-subtle: linear-gradient(135deg, rgba(26, 28, 27, 0.05) 0%, transparent 100%);
+  --gradient-hero: radial-gradient(ellipse at 30% 0%, rgba(26, 28, 27, 0.04) 0%, transparent 70%),
+    radial-gradient(ellipse at 70% 100%, rgba(80, 95, 118, 0.03) 0%, transparent 60%);
+  --gradient-card: linear-gradient(145deg, #ffffff 0%, #eeeeec 100%);
+  --glass-bg: #ffffff;
+  --glass-border: #e5e5e1;
+  --glass-blur: 0px; 
+  --heading: #1a1c1b;
+}
+
+/* Base adjustments specifically for Ceramic Light */
+[data-template="ceramic-light"] .glass {
+  box-shadow: 0 4px 20px rgba(26, 28, 27, 0.02);
+  border-radius: 16px;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  border: 1px solid #e5e5e1;
+}
+
+[data-template="ceramic-light"] .hover-lift:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(26, 28, 27, 0.04);
+}
+
+[data-template="ceramic-light"] h1, [data-template="ceramic-light"] h2, [data-template="ceramic-light"] h3 {
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+/* ============================================================
    Base Styles
    ============================================================ */
 * {

@@ -139,7 +139,12 @@ export default async function RootLayout({
               <Navbar settings={settings} />
               <PageTransition enabled={!!flags.feature_page_transitions}>
                 {/* md:pl-14 for tablet collapsed sidebar (56px), lg:pl-56 for desktop always-open sidebar (224px) */}
-                <main className={`min-h-screen ${((settings["site_template"] as string) || "classic").replace(/"/g, "") !== 'light-modern' ? 'md:pl-14 lg:pl-56' : ''}`}>{children}</main>
+                <main className={`min-h-screen ${
+                  (() => {
+                    const t = ((settings["site_template"] as string) || "classic").replace(/"/g, "");
+                    return t !== 'light-modern' && t !== 'ceramic-light';
+                  })() ? 'md:pl-14 lg:pl-56' : ''
+                }`}>{children}</main>
               </PageTransition>
               <Footer flags={flags} />
               {/* These 3 components are invisible (render null or floating UI).

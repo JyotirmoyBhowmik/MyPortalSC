@@ -13,7 +13,7 @@ export default function Navbar({ settings = {} }: { settings?: Record<string, un
     const flags = settings as Record<string, boolean>;
     const template = ((settings["site_template"] as string) || "classic").replace(/"/g, "");
 
-    if (template === "light-modern") {
+    if (template === "light-modern" || template === "ceramic-light") {
         return <NavbarCeramic flags={flags} />;
     }
 

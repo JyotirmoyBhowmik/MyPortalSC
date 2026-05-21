@@ -18,6 +18,18 @@ export default async function AdminAppearancePage() {
         // site_icon row may not exist yet
     }
 
+    let currentTemplate = "ceramic";
+    try {
+        const { data } = await supabase
+            .from("site_settings")
+            .select("value")
+            .eq("key", "site_template")
+            .single();
+        currentTemplate = (data?.value as string) || "ceramic";
+    } catch {
+        // site_template row may not exist yet
+    }
+
     return (
         <div>
             <div className="mb-8">
@@ -26,7 +38,7 @@ export default async function AdminAppearancePage() {
                     Customize the visual identity of your portfolio — icon, branding, and template.
                 </p>
             </div>
-            <AppearanceManager currentIcon={currentIcon} />
+            <AppearanceManager currentIcon={currentIcon} currentTemplate={currentTemplate} />
         </div>
     );
 }
