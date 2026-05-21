@@ -21,7 +21,7 @@ export async function updatePageContent(pageKey: string, newContent: Record<stri
     }
 
     // 2. Fetch existing content to merge instead of overwrite wholesale
-    const { data: existingPage, error: fetchError } = await supabase
+    const { data: existingPage } = await supabase
         .from("content_pages")
         .select("content")
         .eq("page_key", pageKey)

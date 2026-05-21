@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useTransition } from "react";
+import Image from "next/image";
 import { uploadSiteIcon, resetSiteIcon } from "@/app/admin/actions/appearance";
 
 export default function AppearanceManager({ currentIcon }: { currentIcon: string }) {
@@ -64,9 +65,9 @@ export default function AppearanceManager({ currentIcon }: { currentIcon: string
                 <div className="flex items-start gap-8">
                     {/* Preview */}
                     <div className="flex flex-col items-center gap-3">
-                        <div className="w-24 h-24 rounded-2xl bg-surface border-2 border-dashed border-border flex items-center justify-center overflow-hidden">
+                        <div className="w-24 h-24 rounded-2xl bg-surface border-2 border-dashed border-border flex items-center justify-center overflow-hidden relative">
                             {preview ? (
-                                <img src={preview} alt="Site icon preview" className="w-full h-full object-contain" />
+                                <Image src={preview} alt="Site icon preview" fill className="object-contain" unoptimized />
                             ) : (
                                 <div className="w-16 h-16 rounded-xl bg-[#D9F24A] flex items-center justify-center text-[#0D1B1E] font-extrabold text-xl">
                                     JB
@@ -115,9 +116,9 @@ export default function AppearanceManager({ currentIcon }: { currentIcon: string
                         {/* Size previews */}
                         <div className="flex items-center gap-6 pt-2">
                             <div className="text-center">
-                                <div className="w-8 h-8 rounded bg-surface border border-border flex items-center justify-center overflow-hidden mb-1">
+                                <div className="w-8 h-8 rounded bg-surface border border-border flex items-center justify-center overflow-hidden mb-1 relative">
                                     {preview ? (
-                                        <img src={preview} alt="" className="w-full h-full object-contain" />
+                                        <Image src={preview} alt="" fill className="object-contain" unoptimized />
                                     ) : (
                                         <span className="text-[6px] font-bold">JB</span>
                                     )}
@@ -125,9 +126,9 @@ export default function AppearanceManager({ currentIcon }: { currentIcon: string
                                 <span className="text-[10px] text-muted-foreground">32px</span>
                             </div>
                             <div className="text-center">
-                                <div className="w-12 h-12 rounded-lg bg-surface border border-border flex items-center justify-center overflow-hidden mb-1">
+                                <div className="w-12 h-12 rounded-lg bg-surface border border-border flex items-center justify-center overflow-hidden mb-1 relative">
                                     {preview ? (
-                                        <img src={preview} alt="" className="w-full h-full object-contain" />
+                                        <Image src={preview} alt="" fill className="object-contain" unoptimized />
                                     ) : (
                                         <span className="text-xs font-bold">JB</span>
                                     )}
@@ -135,9 +136,9 @@ export default function AppearanceManager({ currentIcon }: { currentIcon: string
                                 <span className="text-[10px] text-muted-foreground">48px</span>
                             </div>
                             <div className="text-center">
-                                <div className="w-16 h-16 rounded-xl bg-surface border border-border flex items-center justify-center overflow-hidden mb-1">
+                                <div className="w-16 h-16 rounded-xl bg-surface border border-border flex items-center justify-center overflow-hidden mb-1 relative">
                                     {preview ? (
-                                        <img src={preview} alt="" className="w-full h-full object-contain" />
+                                        <Image src={preview} alt="" fill className="object-contain" unoptimized />
                                     ) : (
                                         <span className="text-sm font-bold">JB</span>
                                     )}

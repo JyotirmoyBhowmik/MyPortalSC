@@ -1,5 +1,5 @@
 import { Metadata } from "next";
-import { getAllBudgets } from "@/lib/data/finances";
+import { getAllBudgets, type DashboardBudget } from "@/lib/data/finances";
 import { formatINR, convertToINR } from "@/lib/utils/currency";
 import AnimatedSection from "@/components/animations/AnimatedSection";
 import { BudgetVarianceChart, BudgetTrendChart, PrintExportButton } from "@/components/budget/BudgetCharts";
@@ -13,20 +13,20 @@ export const metadata: Metadata = {
 export const revalidate = 60;
 
 // Categorize a budget item
-function categorize(b: any): "capex_project" | "capex_regular" | "opex_project" | "opex_regular" {
+function categorize(b: DashboardBudget): "capex_project" | "capex_regular" | "opex_project" | "opex_regular" {
     const isProject = !!(b.initiative_id || b.project_id);
     if (b.investment_model === "CapEx") return isProject ? "capex_project" : "capex_regular";
     return isProject ? "opex_project" : "opex_regular";
 }
 
 // Row INR conversion
-function toINR(b: any): number {
+function toINR(b: DashboardBudget): number {
     if (b.exchange_rate_to_inr && b.exchange_rate_to_inr > 0 && b.currency !== "INR") {
         return b.expense_amount * b.exchange_rate_to_inr;
     }
     return convertToINR(b.expense_amount, b.currency || "INR");
 }
-function planINR(b: any): number {
+function planINR(b: DashboardBudget): number {
     if (b.exchange_rate_to_inr && b.exchange_rate_to_inr > 0 && b.currency !== "INR") {
         return b.planning_amount * b.exchange_rate_to_inr;
     }
@@ -92,7 +92,7 @@ export default async function BudgetPage({ searchParams }: { searchParams: Promi
     const role = params.role || 'CFO';
 
     // Group by FY
-    const byFY: Record<string, any[]> = {};
+    const byFY: Record<string, DashboardBudget[]> = {};
     budgets.forEach(b => {
         if (!byFY[b.fiscal_year]) byFY[b.fiscal_year] = [];
         byFY[b.fiscal_year].push(b);
@@ -110,10 +110,10 @@ export default async function BudgetPage({ searchParams }: { searchParams: Promi
     // Chart data (per FY)
     const chartData = sortedFYs.map(fy => {
         const items = byFY[fy];
-        const planned = items.reduce((s: number, b: any) => s + planINR(b), 0);
-        const spent = items.reduce((s: number, b: any) => s + toINR(b), 0);
-        const capex = items.filter((b: any) => b.investment_model === "CapEx").reduce((s: number, b: any) => s + toINR(b), 0);
-        const opex = items.filter((b: any) => b.investment_model === "OpEx").reduce((s: number, b: any) => s + toINR(b), 0);
+        const planned = items.reduce((s: number, b: DashboardBudget) => s + planINR(b), 0);
+        const spent = items.reduce((s: number, b: DashboardBudget) => s + toINR(b), 0);
+        const capex = items.filter((b: DashboardBudget) => b.investment_model === "CapEx").reduce((s: number, b: DashboardBudget) => s + toINR(b), 0);
+        const opex = items.filter((b: DashboardBudget) => b.investment_model === "OpEx").reduce((s: number, b: DashboardBudget) => s + toINR(b), 0);
         return { fy, planned, spent, capex, opex, variance: planned > 0 ? (spent - planned) / planned * 100 : 0 };
     });
 

@@ -29,7 +29,7 @@ export async function GET() {
                 liveConnectConstraints: {
                     model: MODEL,
                     config: {
-                        responseModalities: ['AUDIO'] as unknown as any,
+                        responseModalities: ['AUDIO'] as unknown as import("@google/genai").Modality[],
                         temperature: 0.7,
                     }
                 },

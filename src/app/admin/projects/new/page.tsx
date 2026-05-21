@@ -47,7 +47,7 @@ export default function NewProjectPage() {
                 order_index: parseInt(formData.get("order_index") as string) || 0,
                 featured_image_url: image, // Add image
                 documents: documents, // Add documents
-            } as any);
+            } as unknown as Parameters<typeof createProject>[0]);
             router.push("/admin/projects");
         } catch (err) {
             setError(

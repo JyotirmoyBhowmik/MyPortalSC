@@ -1,5 +1,5 @@
 class PCMProcessor extends AudioWorkletProcessor {
-    process(inputs, outputs, parameters) {
+    process(inputs) {
         const input = inputs[0];
         if (input && input[0]) {
             const inputData = input[0];
