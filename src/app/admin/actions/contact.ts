@@ -26,19 +26,14 @@ function checkRateLimit(ip: string): boolean {
 // ----------------------------------------------------
 
 export async function submitContactForm(formData: FormData) {
-    console.log("[CONTACT] submitContactForm called");
-
     const headersList = await headers();
     const ip = headersList.get("x-forwarded-for") || "unknown";
-    console.log("[CONTACT] IP:", ip);
 
     if (!checkRateLimit(ip)) {
         return { success: false, error: "Too many submissions. Please try again later." };
     }
 
-    console.log("[CONTACT] Checking feature_contact_crm flag...");
     const isContactEnabled = await getFeatureFlag("feature_contact_crm");
-    console.log("[CONTACT] feature_contact_crm =", isContactEnabled);
 
     if (!isContactEnabled) {
         return { success: false, error: "Contact submissions are currently disabled." };
