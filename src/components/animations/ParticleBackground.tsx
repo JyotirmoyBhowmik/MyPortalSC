@@ -84,7 +84,7 @@ export default function ParticleBackground({ className = "", rgbColor = "99, 220
             window.removeEventListener("resize", resize);
             cancelAnimationFrame(animationId);
         };
-    }, []);
+    }, [rgbColor]);
 
     return (
         <canvas
