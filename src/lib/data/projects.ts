@@ -5,6 +5,7 @@
  */
 import { createClient } from "@/lib/supabase/server";
 import type { Project } from "@/lib/database.types";
+import { logDbError } from "@/lib/supabase/error";
 
 export async function getPublishedProjects(): Promise<Project[]> {
     const supabase = await createClient();
@@ -15,7 +16,7 @@ export async function getPublishedProjects(): Promise<Project[]> {
         .order("order_index", { ascending: true });
 
     if (error) {
-        console.error("Error fetching projects:", error);
+        logDbError("Error fetching projects", error);
         return [];
     }
     return data ?? [];
@@ -31,7 +32,7 @@ export async function getFeaturedProjects(limit = 3): Promise<Project[]> {
         .limit(limit);
 
     if (error) {
-        console.error("Error fetching featured projects:", error);
+        logDbError("Error fetching featured projects", error);
         return [];
     }
     return data ?? [];
@@ -48,7 +49,7 @@ export async function getProjectBySlug(
         .single();
 
     if (error) {
-        console.error("Error fetching project:", error);
+        logDbError("Error fetching project", error);
         return null;
     }
     return data;
@@ -62,8 +63,9 @@ export async function getAllProjects(): Promise<Project[]> {
         .order("order_index", { ascending: true });
 
     if (error) {
-        console.error("Error fetching all projects:", error);
+        logDbError("Error fetching all projects", error);
         return [];
     }
     return data ?? [];
 }
+

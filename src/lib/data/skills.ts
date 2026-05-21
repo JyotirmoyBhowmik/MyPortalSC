@@ -5,6 +5,7 @@
  */
 import { createClient } from "@/lib/supabase/server";
 import type { Skill } from "@/lib/database.types";
+import { logDbError } from "@/lib/supabase/error";
 
 export async function getAllSkills(): Promise<Skill[]> {
     const supabase = await createClient();
@@ -14,11 +15,12 @@ export async function getAllSkills(): Promise<Skill[]> {
         .order("order_index", { ascending: true });
 
     if (error) {
-        console.error("Error fetching skills:", error);
+        logDbError("Error fetching skills", error);
         return [];
     }
     return data ?? [];
 }
+
 
 export async function getSkillsByCategory(): Promise<
     Record<string, Skill[]>

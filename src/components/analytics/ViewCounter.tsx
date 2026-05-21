@@ -1,5 +1,6 @@
 import { createClient } from "@supabase/supabase-js";
 import { unstable_cache } from "next/cache";
+import { logDbError } from "@/lib/supabase/error";
 
 // Cache the view count for 60 seconds so we don't hammer the database on every page load
 const getCachedViewCount = unstable_cache(
@@ -17,7 +18,7 @@ const getCachedViewCount = unstable_cache(
             .eq("event_type", "pageview");
 
         if (error) {
-            console.error("Failed to fetch view count:", error);
+            logDbError("Failed to fetch view count", error);
             return 0;
         }
 

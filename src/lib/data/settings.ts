@@ -5,6 +5,7 @@
  */
 import { createClient } from "@/lib/supabase/server";
 import { cache } from "react";
+import { logDbError } from "@/lib/supabase/error";
 
 export interface SiteSetting {
     id: string;
@@ -28,9 +29,10 @@ export const getAllSettings = cache(async function getAllSettings(): Promise<Sit
             .order("category", { ascending: true })
             .order("key", { ascending: true });
         if (error) {
-            console.error("Error fetching settings:", error);
+            logDbError("Error fetching settings", error);
             return [];
         }
+
         return (data ?? []) as SiteSetting[];
     } catch (e) {
         console.error("Critical error in getAllSettings:", e);

@@ -6,6 +6,7 @@
  */
 import { createClient } from "@/lib/supabase/server";
 import type { Initiative, InitiativeWithProgram, Program } from "@/lib/database.types";
+import { logDbError } from "@/lib/supabase/error";
 
 export type { Initiative, InitiativeWithProgram, Program };
 
@@ -18,7 +19,7 @@ export async function getAllPrograms(): Promise<Program[]> {
         .select("*")
         .order("order_index", { ascending: true });
     if (error) {
-        console.error("Error fetching programs:", error);
+        logDbError("Error fetching programs", error);
         return [];
     }
     return (data ?? []) as Program[];
@@ -45,7 +46,7 @@ export async function getAllInitiatives(): Promise<InitiativeWithProgram[]> {
         .eq("status", "published")
         .order("order_index", { ascending: true });
     if (error) {
-        console.error("Error fetching initiatives:", error);
+        logDbError("Error fetching initiatives", error);
         return [];
     }
     return (data ?? []) as InitiativeWithProgram[];
@@ -58,11 +59,12 @@ export async function getAllInitiativesAdmin(): Promise<InitiativeWithProgram[]>
         .select("*, programs(*)")
         .order("order_index", { ascending: true });
     if (error) {
-        console.error("Error fetching initiatives (admin):", error);
+        logDbError("Error fetching initiatives (admin)", error);
         return [];
     }
     return (data ?? []) as InitiativeWithProgram[];
 }
+
 
 export async function getInitiativeBySlug(slug: string): Promise<InitiativeWithProgram | null> {
     const supabase = await createClient();

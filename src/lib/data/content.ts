@@ -6,6 +6,7 @@
  */
 import { createClient } from "@/lib/supabase/server";
 import type { ContentPage, Json } from "@/lib/database.types";
+import { logDbError } from "@/lib/supabase/error";
 
 export async function getPageContent(
     pageKey: string
@@ -18,11 +19,12 @@ export async function getPageContent(
         .single();
 
     if (error) {
-        console.error(`Error fetching page content for "${pageKey}":`, error);
+        logDbError(`Error fetching page content for "${pageKey}"`, error);
         return null;
     }
     return data;
 }
+
 
 // Helper to safely extract a string field from JSONB content
 export function getContentField(
