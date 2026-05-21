@@ -3,6 +3,7 @@
 import { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
+import Image from "next/image";
 import Badge from "@/components/ui/Badge";
 import type { Project } from "@/lib/database.types";
 import { AnimatedCard } from "@/components/animations/AnimatedSection";
@@ -62,13 +63,14 @@ export default function FeaturedProjectsFilter({ projects }: { projects: Project
                                     className="group glass rounded-xl overflow-hidden glow-border flex flex-col h-full"
                                 >
                                     {/* Image placeholder */}
-                                    <div className="h-48 bg-gradient-to-br from-primary/10 to-accent/10 flex items-center justify-center overflow-hidden shrink-0">
+                                    <div className="relative h-48 bg-gradient-to-br from-primary/10 to-accent/10 flex items-center justify-center overflow-hidden shrink-0">
                                         {project.featured_image_url ? (
-                                            // eslint-disable-next-line @next/next/no-img-element
-                                            <img
+                                            <Image
                                                 src={project.featured_image_url}
                                                 alt={project.title}
-                                                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                                                fill
+                                                unoptimized={true}
+                                                className="object-cover group-hover:scale-105 transition-transform duration-500"
                                             />
                                         ) : (
                                             <div className="w-16 h-16 rounded-xl gradient-bg opacity-30 group-hover:opacity-60 transition-opacity" />
