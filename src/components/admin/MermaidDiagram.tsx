@@ -13,38 +13,100 @@ export default function MermaidDiagram({ chart, id = "mermaid-diagram" }: Mermai
     const containerRef = useRef<HTMLDivElement>(null);
     const [svgCode, setSvgCode] = useState<string>('');
     const [error, setError] = useState<string | null>(null);
+    const [loading, setLoading] = useState<boolean>(true);
+
+    const [template, setTemplate] = useState<string>("classic");
+
+    // Generate a unique ID to avoid Mermaid render clashes
+    const uniqueIdRef = useRef(`mermaid-${id.replace(/[^a-zA-Z0-9_-]/g, "")}-${Math.random().toString(36).substring(2, 9)}`);
 
     useEffect(() => {
-        mermaid.initialize({
-            startOnLoad: false,
-            theme: 'dark',
-            securityLevel: 'loose',
-            fontFamily: 'monospace',
-            themeVariables: {
-                primaryColor: '#7c3aed',
-                primaryTextColor: '#fff',
-                primaryBorderColor: '#a78bfa',
-                lineColor: '#6b7280',
-                secondaryColor: '#3b82f6',
-                tertiaryColor: '#10b981'
-            }
+        const getTemplate = () => {
+            const bodyTemplate = document.body.getAttribute("data-template");
+            const htmlTemplate = document.documentElement.getAttribute("data-template");
+            return bodyTemplate || htmlTemplate || "classic";
+        };
+        
+        setTemplate(getTemplate());
+
+        const observer = new MutationObserver(() => {
+            setTemplate(getTemplate());
         });
 
-        const renderDiagram = async () => {
-            try {
-                if (containerRef.current) {
-                    const { svg } = await mermaid.render(id, chart);
-                    setSvgCode(svg);
-                    setError(null);
+        observer.observe(document.body, { attributes: true, attributeFilter: ["data-template"] });
+        observer.observe(document.documentElement, { attributes: true, attributeFilter: ["data-template"] });
+
+        return () => observer.disconnect();
+    }, []);
+
+    useEffect(() => {
+        if (typeof window !== 'undefined') {
+            const isLight = ["ceramic-light", "light-modern", "minimal", "ceramic"].includes(template);
+            
+            let primaryColor = '#7c3aed'; // Purple theme primary
+            let primaryTextColor = '#ffffff';
+            let primaryBorderColor = '#a78bfa';
+            let lineColor = '#6b7280';
+            let secondaryColor = '#3b82f6';
+            let tertiaryColor = '#10b981';
+
+            if (isLight) {
+                if (template === 'ceramic-light') {
+                    primaryColor = '#f4f4f2'; // Soft unglazed surface dim
+                    primaryTextColor = '#1a1c1b'; // Charcoal primary text
+                    primaryBorderColor = '#c4c7c7'; // Tactile outline
+                    lineColor = '#747878'; // Slate blue line
+                    secondaryColor = '#505f76'; // Slate blue accent
+                    tertiaryColor = '#ffffff';
+                } else if (template === 'light-modern' || template === 'ceramic') {
+                    primaryColor = '#f1f5f9';
+                    primaryTextColor = '#1e293b';
+                    primaryBorderColor = '#cbd5e1';
+                    lineColor = '#94a3b8';
+                    secondaryColor = '#3b82f6';
+                    tertiaryColor = '#ffffff';
+                } else if (template === 'minimal') {
+                    primaryColor = '#f3f4f6';
+                    primaryTextColor = '#111827';
+                    primaryBorderColor = '#d1d5db';
+                    lineColor = '#94a3b8';
+                    secondaryColor = '#2563eb';
+                    tertiaryColor = '#ffffff';
                 }
+            }
+
+            mermaid.initialize({
+                startOnLoad: false,
+                theme: isLight ? 'neutral' : 'dark',
+                securityLevel: 'loose',
+                fontFamily: 'monospace',
+                themeVariables: {
+                    primaryColor,
+                    primaryTextColor,
+                    primaryBorderColor,
+                    lineColor,
+                    secondaryColor,
+                    tertiaryColor,
+                }
+            });
+        }
+
+        const renderDiagram = async () => {
+            setLoading(true);
+            try {
+                const { svg } = await mermaid.render(uniqueIdRef.current, chart);
+                setSvgCode(svg);
+                setError(null);
             } catch (err: any) {
                 console.error("Mermaid parsing error:", err);
                 setError(err.message || "Failed to render diagram.");
+            } finally {
+                setLoading(false);
             }
         };
 
         renderDiagram();
-    }, [chart, id]);
+    }, [chart, template]);
 
     if (error) {
         return (
@@ -59,7 +121,7 @@ export default function MermaidDiagram({ chart, id = "mermaid-diagram" }: Mermai
         );
     }
 
-    if (!svgCode) {
+    if (loading || !svgCode) {
         return (
             <div className="h-64 flex items-center justify-center border-2 border-dashed border-border rounded-lg">
                 <div className="animate-pulse text-muted-foreground flex items-center gap-2">

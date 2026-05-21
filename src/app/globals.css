@@ -1001,15 +1001,10 @@ html[data-retro="true"] .retro-cursor::after {
   gap: 1.5rem;
 }
 
-.bento-grid > :nth-child(1) {
-  grid-column: span 2;
-}
-
-.bento-grid > :nth-child(4) {
-  grid-column: span 2;
-}
-
-.bento-grid > :nth-child(7) {
+.bento-grid > :nth-child(1),
+.bento-grid > :nth-child(4),
+.bento-grid > :nth-child(7),
+.bento-grid > :nth-child(8) {
   grid-column: span 2;
 }
 
@@ -1020,7 +1015,8 @@ html[data-retro="true"] .retro-cursor::after {
 
   .bento-grid > :nth-child(1),
   .bento-grid > :nth-child(4),
-  .bento-grid > :nth-child(7) {
+  .bento-grid > :nth-child(7),
+  .bento-grid > :nth-child(8) {
     grid-column: span 2;
   }
 }
