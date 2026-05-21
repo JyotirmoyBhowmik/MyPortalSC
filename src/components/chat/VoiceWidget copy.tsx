@@ -81,7 +81,7 @@ export default function VoiceWidget() {
     const [errorMsg, setErrorMsg] = useState("");
     const [frequencies, setFrequencies] = useState<number[]>(new Array(16).fill(0));
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+     
     const sessionRef = useRef<any>(null);
     const audioCtxRef = useRef<AudioContext | null>(null);
     const streamRef = useRef<MediaStream | null>(null);

@@ -184,7 +184,7 @@ export default function MediaLibrary({ initialMedia, onSelect, selectable = fals
 
                             {item.mime_type?.startsWith("image/") ? (
                                 <div className="h-32 bg-surface">
-                                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                                    { }
                                     <img src={item.public_url} alt={item.original_name} className="w-full h-full object-cover" />
                                 </div>
                             ) : (
