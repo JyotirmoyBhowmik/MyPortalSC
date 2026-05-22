@@ -1,5 +1,5 @@
 // script.js
-const http = require('http');
+import http from "http";
 
 const data = JSON.stringify({
     messages: [{ role: "user", content: "hi" }]

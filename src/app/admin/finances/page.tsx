@@ -17,7 +17,7 @@ export default async function AdminFinancesPage() {
     const projectOptions = projects.map(p => ({ id: p.id, label: p.title }));
     const initOptions = initiatives.map(i => ({ id: i.id, label: i.title }));
     const skillOptions = skills.map(s => ({ id: s.id, label: s.name }));
-    const fiscalYearOptions = fiscalYears.map((f: any) => ({ id: f.label, label: f.label }));
+    const fiscalYearOptions = fiscalYears.map((f: { label: string }) => ({ id: f.label, label: f.label }));
 
     return (
         <div>

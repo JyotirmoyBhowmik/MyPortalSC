@@ -27,7 +27,7 @@ export async function POST(request: Request) {
 
         // 3. Parse upload intention
         const body = await request.json();
-        const { filename, contentType = "application/octet-stream", bucket = "media" } = body;
+        const { filename, bucket = "media" } = body;
 
         if (!filename) {
             return NextResponse.json({ error: "Filename is required" }, { status: 400 });
@@ -54,7 +54,7 @@ export async function POST(request: Request) {
             publicUrl: `/api/media/${data.path}`, // Our new frontend proxy route
         });
 
-    } catch (e: any) {
+    } catch (e: unknown) {
         console.error("Storage Sign-Upload Error:", e);
         return NextResponse.json({ error: "Internal server error" }, { status: 500 });
     }

@@ -13,7 +13,7 @@ export default function NewProjectPage() {
     const [error, setError] = useState<string | null>(null);
 
     const [image, setImage] = useState<string | null>(null);
-    const [documents, setDocuments] = useState<any[]>([]);
+    const [documents, setDocuments] = useState<{ name: string; url: string; size?: number }[]>([]);
 
     async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
@@ -46,8 +46,8 @@ export default function NewProjectPage() {
                 live_url: (formData.get("live_url") as string) || null,
                 order_index: parseInt(formData.get("order_index") as string) || 0,
                 featured_image_url: image, // Add image
-                documents: documents as any, // Add documents
-            } as any);
+                documents: documents, // Add documents
+            } as unknown as Parameters<typeof createProject>[0]);
             router.push("/admin/projects");
         } catch (err) {
             setError(
