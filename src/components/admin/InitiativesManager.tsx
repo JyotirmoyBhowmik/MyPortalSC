@@ -108,7 +108,7 @@ export default function InitiativesManager({
             try {
                 await reorderInitiatives(orderedPayload);
                 showToast("Initiatives reordered", "success");
-            } catch (err) {
+            } catch {
                 showToast("Failed to reorder initiatives", "error");
                 setItems(initiatives);
             }

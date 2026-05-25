@@ -23,7 +23,17 @@ function base64ToUint8Array(base64: string) {
 // ═══════════════════════════════════════════════════════════════
 // Shared Function Call Handlers (The "Action" Layer)
 // ═══════════════════════════════════════════════════════════════
-function executeAction(actionName: string, args?: any) {
+
+interface ActionArgs {
+    target?: string;
+    path?: string;
+    _router?: {
+        push: (href: string) => void;
+    };
+    [key: string]: unknown;
+}
+
+function executeAction(actionName: string, args?: ActionArgs) {
     console.log(`[Action] Executing: ${actionName}`, args);
     switch (actionName) {
         case "set_sunset_theme":
@@ -238,7 +248,6 @@ export default function VoiceWidget() {
                 },
                 callbacks: {
                     onopen: () => {
-                        console.log("[VoiceWidget] Session opened.");
                         setStatus("Listening");
                         processor.port.onmessage = (e) => {
                             if (sessionRef.current && status !== "Speaking") {

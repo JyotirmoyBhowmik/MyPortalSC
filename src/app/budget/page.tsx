@@ -241,8 +241,8 @@ export default async function BudgetPage({ searchParams }: { searchParams: Promi
                                         const cr = items.filter(b => categorize(b) === "capex_regular");
                                         const op = items.filter(b => categorize(b) === "opex_project");
                                         const or2 = items.filter(b => categorize(b) === "opex_regular");
-                                        const fyTotal = items.reduce((s: number, b: any) => s + toINR(b), 0);
-                                        const fyPlan = items.reduce((s: number, b: any) => s + planINR(b), 0);
+                                        const fyTotal = items.reduce((s: number, b: any  ) => s + toINR(b), 0);
+                                        const fyPlan = items.reduce((s: number, b: any  ) => s + planINR(b), 0);
                                         const isCurrent = fy === "2024-25";
                                         const fyVariance = fyPlan > 0 ? ((fyTotal - fyPlan) / fyPlan * 100) : 0;
 
@@ -280,7 +280,7 @@ export default async function BudgetPage({ searchParams }: { searchParams: Promi
                                                     </div>
                                                     {cp.length > 0 && (
                                                         <div className="mt-2 pt-1.5 border-t border-purple-500/10 text-right">
-                                                            <span className="text-[10px] font-bold font-mono text-purple-400/70">₹{fmtLakhs(cp.reduce((s: number, b: any) => s + toINR(b), 0))}</span>
+                                                            <span className="text-[10px] font-bold font-mono text-purple-400/70">₹{fmtLakhs(cp.reduce((s: number, b: any  ) => s + toINR(b), 0))}</span>
                                                         </div>
                                                     )}
                                                 </td>
@@ -301,7 +301,7 @@ export default async function BudgetPage({ searchParams }: { searchParams: Promi
                                                         </div>
                                                         {cr.length > 0 && (
                                                             <div className="mt-2 pt-1.5 border-t border-purple-500/10 text-right">
-                                                                <span className="text-[10px] font-bold font-mono text-purple-400/70">₹{fmtLakhs(cr.reduce((s: number, b: any) => s + toINR(b), 0))}</span>
+                                                                <span className="text-[10px] font-bold font-mono text-purple-400/70">₹{fmtLakhs(cr.reduce((s: number, b: any  ) => s + toINR(b), 0))}</span>
                                                             </div>
                                                         )}
                                                     </td>
@@ -322,7 +322,7 @@ export default async function BudgetPage({ searchParams }: { searchParams: Promi
                                                     </div>
                                                     {op.length > 0 && (
                                                         <div className="mt-2 pt-1.5 border-t border-blue-500/10 text-right">
-                                                            <span className="text-[10px] font-bold font-mono text-blue-400/70">₹{fmtLakhs(op.reduce((s: number, b: any) => s + toINR(b), 0))}</span>
+                                                            <span className="text-[10px] font-bold font-mono text-blue-400/70">₹{fmtLakhs(op.reduce((s: number, b: any  ) => s + toINR(b), 0))}</span>
                                                         </div>
                                                     )}
                                                 </td>
@@ -343,7 +343,7 @@ export default async function BudgetPage({ searchParams }: { searchParams: Promi
                                                         </div>
                                                         {or2.length > 0 && (
                                                             <div className="mt-2 pt-1.5 border-t border-blue-500/10 text-right">
-                                                                <span className="text-[10px] font-bold font-mono text-blue-400/70">₹{fmtLakhs(or2.reduce((s: number, b: any) => s + toINR(b), 0))}</span>
+                                                                <span className="text-[10px] font-bold font-mono text-blue-400/70">₹{fmtLakhs(or2.reduce((s: number, b: any  ) => s + toINR(b), 0))}</span>
                                                             </div>
                                                         )}
                                                     </td>

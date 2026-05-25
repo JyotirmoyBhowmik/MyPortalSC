@@ -86,15 +86,15 @@ export default function DeliveryGlobe() {
         const items = [];
         for (let i = 0; i < 8; i++) {
             // random points on sphere surface
-            const theta1 = Math.random() * Math.PI * 2;
-            const phi1 = Math.acos((Math.random() * 2) - 1);
+            const theta1 = ((i + 1) / 8) * Math.PI * 2;
+            const phi1 = Math.acos((((i + 1) / 8) * 2) - 1);
             const r = 2;
             const x1 = r * Math.sin(phi1) * Math.cos(theta1);
             const y1 = r * Math.sin(phi1) * Math.sin(theta1);
             const z1 = r * Math.cos(phi1);
 
-            const theta2 = Math.random() * Math.PI * 2;
-            const phi2 = Math.acos((Math.random() * 2) - 1);
+            const theta2 = ((i + 1) / 8) * Math.PI * 2;
+            const phi2 = Math.acos((((i + 1) / 8) * 2) - 1);
             const x2 = r * Math.sin(phi2) * Math.cos(theta2);
             const y2 = r * Math.sin(phi2) * Math.sin(theta2);
             const z2 = r * Math.cos(phi2);

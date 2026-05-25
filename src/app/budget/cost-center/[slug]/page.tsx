@@ -15,18 +15,11 @@ export async function generateMetadata({ params }: { params: { slug: string } })
 
 export const revalidate = 60;
 
-function toINR(b: { expense_amount: number; currency?: string | null; exchange_rate_to_inr?: number | null }): number {
+function toINR(b: { exchange_rate_to_inr?: number, currency?: string, expense_amount: number }): number {
     if (b.exchange_rate_to_inr && b.exchange_rate_to_inr > 0 && b.currency !== "INR") {
         return b.expense_amount * b.exchange_rate_to_inr;
     }
     return convertToINR(b.expense_amount, b.currency || "INR");
-}
-
-function fmtLakhs(n: number): string {
-    if (n >= 10000000) return `${(n / 10000000).toFixed(1)}Cr`;
-    if (n >= 100000) return `${(n / 100000).toFixed(1)}L`;
-    if (n >= 1000) return `${(n / 1000).toFixed(0)}K`;
-    return n.toLocaleString("en-IN");
 }
 
 const renderStatusDot = (status: string | undefined) => {

@@ -28,7 +28,6 @@ export async function GET() {
                 expireTime: expireTime,
                 liveConnectConstraints: {
                     model: MODEL,
-                    config: {
                         responseModalities: ['AUDIO'] as unknown as import("@google/genai").Modality[],
                         temperature: 0.7,
                     }
@@ -69,7 +68,7 @@ SITEMAP (Use these exact paths when redirecting users):
             siteContext: siteContext,
         });
     } catch (error: unknown) {
-        console.error('Ephemeral token error:', error instanceof Error ? error.message : "Unknown error");
+        console.error('Ephemeral token error:', error instanceof Error ? error.message : String(error) || error);
 
         // Fallback: return the raw API key if ephemeral tokens aren't supported
         // (this can happen on some API tiers)

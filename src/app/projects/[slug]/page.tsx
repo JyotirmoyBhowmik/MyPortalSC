@@ -7,6 +7,12 @@ import ProjectImageWithLightbox from "@/components/projects/ProjectImageWithLigh
 
 export const revalidate = 60;
 
+interface KeyMetric {
+    label: string;
+    before: string;
+    after: string;
+}
+
 interface Props {
     params: Promise<{ slug: string }>;
 }
@@ -247,9 +253,9 @@ export default async function ProjectDetailPage({ params }: Props) {
                                     <p className="text-muted-foreground leading-relaxed whitespace-pre-line mb-4">{project.outcome}</p>
 
                                     {/* Before/After Metric Chips */}
-                                    {project.key_metrics && Array.isArray(project.key_metrics) && (project.key_metrics as any[]).length > 0 && (
+                                    {project.key_metrics && Array.isArray(project.key_metrics) && (project.key_metrics as unknown as KeyMetric[]).length > 0 && (
                                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 mt-4 pt-4 border-t border-success/10">
-                                            {(project.key_metrics as any[]).map((metric: any, idx: number) => (
+                                            {(project.key_metrics as unknown as KeyMetric[]).map((metric: KeyMetric, idx: number) => (
                                                 <div key={idx} className="glass rounded-lg p-4 text-center">
                                                     <p className="text-xs text-muted-foreground mb-2 font-medium">{metric.label}</p>
                                                     <div className="flex items-center justify-center gap-2">

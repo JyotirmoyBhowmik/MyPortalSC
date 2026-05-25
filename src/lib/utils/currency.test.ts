@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { formatINR } from './currency';
+import { formatINR, convertToINR, EXCHANGE_RATES_TO_INR } from './currency';
 
 describe('formatINR', () => {
     it('formats zero correctly', () => {
@@ -29,5 +29,26 @@ describe('formatINR', () => {
         expect(formatINR(100.4)).toBe('₹100');
         expect(formatINR(100.5)).toBe('₹101');
         expect(formatINR(100.6)).toBe('₹101');
+    });
+});
+
+describe('convertToINR', () => {
+    it('handles known currencies', () => {
+        expect(convertToINR(100, 'USD')).toBe(100 * EXCHANGE_RATES_TO_INR.USD);
+        expect(convertToINR(50, 'EUR')).toBe(50 * EXCHANGE_RATES_TO_INR.EUR);
+    });
+
+    it('is case-insensitive', () => {
+        expect(convertToINR(100, 'usd')).toBe(100 * EXCHANGE_RATES_TO_INR.USD);
+        expect(convertToINR(50, 'eUr')).toBe(50 * EXCHANGE_RATES_TO_INR.EUR);
+    });
+
+    it('handles unknown currencies with fallback rate of 1', () => {
+        expect(convertToINR(100, 'UNKNOWN')).toBe(100);
+        expect(convertToINR(50, 'XYZ')).toBe(50);
+    });
+
+    it('handles INR to INR conversion correctly', () => {
+        expect(convertToINR(100, 'INR')).toBe(100);
     });
 });

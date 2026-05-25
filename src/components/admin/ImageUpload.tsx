@@ -41,10 +41,6 @@ export default function ImageUpload({
 
             if (uploadError) throw uploadError;
 
-            // Get Public URL
-            const { data } = supabase.storage
-                .from(bucketName)
-                .getPublicUrl(filePath);
 
             // Use proxy route to hide raw Supabase URL from visitors
             const proxyUrl = `/api/assets?path=${encodeURIComponent(filePath)}`;

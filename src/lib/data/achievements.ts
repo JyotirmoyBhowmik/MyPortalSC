@@ -5,6 +5,7 @@
  */
 import { createClient } from "@/lib/supabase/server";
 import type { Achievement } from "@/lib/database.types";
+import { logDbError } from "@/lib/supabase/error";
 
 export async function getAllAchievements(): Promise<Achievement[]> {
     const supabase = await createClient();
@@ -14,8 +15,9 @@ export async function getAllAchievements(): Promise<Achievement[]> {
         .order("order_index", { ascending: true });
 
     if (error) {
-        console.error("Error fetching achievements:", error);
+        logDbError("Error fetching achievements", error);
         return [];
     }
     return data ?? [];
 }
+

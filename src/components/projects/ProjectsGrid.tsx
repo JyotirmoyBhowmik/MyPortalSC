@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import Badge from "@/components/ui/Badge";
 import type { Project } from "@/lib/database.types";
 
@@ -168,11 +169,12 @@ export default function ProjectsGrid({ projects }: ProjectsGridProps) {
                     >
                         <div className="relative h-48 w-full bg-gradient-to-br from-primary/10 to-accent/10 flex items-center justify-center overflow-hidden">
                             {project.featured_image_url ? (
-                                // eslint-disable-next-line @next/next/no-img-element
-                                <img
+                                <Image
                                     src={project.featured_image_url}
                                     alt={project.title}
-                                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                                    fill
+                                    unoptimized={true}
+                                    className="object-cover group-hover:scale-105 transition-transform duration-500"
                                 />
                             ) : (
                                 <>

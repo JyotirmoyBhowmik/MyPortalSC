@@ -166,7 +166,7 @@ export default async function InitiativesPage() {
                                 programs — from OT modernization and network upgrades to cloud
                                 foundations and compliance enablement.
                             </p>
-                            <a
+                            <Link
                                 href="/initiatives/programs"
                                 className="inline-flex items-center gap-2 px-6 py-3 rounded-lg gradient-bg text-white font-medium shadow-lg shadow-primary/25 hover:shadow-primary/40 transition-shadow"
                             >
@@ -174,7 +174,7 @@ export default async function InitiativesPage() {
                                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
                                 </svg>
-                            </a>
+                            </Link>
                         </div>
                     </div>
                 </div>

@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
+import { logDbError } from "@/lib/supabase/error";
 
 export interface DashboardBudget {
     id: string;
@@ -39,7 +40,7 @@ export async function getAllBudgets(): Promise<DashboardBudget[]> {
         .order("created_at", { ascending: false });
 
     if (error) {
-        console.error("Error fetching financial budgets:", error);
+        logDbError("Error fetching financial budgets", error);
         return [];
     }
 
@@ -54,8 +55,9 @@ export async function getFiscalYears() {
         .order("label", { ascending: false });
 
     if (error) {
-        console.error("Error fetching fiscal years:", error);
+        logDbError("Error fetching fiscal years", error);
         return [];
     }
     return data;
 }
+
