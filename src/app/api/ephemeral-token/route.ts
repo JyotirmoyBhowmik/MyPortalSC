@@ -28,6 +28,7 @@ export async function GET() {
                 expireTime: expireTime,
                 liveConnectConstraints: {
                     model: MODEL,
+                    config: {
                         responseModalities: ['AUDIO'] as unknown as import("@google/genai").Modality[],
                         temperature: 0.7,
                     }
