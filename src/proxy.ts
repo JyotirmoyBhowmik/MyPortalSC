@@ -89,18 +89,18 @@ export async function proxy(request: NextRequest) {
         
         const csp = `
             default-src 'self';
-            script-src 'self' 'unsafe-inline' https://vercel.live https://static.cloudflareinsights.com https://challenges.cloudflare.com;
+            script-src 'self' 'unsafe-inline' https://vercel.live https://static.cloudflareinsights.com https://challenges.cloudflare.com https://cdn.credly.com;
             style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
-            img-src 'self' data: blob: https://cqtluudfmigefqphmfbb.supabase.co https://commondatastorage.googleapis.com;
+            img-src 'self' data: blob: https://cqtluudfmigefqphmfbb.supabase.co https://commondatastorage.googleapis.com https://images.credly.com;
             font-src 'self' data: https://fonts.gstatic.com;
             object-src 'none';
             base-uri 'self';
             form-action 'self';
             frame-ancestors 'self';
-            frame-src 'self' https://challenges.cloudflare.com;
+            frame-src 'self' https://challenges.cloudflare.com https://*.credly.com https://credly.com;
             worker-src 'self' blob:;
             media-src 'self' blob: https://cqtluudfmigefqphmfbb.supabase.co https://commondatastorage.googleapis.com mediastream:;
-            connect-src 'self' https://vercel.live https://*.supabase.co wss://*.supabase.co wss://*.googleapis.com https://*.googleapis.com https://cdn.jsdelivr.net;
+            connect-src 'self' https://vercel.live https://*.supabase.co wss://*.supabase.co wss://*.googleapis.com wss://*.credly.com https://*.credly.com https://credly.com wss://credly.com https://*.googleapis.com https://cdn.jsdelivr.net;
             upgrade-insecure-requests;
         `.replace(/\s{2,}/g, ' ').trim();
         

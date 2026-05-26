@@ -653,6 +653,52 @@ h6 {
   font-weight: 400 !important;
 }
 
+/* Sidebar adjustments specifically for Compact Ceramic Navigation */
+[data-template="compact-ceramic"] aside {
+  background-color: #FFFFFF !important;
+  border-right: 1px solid #E5E5E1 !important;
+  box-shadow: none !important;
+}
+
+[data-template="compact-ceramic"] aside a, [data-template="compact-ceramic"] aside button {
+  font-family: var(--font-sans), sans-serif !important;
+  border-radius: 8px !important;
+  transition: all 0.2s ease !important;
+}
+
+/* Active navigation link in Sidebar */
+[data-template="compact-ceramic"] aside a[class*="bg-primary"],
+[data-template="compact-ceramic"] aside a[class*="text-primary"] {
+  background-color: #1A1A1A !important;
+  color: #FFFFFF !important;
+  border: 1px solid #1A1A1A !important;
+}
+
+[data-template="compact-ceramic"] aside a[class*="bg-primary"] span,
+[data-template="compact-ceramic"] aside a[class*="text-primary"] span {
+  color: #FFFFFF !important;
+}
+
+/* Hover state for links */
+[data-template="compact-ceramic"] aside a:hover:not([class*="bg-primary"]) {
+  background-color: #F1F1EF !important;
+  color: #1A1A1A !important;
+}
+
+/* Sidebar separators and group headers */
+[data-template="compact-ceramic"] aside button[class*="text-muted-foreground"] {
+  color: #1A1A1A !important;
+  font-family: var(--font-jetbrains), monospace !important;
+  font-size: 9px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.08em !important;
+  opacity: 0.8;
+}
+
+[data-template="compact-ceramic"] aside div[class*="border-t"] {
+  border-color: #E5E5E1 !important;
+}
+
 /* ============================================================
    Base Styles
    ============================================================ */

@@ -17,6 +17,9 @@ interface HomeCompactCeramicProps {
     heroSubtitle: string;
     heroDescription: string;
     availableForOpportunities?: boolean;
+    location?: string;
+    experienceYears?: string;
+    initiativesCount?: number;
 }
 
 export default function HomeCompactCeramic(props: HomeCompactCeramicProps) {
@@ -29,6 +32,9 @@ export default function HomeCompactCeramic(props: HomeCompactCeramicProps) {
         heroSubtitle,
         heroDescription,
         availableForOpportunities = true,
+        location,
+        experienceYears,
+        initiativesCount,
     } = props;
 
     const { theme, setTheme, themes } = useTheme();
@@ -96,7 +102,7 @@ export default function HomeCompactCeramic(props: HomeCompactCeramicProps) {
 
                         {/* Profile/Hero Card */}
                         <div className="bg-white border border-[#E5E5E1] rounded-2xl p-6 sm:p-8 relative overflow-hidden transition-all duration-300">
-                            <div className="flex flex-col md:flex-row lg:flex-col xl:flex-row items-center lg:items-start xl:items-center gap-6 sm:gap-8">
+                            <div className="flex flex-col md:flex-row lg:flex-col xl:flex-row items-center md:items-start lg:items-center xl:items-start gap-6 sm:gap-8">
                                 {/* Portrait photo Container */}
                                 <div className="relative w-36 h-36 rounded-2xl overflow-hidden bg-[#F1F1EF] border border-[#E5E5E1] shrink-0">
                                     <Image
@@ -145,15 +151,15 @@ export default function HomeCompactCeramic(props: HomeCompactCeramicProps) {
                             <div className="grid grid-cols-3 border-t border-[#E5E5E1] mt-8 pt-6 gap-4 font-mono text-[9px] leading-tight select-none">
                                 <div className="text-center md:text-left lg:text-center xl:text-left">
                                     <span className="block text-[#64748B] uppercase tracking-wider mb-1">LOCATION</span>
-                                    <strong className="text-[#1A1A1A] text-xs font-semibold">Kathmandu, Nepal</strong>
+                                    <strong className="text-[#1A1A1A] text-xs font-semibold">{location || "Kathmandu, Nepal"}</strong>
                                 </div>
                                 <div className="text-center md:text-left lg:text-center xl:text-left border-x border-[#E5E5E1] px-2">
                                     <span className="block text-[#64748B] uppercase tracking-wider mb-1">EXPERIENCE</span>
-                                    <strong className="text-[#1A1A1A] text-xs font-semibold">15+ Years</strong>
+                                    <strong className="text-[#1A1A1A] text-xs font-semibold">{experienceYears || "15+ Years"}</strong>
                                 </div>
                                 <div className="text-center md:text-left lg:text-center xl:text-left">
                                     <span className="block text-[#64748B] uppercase tracking-wider mb-1">IMPACT</span>
-                                    <strong className="text-[#1A1A1A] text-xs font-semibold">hh+ Initiatives</strong>
+                                    <strong className="text-[#1A1A1A] text-xs font-semibold">{initiativesCount ? `${initiativesCount}+ Initiatives` : "88+ Initiatives"}</strong>
                                 </div>
                             </div>
                         </div>
@@ -289,7 +295,9 @@ export default function HomeCompactCeramic(props: HomeCompactCeramicProps) {
                                 >
                                     {/* Project image */}
                                     <div className="relative w-full sm:w-[200px] h-[150px] sm:h-auto shrink-0 bg-[#F1F1EF] border-b sm:border-b-0 sm:border-r border-[#E5E5E1] overflow-hidden">
-                                        {project.featured_image_url ? (
+                                        {project.featured_image_url && 
+                                         project.featured_image_url !== "image" && 
+                                         (project.featured_image_url.startsWith("/") || project.featured_image_url.startsWith("http")) ? (
                                             <Image
                                                 src={project.featured_image_url}
                                                 alt={project.title}

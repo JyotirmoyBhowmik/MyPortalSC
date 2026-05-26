@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
+import { useTheme } from "@/components/ThemeProvider";
 import ThemeSwitcher from "@/components/ThemeSwitcher";
 import LanguageSwitcher from "@/components/layout/LanguageSwitcher";
 
@@ -40,10 +41,13 @@ type ScreenSize = "mobile" | "tablet" | "desktop";
 export default function NavbarSidebar({ flags = {} }: { flags?: Record<string, boolean> }) {
     const pathname = usePathname();
     const router = useRouter();
+    const { theme, activeTemplate } = useTheme();
     const [mobileOpen, setMobileOpen] = useState(false);
     const [screenSize, setScreenSize] = useState<ScreenSize>("desktop");
     const [hovered, setHovered] = useState(false);
     const [collapsedGroups, setCollapsedGroups] = useState<Record<string, boolean>>({});
+
+    const isCeramic = activeTemplate === "compact-ceramic";
 
     // Skip rendering on admin pages
     if (pathname.startsWith("/admin")) return null;
@@ -141,6 +145,19 @@ export default function NavbarSidebar({ flags = {} }: { flags?: Record<string, b
         .map(g => ({ ...g, links: g.links.filter(l => l.visible) }))
         .filter(g => g.links.length > 0);
 
+    // Compute dynamic double-digit sequence indexing for ceramic lookbook
+    let linkCounter = 0;
+    const visibleGroupsWithIndices = visibleGroups.map(group => ({
+        ...group,
+        links: group.links.map(link => {
+            linkCounter++;
+            return {
+                ...link,
+                indexStr: String(linkCounter).padStart(2, '0')
+            };
+        })
+    }));
+
     return (
         <>
             {/* Mobile hamburger */}
@@ -170,7 +187,11 @@ export default function NavbarSidebar({ flags = {} }: { flags?: Record<string, b
             <aside
                 onMouseEnter={() => screenSize === "tablet" && setHovered(true)}
                 onMouseLeave={() => screenSize === "tablet" && setHovered(false)}
-                className={`fixed top-0 left-0 z-[55] h-full flex flex-col transition-all duration-300 ease-in-out glass border-r border-border
+                className={`fixed top-0 left-0 z-[55] h-full flex flex-col transition-all duration-300 ease-in-out border-r
+                    ${isCeramic 
+                        ? "bg-white border-[#E5E5E1] shadow-none" 
+                        : "glass border-border"
+                    }
                     ${screenSize === "desktop"
                         ? "w-56"
                         : screenSize === "tablet"
@@ -180,12 +201,16 @@ export default function NavbarSidebar({ flags = {} }: { flags?: Record<string, b
                 style={{ overflowX: "hidden" }}
             >
                 {/* Logo */}
-                <div className="flex items-center px-3 h-14 shrink-0 border-b border-border/50">
+                <div className={`flex items-center px-3 h-14 shrink-0 border-b ${isCeramic ? "border-[#E5E5E1]" : "border-border/50"}`}>
                     <Link href="/" className="flex items-center gap-2.5 group" onClick={() => screenSize === "mobile" && setMobileOpen(false)}>
-                        <div className="w-8 h-8 rounded-lg gradient-bg flex items-center justify-center text-white font-bold text-sm shrink-0">
+                        <div className={`w-8 h-8 rounded-lg flex items-center justify-center text-white font-bold text-sm shrink-0 ${
+                            isCeramic ? "bg-[#1A1A1A]" : "gradient-bg"
+                        }`}>
                             JB
                         </div>
-                        <span className={`text-base font-bold text-foreground group-hover:text-primary whitespace-nowrap transition-all duration-300 ${isExpanded ? "opacity-100" : "opacity-0 invisible w-0"}`}>
+                        <span className={`text-base font-bold group-hover:text-primary whitespace-nowrap transition-all duration-300 ${
+                            isCeramic ? "text-[#1A1A1A]" : "text-foreground"
+                        } ${isExpanded ? "opacity-100" : "opacity-0 invisible w-0"}`}>
                             Jyotirmoy
                         </span>
                     </Link>
@@ -193,11 +218,8 @@ export default function NavbarSidebar({ flags = {} }: { flags?: Record<string, b
 
                 {/* Nav links with groups */}
                 <nav className="flex-1 overflow-y-auto py-2 px-1.5">
-                    {visibleGroups.map((group, gIdx) => {
+                    {visibleGroupsWithIndices.map((group, gIdx) => {
                         const isCollapsed = collapsedGroups[group.title];
-                        const hasActiveChild = group.links.some(l =>
-                            pathname === l.href || (l.href !== "/" && pathname.startsWith(l.href))
-                        );
 
                         return (
                             <div key={group.title || "root"} className={gIdx > 0 ? "mt-1" : ""}>
@@ -205,7 +227,11 @@ export default function NavbarSidebar({ flags = {} }: { flags?: Record<string, b
                                 {group.title && isExpanded && (
                                     <button
                                         onClick={() => toggleGroup(group.title)}
-                                        className="w-full flex items-center justify-between px-2.5 py-1.5 mb-0.5 rounded-md text-[10px] font-bold uppercase tracking-[0.12em] text-muted-foreground/60 hover:text-muted-foreground hover:bg-surface-hover/50 transition-all"
+                                        className={`w-full flex items-center justify-between px-2.5 py-1.5 mb-0.5 rounded-md text-[9px] font-bold uppercase tracking-[0.12em] transition-all ${
+                                            isCeramic 
+                                                ? "font-mono text-[#1A1A1A]/80 hover:text-[#1A1A1A] hover:bg-[#F1F1EF]/50" 
+                                                : "text-muted-foreground/60 hover:text-muted-foreground hover:bg-surface-hover/50"
+                                        }`}
                                     >
                                         <span>{group.title}</span>
                                         <svg
@@ -218,7 +244,7 @@ export default function NavbarSidebar({ flags = {} }: { flags?: Record<string, b
                                 )}
                                 {/* Collapsed separator for icon-only mode */}
                                 {group.title && !isExpanded && gIdx > 0 && (
-                                    <div className="mx-2 my-1.5 border-t border-border/30" />
+                                    <div className={`mx-2 my-1.5 border-t ${isCeramic ? "border-[#E5E5E1]" : "border-border/30"}`} />
                                 )}
                                 {/* Links */}
                                 {(!isCollapsed || !isExpanded) && (
@@ -233,17 +259,27 @@ export default function NavbarSidebar({ flags = {} }: { flags?: Record<string, b
                                                     onClick={() => screenSize === "mobile" && setMobileOpen(false)}
                                                     title={!isExpanded ? link.label : undefined}
                                                     className={`flex items-center px-2.5 py-2 rounded-lg text-[13px] font-medium transition-all group relative overflow-hidden ${isActive
-                                                            ? "bg-primary/15 text-primary border border-primary/20"
-                                                            : "text-muted-foreground hover:text-foreground hover:bg-surface-hover"
+                                                            ? isCeramic
+                                                                ? "bg-[#1A1A1A] text-white border border-[#1A1A1A]"
+                                                                : "bg-primary/15 text-primary border border-primary/20"
+                                                            : isCeramic
+                                                                ? "text-[#505F76] hover:text-[#1A1A1A] hover:bg-[#F1F1EF]"
+                                                                : "text-muted-foreground hover:text-foreground hover:bg-surface-hover"
                                                         }`}
                                                 >
                                                     <span className={`text-sm shrink-0 flex items-center justify-center transition-all ${!isExpanded ? "w-full" : "mr-2.5 w-5"}`}>
-                                                        {icon}
+                                                        {isCeramic ? (
+                                                            <span className={`font-mono text-[10px] transition-colors ${isActive ? "text-white" : "text-[#505F76]/60 group-hover:text-inherit"}`}>
+                                                                {link.indexStr}
+                                                            </span>
+                                                        ) : (
+                                                            icon
+                                                        )}
                                                     </span>
                                                     <span className={`whitespace-nowrap transition-all duration-300 ${isExpanded ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-4 absolute"}`}>
                                                         {link.label}
                                                     </span>
-                                                    {isActive && isExpanded && (
+                                                    {isActive && isExpanded && !isCeramic && (
                                                         <span className="ml-auto w-1.5 h-1.5 rounded-full bg-primary shrink-0 animate-pulse" />
                                                     )}
                                                 </Link>
@@ -257,7 +293,9 @@ export default function NavbarSidebar({ flags = {} }: { flags?: Record<string, b
                 </nav>
 
                 {/* Bottom controls */}
-                <div className="shrink-0 px-2 py-3 border-t border-border/50 space-y-2 flex flex-col items-center">
+                <div className={`shrink-0 px-2 py-3 border-t space-y-2 flex flex-col items-center ${
+                    isCeramic ? "border-[#E5E5E1]" : "border-border/50"
+                }`}>
                     <div className={`flex items-center gap-2 transition-all duration-300 ${isExpanded ? "opacity-100" : "opacity-0 h-0 overflow-hidden"}`}>
                         <LanguageSwitcher />
                         <ThemeSwitcher />
@@ -266,7 +304,11 @@ export default function NavbarSidebar({ flags = {} }: { flags?: Record<string, b
                         <Link
                             href="/contact"
                             onClick={() => screenSize === "mobile" && setMobileOpen(false)}
-                            className="flex items-center justify-center w-full px-4 py-2 rounded-xl gradient-bg text-white text-sm font-medium shadow-lg shadow-primary/20 hover:shadow-primary/30 transition-all whitespace-nowrap"
+                            className={`flex items-center justify-center w-full px-4 py-2 rounded-xl text-sm font-medium transition-all whitespace-nowrap ${
+                                isCeramic
+                                    ? "bg-[#1A1A1A] hover:bg-black text-white shadow-none"
+                                    : "gradient-bg text-white shadow-lg shadow-primary/20 hover:shadow-primary/30"
+                            }`}
                         >
                             Get in touch
                         </Link>
@@ -274,7 +316,11 @@ export default function NavbarSidebar({ flags = {} }: { flags?: Record<string, b
                         <Link
                             href="/contact"
                             title="Get in touch"
-                            className="flex items-center justify-center w-9 h-9 rounded-xl gradient-bg text-white text-lg hover:shadow-lg shadow-primary/30 transition-all shrink-0"
+                            className={`flex items-center justify-center w-9 h-9 rounded-xl text-lg transition-all shrink-0 ${
+                                isCeramic
+                                    ? "bg-[#1A1A1A] text-white hover:bg-black"
+                                    : "gradient-bg text-white hover:shadow-lg shadow-primary/30"
+                            }`}
                         >
                             ✉️
                         </Link>

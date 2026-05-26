@@ -132,7 +132,7 @@ export default async function AboutPage() {
     const profilePhotoUrl = await getSetting("profile_photo_url");
     const profilePhotoSrc = (typeof profilePhotoUrl === "string" && profilePhotoUrl.trim()) 
         ? profilePhotoUrl.trim() 
-        : "/images/profile.jpg";
+        : "/profile.jpg";
 
     const displayVision = dbVision || visionStatement;
     const displayExperience = dbExperience || experience;
@@ -211,7 +211,7 @@ export default async function AboutPage() {
                         <div className="relative rounded-2xl overflow-hidden shadow-2xl border border-white/10 bg-black/50 aspect-video">
                             <VideoPlayer
                                 src={displayVideoLink}
-                                poster="/images/video-poster.jpg"
+                                poster="/profile.jpg"
                                 className="w-full h-full"
                             />
                             <div className="absolute bottom-6 left-6 right-6">

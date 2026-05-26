@@ -168,7 +168,9 @@ export default function ProjectsGrid({ projects }: ProjectsGridProps) {
                         className="group glass rounded-xl overflow-hidden hover-lift flex flex-col h-full"
                     >
                         <div className="relative h-48 w-full bg-gradient-to-br from-primary/10 to-accent/10 flex items-center justify-center overflow-hidden">
-                            {project.featured_image_url ? (
+                            {project.featured_image_url && 
+                             project.featured_image_url !== "image" && 
+                             (project.featured_image_url.startsWith("/") || project.featured_image_url.startsWith("http")) ? (
                                 <Image
                                     src={project.featured_image_url}
                                     alt={project.title}

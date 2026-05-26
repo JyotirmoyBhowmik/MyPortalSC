@@ -16,6 +16,7 @@ interface ThemeContextValue {
     themes: { name: ThemeName; label: string; swatch: string }[];
     isRetro: boolean;
     toggleRetro: () => void;
+    activeTemplate: string;
 }
 
 const themes: ThemeContextValue["themes"] = [
@@ -32,6 +33,7 @@ const ThemeContext = createContext<ThemeContextValue>({
     themes,
     isRetro: false,
     toggleRetro: () => { },
+    activeTemplate: "classic",
 });
 
 export function useTheme() {
@@ -41,6 +43,7 @@ export function useTheme() {
 export function ThemeProvider({ children, initialRetro = false }: { children: ReactNode; initialRetro?: boolean }) {
     const [theme, setThemeState] = useState<ThemeName>("deep-navy");
     const [isRetro, setIsRetro] = useState(initialRetro);
+    const [activeTemplate, setActiveTemplate] = useState<string>("classic");
     const [mounted, setMounted] = useState(false);
 
     useEffect(() => {
@@ -58,9 +61,20 @@ export function ThemeProvider({ children, initialRetro = false }: { children: Re
             setThemeState(stored);
             document.documentElement.setAttribute("data-theme", stored);
             if (stored === "compact-ceramic") {
+                setActiveTemplate("compact-ceramic");
                 document.documentElement.setAttribute("data-template", "compact-ceramic");
                 document.body?.setAttribute("data-template", "compact-ceramic");
+            } else {
+                let tempInitial = initial;
+                if (tempInitial === "compact-ceramic") {
+                    tempInitial = "classic";
+                }
+                setActiveTemplate(tempInitial);
+                document.documentElement.setAttribute("data-template", tempInitial);
+                document.body?.setAttribute("data-template", tempInitial);
             }
+        } else {
+            setActiveTemplate(initial);
         }
         // Retro mode: DB setting (initialRetro) is authoritative; localStorage is ignored
         // so it's purely admin-controlled
@@ -77,10 +91,15 @@ export function ThemeProvider({ children, initialRetro = false }: { children: Re
         localStorage.setItem("portfolio-theme", t);
         document.documentElement.setAttribute("data-theme", t);
         if (t === "compact-ceramic") {
+            setActiveTemplate("compact-ceramic");
             document.documentElement.setAttribute("data-template", "compact-ceramic");
             document.body?.setAttribute("data-template", "compact-ceramic");
         } else {
-            const initial = document.documentElement.getAttribute("data-initial-template") || "classic";
+            let initial = document.documentElement.getAttribute("data-initial-template") || "classic";
+            if (initial === "compact-ceramic") {
+                initial = "classic";
+            }
+            setActiveTemplate(initial);
             document.documentElement.setAttribute("data-template", initial);
             document.body?.setAttribute("data-template", initial);
         }
@@ -103,10 +122,15 @@ export function ThemeProvider({ children, initialRetro = false }: { children: Re
         if (mounted) {
             document.documentElement.setAttribute("data-theme", theme);
             if (theme === "compact-ceramic") {
+                setActiveTemplate("compact-ceramic");
                 document.documentElement.setAttribute("data-template", "compact-ceramic");
                 document.body?.setAttribute("data-template", "compact-ceramic");
             } else {
-                const initial = document.documentElement.getAttribute("data-initial-template") || "classic";
+                let initial = document.documentElement.getAttribute("data-initial-template") || "classic";
+                if (initial === "compact-ceramic") {
+                    initial = "classic";
+                }
+                setActiveTemplate(initial);
                 document.documentElement.setAttribute("data-template", initial);
                 document.body?.setAttribute("data-template", initial);
             }
@@ -119,7 +143,7 @@ export function ThemeProvider({ children, initialRetro = false }: { children: Re
     }, [theme, isRetro, mounted]);
 
     return (
-        <ThemeContext.Provider value={{ theme, setTheme, themes, isRetro, toggleRetro }}>
+        <ThemeContext.Provider value={{ theme, setTheme, themes, isRetro, toggleRetro, activeTemplate }}>
             {children}
         </ThemeContext.Provider>
     );

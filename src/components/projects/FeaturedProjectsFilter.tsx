@@ -64,7 +64,9 @@ export default function FeaturedProjectsFilter({ projects }: { projects: Project
                                 >
                                     {/* Image placeholder */}
                                     <div className="relative h-48 bg-gradient-to-br from-primary/10 to-accent/10 flex items-center justify-center overflow-hidden shrink-0">
-                                        {project.featured_image_url ? (
+                                        {project.featured_image_url && 
+                                         project.featured_image_url !== "image" && 
+                                         (project.featured_image_url.startsWith("/") || project.featured_image_url.startsWith("http")) ? (
                                             <Image
                                                 src={project.featured_image_url}
                                                 alt={project.title}

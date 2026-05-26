@@ -102,7 +102,7 @@ export default function AdminProfilePhotoManager({ currentPhotoUrl }: Props) {
         await savePhotoUrl(urlInput.trim());
     }
 
-    const displaySrc = photoUrl || "/images/profile.jpg";
+    const displaySrc = photoUrl || "/profile.jpg";
 
     return (
         <div className="space-y-8">
@@ -219,8 +219,8 @@ export default function AdminProfilePhotoManager({ currentPhotoUrl }: Props) {
                     Manual Fallback (Always Works)
                 </h3>
                 <p className="text-xs text-muted-foreground leading-relaxed">
-                    Place your photo file at <code className="text-primary bg-primary/10 px-1 rounded">public/images/profile.jpg</code> in the project root.
-                    Then set the URL to <code className="text-primary bg-primary/10 px-1 rounded">/images/profile.jpg</code> in Option B above and click Save.
+                    Place your photo file at <code className="text-primary bg-primary/10 px-1 rounded">public/profile.jpg</code> in the project root.
+                    Then set the URL to <code className="text-primary bg-primary/10 px-1 rounded">/profile.jpg</code> in Option B above and click Save.
                     The About Me page will automatically display it.
                 </p>
             </div>

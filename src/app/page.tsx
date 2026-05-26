@@ -1,10 +1,3 @@
-/**
- * Home Page — The main landing page (route: /).
- * A Server Component that fetches featured projects, skills, certifications,
- * and CMS content in parallel via Promise.all for maximum performance.
- *
- * It dynamically renders the legacy UI or the new Ceramic UI based on settings.
- */
 import { getFeaturedProjects } from "@/lib/data/projects";
 import { getSkillsByCategory } from "@/lib/data/skills";
 import { getActiveCertifications } from "@/lib/data/certifications";
@@ -12,9 +5,9 @@ import { getPageContent, getContentField } from "@/lib/data/content";
 import { getFeatureFlag, getSiteSettingsMap } from "@/lib/data/settings";
 import { getAllBudgets } from "@/lib/data/finances";
 import { convertToINR } from "@/lib/utils/currency";
+import { getInitiativeStats } from "@/lib/data/initiatives";
 
-import HomeLegacy from "@/components/home/HomeLegacy";
-import HomeCompactCeramic from "@/components/home/HomeCompactCeramic";
+import HomeClientRouter from "@/components/home/HomeClientRouter";
 
 export const revalidate = 60;
 
@@ -24,19 +17,23 @@ export default async function HomePage() {
     skillsByCategory,
     certifications,
     pageContent,
+    aboutContent,
     featureParticleBg,
     budgets,
     settingsMap,
-    availableForOpportunities
+    availableForOpportunities,
+    initiativeStats
   ] = await Promise.all([
     getFeaturedProjects(3),
     getSkillsByCategory(),
     getActiveCertifications(),
     getPageContent("home"),
+    getPageContent("about"),
     getFeatureFlag("feature_particle_bg"),
     getAllBudgets(),
     getSiteSettingsMap(),
     getFeatureFlag("feature_available_for_opportunities"),
+    getInitiativeStats()
   ]);
 
   // Calculate generic total spend
@@ -58,6 +55,11 @@ export default async function HomePage() {
 
   const template = ((settingsMap["site_template"] as string) || "classic").replace(/"/g, "");
 
+  const dbLocation = getContentField(aboutContent?.content, "location") || "Kathmandu, Nepal";
+  const rawExperience = (settingsMap["years_of_experience"] as string) || "15+";
+  const experienceYears = rawExperience.toLowerCase().includes("year") ? rawExperience : `${rawExperience} Years`;
+  const initiativesCount = initiativeStats.total || 88;
+
   const props = {
       projects,
       skillsByCategory,
@@ -69,13 +71,10 @@ export default async function HomePage() {
       heroSubtitle,
       heroDescription,
       availableForOpportunities,
+      location: dbLocation,
+      experienceYears,
+      initiativesCount,
   };
 
-  if (template === "compact-ceramic") {
-      return <HomeCompactCeramic {...props} />;
-  }
-
-  // All other themes use the Legacy structural layout and animations. 
-  // CSS data-template handles the styling differences.
-  return <HomeLegacy template={template} {...props} />;
+  return <HomeClientRouter template={template} {...props} />;
 }

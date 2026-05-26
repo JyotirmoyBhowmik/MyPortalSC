@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import {
     RadarChart,
     PolarGrid,
@@ -23,6 +24,11 @@ interface SkillsRadarChartProps {
 
 export default function SkillsRadarChart({ data }: SkillsRadarChartProps) {
     const { isRetro } = useRetroTheme();
+    const [isMounted, setIsMounted] = useState(false);
+
+    useEffect(() => {
+        setIsMounted(true);
+    }, []);
 
     const chartColor = isRetro ? "#00ff41" : "#64ffda";
     const chartColorFill = isRetro ? "rgba(0, 255, 65, 0.2)" : "rgba(100, 255, 218, 0.15)";
@@ -35,9 +41,17 @@ export default function SkillsRadarChart({ data }: SkillsRadarChartProps) {
         shortName: d.category.length > 18 ? d.category.substring(0, 16) + "…" : d.category,
     }));
 
+    if (!isMounted) {
+        return (
+            <div className="w-full aspect-square max-w-md mx-auto min-h-[300px] flex items-center justify-center">
+                <div className="w-8 h-8 rounded-full border-2 border-primary/20 border-t-primary animate-spin" />
+            </div>
+        );
+    }
+
     return (
-        <div className="w-full aspect-square max-w-md mx-auto">
-            <ResponsiveContainer width="100%" height="100%">
+        <div className="w-full aspect-square max-w-md mx-auto min-h-[300px]">
+            <ResponsiveContainer width="100%" height={300} minWidth={0} minHeight={0}>
                 <RadarChart cx="50%" cy="50%" outerRadius="60%" data={chartData}>
                     <PolarGrid stroke={gridColor} />
                     <PolarAngleAxis
