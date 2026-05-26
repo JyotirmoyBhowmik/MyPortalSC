@@ -10,8 +10,11 @@ export async function createClient() {
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
     const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
-    if (!supabaseUrl || !supabaseAnonKey) {
-        return createFallbackClient(supabaseUrl || "", supabaseAnonKey || "");
+    const isUrlValid = !!supabaseUrl && supabaseUrl !== "undefined" && supabaseUrl !== "null" && supabaseUrl.startsWith("http");
+    const isKeyValid = !!supabaseAnonKey && supabaseAnonKey !== "undefined" && supabaseAnonKey !== "null" && supabaseAnonKey !== "";
+
+    if (!isUrlValid || !isKeyValid) {
+        return createFallbackClient();
     }
 
     try {
@@ -42,16 +45,21 @@ export async function createClient() {
     }
 }
 
-function createFallbackClient(url: string, key: string) {
+function createFallbackClient(url?: string, key?: string) {
     // Use placeholders if actual values are missing to prevent createServerClient from throwing.
     // This allows the build to proceed during static generation even if env vars are not set.
-    const safeUrl = url || "https://placeholder.supabase.co";
-    const safeKey = key || "dummy-key";
+    const safeUrl = url && url !== "undefined" && url !== "null" && url.startsWith("http")
+        ? url
+        : "https://placeholder.supabase.co";
+    const safeKey = key && key !== "undefined" && key !== "null" && key !== ""
+        ? key
+        : "dummy-key";
 
     return createServerClient(safeUrl, safeKey, {
         cookies: {
             getAll() { return []; },
-            setAll() { }
+            setAll() {}
         }
     });
 }
+

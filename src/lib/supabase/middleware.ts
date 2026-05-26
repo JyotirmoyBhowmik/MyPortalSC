@@ -10,8 +10,11 @@ export async function updateSession(request: NextRequest) {
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
     const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
-    // If env vars are missing, skip Supabase session refresh and just continue
-    if (!supabaseUrl || !supabaseAnonKey) {
+    const isUrlValid = !!supabaseUrl && supabaseUrl !== "undefined" && supabaseUrl !== "null" && supabaseUrl.startsWith("http");
+    const isKeyValid = !!supabaseAnonKey && supabaseAnonKey !== "undefined" && supabaseAnonKey !== "null" && supabaseAnonKey !== "";
+
+    // If env vars are missing or invalid, skip Supabase session refresh and just continue
+    if (!isUrlValid || !isKeyValid) {
         // Still protect admin routes even without Supabase
         if (
             request.nextUrl.pathname.startsWith("/admin") &&
