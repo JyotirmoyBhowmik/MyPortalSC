@@ -3,7 +3,6 @@
 import { useState, useMemo } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import Badge from "@/components/ui/Badge";
 import type { Project } from "@/lib/database.types";
 import { useTheme } from "../ThemeProvider";
 
@@ -24,7 +23,6 @@ export default function HomeCompactCeramic(props: HomeCompactCeramicProps) {
     const {
         projects,
         skillsByCategory,
-        certifications,
         budgets,
         formattedSpend,
         heroTitle,
@@ -35,7 +33,6 @@ export default function HomeCompactCeramic(props: HomeCompactCeramicProps) {
 
     const { theme, setTheme, themes } = useTheme();
     const [activeFilter, setActiveFilter] = useState<string>("All");
-    const [showStyleConfig, setShowStyleConfig] = useState(false);
 
     // Extract unique domains for project filtering
     const domains = useMemo(() => {
@@ -51,121 +48,18 @@ export default function HomeCompactCeramic(props: HomeCompactCeramicProps) {
     }, [projects, activeFilter]);
 
     return (
-        <div className="min-h-screen bg-[#F9F9F7] text-[#505F76] font-sans antialiased overflow-x-hidden p-0 md:pl-[240px] pt-[72px]">
-            {/* ========== TOP HORIZONTAL NAVBAR ========== */}
-            <header className="fixed top-0 left-0 md:left-[240px] right-0 h-[72px] bg-white border-b border-[#E5E5E1] z-40 px-6 sm:px-8 flex items-center justify-between transition-all duration-300">
-                <div className="flex items-center gap-8">
-                    <span className="font-extrabold text-lg text-[#1A1A1A] tracking-tight">JB Portal</span>
-                    <nav className="hidden lg:flex items-center gap-6 text-sm font-semibold">
-                        <Link href="/" className="text-[#1A1A1A] border-b-2 border-[#1A1A1A] pb-1.5 transition-colors">Overview</Link>
-                        <Link href="/initiatives" className="hover:text-[#1A1A1A] pb-1.5 transition-colors">Initiatives</Link>
-                        <Link href="/projects" className="hover:text-[#1A1A1A] pb-1.5 transition-colors">Projects</Link>
-                        <Link href="/timeline" className="hover:text-[#1A1A1A] pb-1.5 transition-colors">Timeline</Link>
-                    </nav>
-                </div>
-                <div className="flex items-center gap-4">
-                    {/* Public Notification Bell */}
-                    <button className="p-2 rounded-lg hover:bg-[#F1F1EF] transition-colors relative" aria-label="Notifications">
-                        <svg className="w-5 h-5 text-[#505F76]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
-                        </svg>
-                        <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-[#10B981]" />
-                    </button>
-                    {/* Settings Cog (Public theme switch toggler) */}
-                    <button 
-                        onClick={() => setShowStyleConfig(!showStyleConfig)}
-                        className={`p-2 rounded-lg hover:bg-[#F1F1EF] transition-colors ${showStyleConfig ? "bg-[#F1F1EF] text-[#1A1A1A]" : ""}`} 
-                        aria-label="Toggle Styles Panel"
-                    >
-                        <svg className="w-5 h-5 text-[#505F76]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                        </svg>
-                    </button>
-                    {/* User profile picture */}
-                    <Link href="/admin" className="w-9 h-9 rounded-full bg-[#E5E5E1] overflow-hidden border border-[#E5E5E1] flex items-center justify-center">
-                        <Image
-                            src="/images/profile.jpg"
-                            alt="Profile"
-                            width={36}
-                            height={36}
-                            unoptimized={true}
-                            className="object-cover"
-                            onError={(e) => {
-                                // Fallback if local image doesn't exist
-                                e.currentTarget.src = "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?fit=crop&w=80&h=80&q=80";
-                            }}
-                        />
-                    </Link>
-                </div>
-            </header>
-
-            {/* ========== LEFT FIXED SIDEBAR ========== */}
-            <aside className="fixed top-0 left-0 bottom-0 w-[240px] bg-white border-r border-[#E5E5E1] z-50 hidden md:flex flex-col p-6 select-none justify-between transition-all duration-300">
-                <div className="space-y-8">
-                    {/* Brand header */}
-                    <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-lg bg-[#1A1A1A] flex items-center justify-center text-white font-extrabold text-sm tracking-tight shadow-sm">
-                            JB
-                        </div>
-                        <div>
-                            <h2 className="text-[#1A1A1A] font-extrabold text-base tracking-tight leading-tight">JB Leader</h2>
-                            <p className="font-mono text-[9px] uppercase tracking-wider text-[#64748B] font-medium">INFRASTRUCTURE & PM</p>
-                        </div>
+        <div className="min-h-screen bg-[#F9F9F7] text-[#505F76] font-sans antialiased overflow-x-hidden p-0">
+            {/* ========== MAIN GRID CONTENTS ========== */}
+            <main className="max-w-[1200px] mx-auto px-6 py-8 sm:px-8 md:py-12 transition-all duration-300">
+                {/* ========== TOP HEADER WITH PUBLIC THEME SWATCHES ========== */}
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-[#E5E5E1] pb-6 mb-8 gap-4 select-none">
+                    <div>
+                        <h2 className="text-[#1A1A1A] font-mono text-[10px] uppercase tracking-[0.15em] font-bold">System Status</h2>
+                        <p className="text-xs text-[#64748B] mt-0.5">Tactile Minimalist Portfolio Console</p>
                     </div>
-
-                    {/* Navigation menu */}
-                    <nav className="flex flex-col gap-2">
-                        <Link href="/" className="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-[#F1F1EF] text-[#1A1A1A] text-sm font-semibold transition-all">
-                            <span className="text-base">👤</span> Overview
-                        </Link>
-                        <Link href="/initiatives" className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium hover:text-[#1A1A1A] hover:bg-[#F1F1EF] transition-all">
-                            <span className="text-base">🚀</span> Initiatives
-                        </Link>
-                        <Link href="/projects" className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium hover:text-[#1A1A1A] hover:bg-[#F1F1EF] transition-all">
-                            <span className="text-base">📁</span> Projects
-                        </Link>
-                        <Link href="/timeline" className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium hover:text-[#1A1A1A] hover:bg-[#F1F1EF] transition-all">
-                            <span className="text-base">📅</span> Credentials
-                        </Link>
-                    </nav>
-                </div>
-
-                <div className="space-y-4">
-                    {/* CONFIGURE STYLES Admin link card */}
-                    <button 
-                        onClick={() => setShowStyleConfig(!showStyleConfig)}
-                        className="w-full bg-white border border-dashed border-[#E5E5E1] rounded-xl p-4 text-left hover:border-[#1A1A1A] transition-all group"
-                    >
-                        <div className="flex items-center justify-between mb-1.5">
-                            <span className="w-5 h-5 rounded-full bg-[#F1F1EF] flex items-center justify-center text-xs">🔧</span>
-                            <span className="w-1.5 h-1.5 rounded-full bg-[#10B981]" />
-                        </div>
-                        <h4 className="text-[#1A1A1A] font-bold text-xs group-hover:text-primary transition-colors">CONFIGURE STYLES</h4>
-                        <p className="font-mono text-[9px] text-[#64748B] mt-0.5">Admin Setting Panel Console</p>
-                    </button>
-
-                    {/* View/Download Resume link */}
-                    <a 
-                        href="/downloads" 
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[#505F76] hover:text-[#1A1A1A] text-sm font-semibold transition-all hover:bg-[#F1F1EF]"
-                    >
-                        <span className="text-base">📥</span> View & Download Resume
-                    </a>
-                </div>
-            </aside>
-
-            {/* ========== PUBLIC STYLE SELECTOR CONFIG DRAWER (SLIDE-DOWN) ========== */}
-            {showStyleConfig && (
-                <div className="fixed top-[72px] left-0 md:left-[240px] right-0 bg-white border-b border-[#E5E5E1] shadow-md z-40 p-6 animate-slide-down transition-all duration-300">
-                    <div className="max-w-4xl mx-auto flex flex-col md:flex-row md:items-center justify-between gap-6">
-                        <div>
-                            <h3 className="text-[#1A1A1A] font-extrabold text-sm tracking-tight mb-1">Color Theme & Layout System</h3>
-                            <p className="text-xs text-[#64748B]">Select a premium design palette to instantly morph the entire website interface.</p>
-                        </div>
-                        <div className="flex flex-wrap gap-2.5">
+                    <div className="flex items-center gap-3">
+                        <span className="text-xs font-mono text-[#64748B]">Active Theme:</span>
+                        <div className="flex gap-1.5 bg-white border border-[#E5E5E1] p-1 rounded-lg">
                             {themes.map((t) => (
                                 <button
                                     key={t.name}
@@ -176,34 +70,20 @@ export default function HomeCompactCeramic(props: HomeCompactCeramicProps) {
                                             document.documentElement.classList.remove('theme-transitioning');
                                         }, 600);
                                     }}
-                                    className={`flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-semibold border transition-all ${theme === t.name
-                                        ? "bg-[#1A1A1A] text-white border-[#1A1A1A] shadow-sm"
-                                        : "bg-white text-[#505F76] border-[#E5E5E1] hover:bg-[#F1F1EF] hover:text-[#1A1A1A]"
+                                    title={t.label}
+                                    className={`w-6 h-6 rounded-full border flex items-center justify-center transition-all ${
+                                        theme === t.name 
+                                            ? "border-[#1A1A1A] scale-110" 
+                                            : "border-transparent hover:scale-105"
                                     }`}
                                 >
                                     <span 
                                         className="w-4 h-4 rounded-full border border-black/10 shrink-0" 
                                         style={{ background: t.swatch }}
                                     />
-                                    {t.label}
                                 </button>
                             ))}
                         </div>
-                    </div>
-                </div>
-            )}
-
-            {/* ========== MAIN GRID CONTENTS ========== */}
-            <main className="max-w-[1200px] mx-auto px-6 py-8 sm:px-8 md:py-12 transition-all duration-300">
-                {/* Telemetry/Active banner */}
-                <div className="bg-white border border-[#E5E5E1] rounded-lg px-4 py-2.5 flex flex-wrap items-center justify-between gap-3 mb-8 font-mono text-[10px] text-[#64748B]">
-                    <div className="flex items-center gap-2">
-                        <span className="w-1.5 h-1.5 rounded-full bg-[#10B981] animate-pulse shrink-0" />
-                        <span className="text-[#505F76]">Active Address:</span>
-                        <code className="text-[#1A1A1A] bg-[#F1F1EF] px-1.5 py-0.5 rounded font-medium">https://jyotirmoyb.com/</code>
-                    </div>
-                    <div>
-                        Source: <span className="font-semibold text-[#1A1A1A]">localStorage DB (src/types.ts)</span> • <Link href="/admin" className="underline hover:text-[#1A1A1A]">Edit dynamic table</Link>
                     </div>
                 </div>
 
@@ -220,7 +100,7 @@ export default function HomeCompactCeramic(props: HomeCompactCeramicProps) {
                                 {/* Portrait photo Container */}
                                 <div className="relative w-36 h-36 rounded-2xl overflow-hidden bg-[#F1F1EF] border border-[#E5E5E1] shrink-0">
                                     <Image
-                                        src="/images/profile.jpg"
+                                        src="/profile.jpg"
                                         alt={heroTitle || "Jyotirmoy Bhowmik"}
                                         fill
                                         unoptimized={true}
@@ -467,19 +347,6 @@ export default function HomeCompactCeramic(props: HomeCompactCeramicProps) {
                     </div>
                 </div>
             </main>
-
-            {/* ========== FLOATING ACTIONS CHAT WIDGET ICON ========== */}
-            <div className="fixed bottom-6 right-6 z-40 select-none">
-                <a 
-                    href="/contact" 
-                    className="w-12 h-12 bg-[#1A1A1A] hover:bg-black text-white rounded-full flex items-center justify-center shadow-lg hover:shadow-xl transition-all hover:scale-105"
-                    title="Send a message"
-                >
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                    </svg>
-                </a>
-            </div>
         </div>
     );
 }
