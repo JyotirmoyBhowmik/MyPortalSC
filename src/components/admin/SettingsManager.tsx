@@ -254,6 +254,7 @@ export default function SettingsManager({ grouped }: Props) {
                                                     <option value="glass-dark">Glass Exec Dark (Secondary)</option>
                                                     <option value="light-modern">Light Exec Modern Legacy</option>
                                                     <option value="premium">Premium Themes Ext.</option>
+                                                    <option value="compact-ceramic">Compact Ceramic Light (Premium)</option>
                                                 </select>
                                             ) : setting.key === "navbar_style" ? (
                                                 <select
