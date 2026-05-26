@@ -14,6 +14,7 @@ import { getAllBudgets } from "@/lib/data/finances";
 import { convertToINR } from "@/lib/utils/currency";
 
 import HomeLegacy from "@/components/home/HomeLegacy";
+import HomeCompactCeramic from "@/components/home/HomeCompactCeramic";
 
 export const revalidate = 60;
 
@@ -70,7 +71,11 @@ export default async function HomePage() {
       availableForOpportunities,
   };
 
-  // All themes use the Legacy structural layout and animations. 
+  if (template === "compact-ceramic") {
+      return <HomeCompactCeramic {...props} />;
+  }
+
+  // All other themes use the Legacy structural layout and animations. 
   // CSS data-template handles the styling differences.
   return <HomeLegacy template={template} {...props} />;
 }

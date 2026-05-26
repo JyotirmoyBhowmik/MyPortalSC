@@ -532,6 +532,75 @@ h6 {
 }
 
 /* ============================================================
+   Template: Compact Ceramic Light UI (Milky Porcelain)
+   ============================================================ */
+[data-template="compact-ceramic"], [data-theme="compact-ceramic"] {
+  --background: #F9F9F7;
+  --foreground: #505F76;
+  --surface: #FFFFFF;
+  --surface-hover: #F1F1EF;
+  --border-color: #E5E5E1;
+  --border-hover: #D8D8D4;
+  --primary: #1A1A1A;
+  --primary-hover: #000000;
+  --primary-fg: #FFFFFF;
+  --accent: #64748B;
+  --accent-hover: #1A1A1A;
+  --muted: #F1F1EF;
+  --muted-fg: #64748B;
+  --success: #10B981;
+  --warning: #F59E0B;
+  --danger: #EF4444;
+  --card-bg: #FFFFFF;
+  --card-hover: #FFFFFF;
+  
+  --gradient-primary: linear-gradient(135deg, #1A1A1A 0%, #333333 100%);
+  --gradient-subtle: none;
+  --gradient-hero: none;
+  --gradient-card: none;
+
+  --glass-bg: #FFFFFF;
+  --glass-border: #E5E5E1;
+  --glass-blur: 0px; 
+  --heading: #1A1A1A;
+  --primary-rgb: 26, 26, 26;
+}
+
+/* Compact Ceramic Custom Layout System Styles */
+[data-template="compact-ceramic"] .glass, [data-theme="compact-ceramic"] .glass {
+  box-shadow: none !important;
+  border: 1px solid #E5E5E1 !important;
+  border-radius: 12px !important;
+}
+
+[data-template="compact-ceramic"] .hover-lift:hover, [data-theme="compact-ceramic"] .hover-lift:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03) !important;
+  border-color: #D8D8D4 !important;
+}
+
+[data-template="compact-ceramic"] h1, [data-template="compact-ceramic"] h2, [data-template="compact-ceramic"] h3, [data-template="compact-ceramic"] h4,
+[data-theme="compact-ceramic"] h1, [data-theme="compact-ceramic"] h2, [data-theme="compact-ceramic"] h3, [data-theme="compact-ceramic"] h4 {
+  color: #1A1A1A !important;
+  font-family: var(--font-inter), sans-serif !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.04em !important;
+}
+
+[data-template="compact-ceramic"] button, [data-template="compact-ceramic"] a.btn,
+[data-theme="compact-ceramic"] button, [data-theme="compact-ceramic"] a.btn {
+  border-radius: 8px !important;
+}
+
+/* Telemetry styling for JetBrains Mono labels */
+[data-template="compact-ceramic"] .telemetry-label, [data-theme="compact-ceramic"] .telemetry-label {
+  font-family: var(--font-jetbrains), monospace !important;
+  font-size: 0.75rem !important;
+  letter-spacing: -0.01em !important;
+  font-weight: 400 !important;
+}
+
+/* ============================================================
    Base Styles
    ============================================================ */
 * {
