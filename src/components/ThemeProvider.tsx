@@ -74,7 +74,19 @@ export function ThemeProvider({ children, initialRetro = false }: { children: Re
                 document.body?.setAttribute("data-template", tempInitial);
             }
         } else {
-            setActiveTemplate(initial);
+            // First time visitor with empty localStorage:
+            // If the server-rendered default template is compact-ceramic, initialize the theme and activeTemplate as compact-ceramic.
+            if (initial === "compact-ceramic") {
+                setThemeState("compact-ceramic");
+                document.documentElement.setAttribute("data-theme", "compact-ceramic");
+                setActiveTemplate("compact-ceramic");
+                document.documentElement.setAttribute("data-template", "compact-ceramic");
+                if (document.body) {
+                    document.body.setAttribute("data-template", "compact-ceramic");
+                }
+            } else {
+                setActiveTemplate(initial);
+            }
         }
         // Retro mode: DB setting (initialRetro) is authoritative; localStorage is ignored
         // so it's purely admin-controlled

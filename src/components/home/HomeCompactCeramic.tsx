@@ -5,6 +5,9 @@ import Link from "next/link";
 import Image from "next/image";
 import type { Project } from "@/lib/database.types";
 import { useTheme } from "../ThemeProvider";
+import dynamic from "next/dynamic";
+
+const ServerStatusWidget = dynamic(() => import("../visuals/ServerStatusWidget"), { ssr: false });
 
 interface HomeCompactCeramicProps {
     projects: Project[];
@@ -26,6 +29,7 @@ export default function HomeCompactCeramic(props: HomeCompactCeramicProps) {
     const {
         projects,
         skillsByCategory,
+        certifications,
         budgets,
         formattedSpend,
         heroTitle,
@@ -229,6 +233,11 @@ export default function HomeCompactCeramic(props: HomeCompactCeramicProps) {
                             </div>
                         </div>
 
+                        {/* Dynamic Infrastructure Telemetry Console */}
+                        <div className="hover-lift transition-all duration-300">
+                            <ServerStatusWidget />
+                        </div>
+
                         {/* Engagement Metrics Charcoal card */}
                         <div className="bg-[#1A1A1A] text-white rounded-2xl p-6 sm:p-8 space-y-6 transition-all duration-300 relative overflow-hidden shadow-inner">
                             <span className="block font-mono text-[9px] uppercase tracking-[0.15em] text-[#A3A3A3] font-bold select-none">📊 ENGAGEMENT METRICS</span>
@@ -352,6 +361,70 @@ export default function HomeCompactCeramic(props: HomeCompactCeramicProps) {
                                 </div>
                             )}
                         </div>
+
+                        {/* ==================== CERTIFICATIONS LOOKBOOK REGISTRY ==================== */}
+                        {certifications && certifications.length > 0 && (
+                            <div className="space-y-6 border-t border-[#E5E5E1] pt-8 mt-12">
+                                <div className="select-none">
+                                    <div className="font-mono text-[9px] uppercase tracking-[0.15em] text-[#64748B] font-bold border-b border-[#E5E5E1] pb-2">
+                                        Verified Credentials Registry
+                                    </div>
+                                    <h3 className="text-xl font-extrabold text-[#1A1A1A] tracking-tight leading-tight mt-4">
+                                        Professional Certifications
+                                    </h3>
+                                    <p className="text-xs text-[#64748B] mt-0.5">
+                                        Industry accredited credentials in Infrastructure, Security & Cloud Architecture
+                                    </p>
+                                </div>
+
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                    {certifications.map((cert, index) => {
+                                        const indexStr = String(index + 1).padStart(2, '0');
+                                        return (
+                                            <div 
+                                                key={cert.id || index}
+                                                className="bg-white border border-[#E5E5E1] rounded-2xl p-5 hover:border-[#1A1A1A] transition-all hover-lift"
+                                            >
+                                                <div className="flex items-start justify-between select-none">
+                                                    <span className="font-mono text-[10px] text-[#64748B] font-bold">
+                                                        [{indexStr}]
+                                                    </span>
+                                                    <span className="inline-flex px-2 py-0.5 rounded bg-[#F1F1EF] border border-[#E5E5E1] font-mono text-[8px] uppercase tracking-wider font-extrabold text-[#1A1A1A]">
+                                                        Active
+                                                    </span>
+                                                </div>
+
+                                                <h4 className="text-sm font-extrabold text-[#1A1A1A] tracking-tight mt-3 mb-1 line-clamp-1">
+                                                    {cert.title}
+                                                </h4>
+                                                <p className="font-mono text-[9px] uppercase tracking-wider text-[#64748B] font-bold select-none">
+                                                    {cert.issuing_organization}
+                                                </p>
+
+                                                <div className="flex items-center justify-between mt-4 pt-3 border-t border-[#E5E5E1] font-mono text-[9px] select-none">
+                                                    <span className="text-[#64748B]">
+                                                        ISSUED: {new Date(cert.issue_date).toLocaleDateString("en-US", {
+                                                            month: "short",
+                                                            year: "numeric",
+                                                        }).toUpperCase()}
+                                                    </span>
+                                                    {cert.credential_url && (
+                                                        <a
+                                                            href={cert.credential_url}
+                                                            target="_blank"
+                                                            rel="noopener noreferrer"
+                                                            className="inline-flex items-center gap-1 font-bold text-[#1A1A1A] hover:underline uppercase tracking-wider"
+                                                        >
+                                                            Verify ↗
+                                                        </a>
+                                                    )}
+                                                </div>
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+                            </div>
+                        )}
                     </div>
                 </div>
             </main>

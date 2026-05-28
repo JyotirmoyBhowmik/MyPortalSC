@@ -33,15 +33,13 @@ export default function MermaidDiagram({ chart, id = "mermaid-diagram" }: Mermai
 
         const renderDiagram = async () => {
             try {
-                if (containerRef.current) {
-                    const { svg } = await mermaid.render(id, chart);
-                    const sanitizedSvg = DOMPurify.sanitize(svg, {
-                        USE_PROFILES: { svg: true },
-                        ADD_ATTR: ['style'] // Allow style attribute for mermaid styling
-                    });
-                    setSvgCode(sanitizedSvg);
-                    setError(null);
-                }
+                const { svg } = await mermaid.render(id, chart);
+                const sanitizedSvg = DOMPurify.sanitize(svg, {
+                    USE_PROFILES: { svg: true },
+                    ADD_ATTR: ['style'] // Allow style attribute for mermaid styling
+                });
+                setSvgCode(sanitizedSvg);
+                setError(null);
             } catch (err: any) {
                 console.error("Mermaid parsing error:", err);
                 setError(err.message || "Failed to render diagram.");
