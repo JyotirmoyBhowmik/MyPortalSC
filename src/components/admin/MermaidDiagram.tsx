@@ -4,6 +4,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import mermaid from 'mermaid';
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 import DOMPurify from "isomorphic-dompurify";
+import { useTheme } from "@/components/ThemeProvider";
 
 interface MermaidDiagramProps {
     chart: string;
@@ -12,16 +13,26 @@ interface MermaidDiagramProps {
 
 export default function MermaidDiagram({ chart, id = "mermaid-diagram" }: MermaidDiagramProps) {
     const containerRef = useRef<HTMLDivElement>(null);
+    const { theme, activeTemplate } = useTheme();
     const [svgCode, setSvgCode] = useState<string>('');
     const [error, setError] = useState<string | null>(null);
+
+    const isLight = theme === "compact-ceramic" || activeTemplate === "ceramic-light" || activeTemplate === "light-modern";
 
     useEffect(() => {
         mermaid.initialize({
             startOnLoad: false,
-            theme: 'dark',
+            theme: isLight ? 'default' : 'dark',
             securityLevel: 'strict',
             fontFamily: 'monospace',
-            themeVariables: {
+            themeVariables: isLight ? {
+                primaryColor: '#ffffff',
+                primaryTextColor: '#1a1a1a',
+                primaryBorderColor: '#e5e5e1',
+                lineColor: '#94a3b8',
+                secondaryColor: '#f1f1ef',
+                tertiaryColor: '#f9f9f7'
+            } : {
                 primaryColor: '#7c3aed',
                 primaryTextColor: '#fff',
                 primaryBorderColor: '#a78bfa',
@@ -33,7 +44,9 @@ export default function MermaidDiagram({ chart, id = "mermaid-diagram" }: Mermai
 
         const renderDiagram = async () => {
             try {
-                const { svg } = await mermaid.render(id, chart);
+                // Generate a unique render ID to prevent collisions on redrawing
+                const renderId = `${id}-${Math.random().toString(36).substring(2, 9)}`;
+                const { svg } = await mermaid.render(renderId, chart);
                 const sanitizedSvg = DOMPurify.sanitize(svg, {
                     USE_PROFILES: { svg: true },
                     ADD_ATTR: ['style'] // Allow style attribute for mermaid styling
@@ -47,7 +60,7 @@ export default function MermaidDiagram({ chart, id = "mermaid-diagram" }: Mermai
         };
 
         renderDiagram();
-    }, [chart, id]);
+    }, [chart, id, isLight]);
 
     if (error) {
         return (
@@ -76,8 +89,109 @@ export default function MermaidDiagram({ chart, id = "mermaid-diagram" }: Mermai
     return (
         <div 
             ref={containerRef}
-            className="mermaid-container w-full h-full min-h-[400px] bg-surface/50 border border-border rounded-xl shadow-inner relative overflow-hidden group"
+            className={`mermaid-container w-full h-full min-h-[400px] rounded-xl shadow-inner relative overflow-hidden group border transition-all duration-300 ${
+                isLight 
+                    ? "bg-[#F9F9F7] border-[#E5E5E1] mermaid-light" 
+                    : "bg-[#0F172A]/50 border-border mermaid-dark"
+            }`}
         >
+            <style dangerouslySetInnerHTML={{ __html: `
+                /* Scoped Light Theme Overrides */
+                .mermaid-light .node rect {
+                    fill: #FFFFFF !important;
+                    stroke: #E5E5E1 !important;
+                    stroke-width: 1.5px !important;
+                }
+                .mermaid-light .node.hotspot rect {
+                    fill: #7c3aed !important;
+                    stroke: #a78bfa !important;
+                    stroke-width: 2.5px !important;
+                }
+                .mermaid-light .node .label, 
+                .mermaid-light .node text, 
+                .mermaid-light .node tspan {
+                    fill: #1A1A1A !important;
+                    color: #1A1A1A !important;
+                }
+                .mermaid-light .node.hotspot .label, 
+                .mermaid-light .node.hotspot text, 
+                .mermaid-light .node.hotspot tspan {
+                    fill: #FFFFFF !important;
+                    color: #FFFFFF !important;
+                }
+                .mermaid-light .cluster rect {
+                    fill: #F9F9F7 !important;
+                    stroke: #E5E5E1 !important;
+                    stroke-width: 1px !important;
+                }
+                .mermaid-light .cluster .label, 
+                .mermaid-light .cluster text, 
+                .mermaid-light .cluster tspan {
+                    fill: #64748B !important;
+                    color: #64748B !important;
+                    font-weight: 700 !important;
+                }
+                .mermaid-light .edgePath .path {
+                    stroke: #94A3B8 !important;
+                    stroke-width: 1.5px !important;
+                }
+                .mermaid-light .edgeLabel rect {
+                    fill: #F9F9F7 !important;
+                }
+                .mermaid-light .edgeLabel text, 
+                .mermaid-light .edgeLabel tspan {
+                    fill: #64748B !important;
+                    color: #64748B !important;
+                }
+
+                /* Scoped Dark Theme Overrides */
+                .mermaid-dark .node rect {
+                    fill: #1E293B !important;
+                    stroke: #334155 !important;
+                    stroke-width: 1.5px !important;
+                }
+                .mermaid-dark .node.hotspot rect {
+                    fill: #7c3aed !important;
+                    stroke: #a78bfa !important;
+                    stroke-width: 2.5px !important;
+                }
+                .mermaid-dark .node .label, 
+                .mermaid-dark .node text, 
+                .mermaid-dark .node tspan {
+                    fill: #F8FAFC !important;
+                    color: #F8FAFC !important;
+                }
+                .mermaid-dark .node.hotspot .label, 
+                .mermaid-dark .node.hotspot text, 
+                .mermaid-dark .node.hotspot tspan {
+                    fill: #FFFFFF !important;
+                    color: #FFFFFF !important;
+                }
+                .mermaid-dark .cluster rect {
+                    fill: #0F172A !important;
+                    stroke: #1E293B !important;
+                    stroke-width: 1px !important;
+                }
+                .mermaid-dark .cluster .label, 
+                .mermaid-dark .cluster text, 
+                .mermaid-dark .cluster tspan {
+                    fill: #94A3B8 !important;
+                    color: #94A3B8 !important;
+                    font-weight: 700 !important;
+                }
+                .mermaid-dark .edgePath .path {
+                    stroke: #475569 !important;
+                    stroke-width: 1.5px !important;
+                }
+                .mermaid-dark .edgeLabel rect {
+                    fill: #0F172A !important;
+                }
+                .mermaid-dark .edgeLabel text, 
+                .mermaid-dark .edgeLabel tspan {
+                    fill: #94A3B8 !important;
+                    color: #94A3B8 !important;
+                }
+            ` }} />
             <TransformWrapper
                 initialScale={1}
                 minScale={0.2}
