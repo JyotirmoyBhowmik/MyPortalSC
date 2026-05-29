@@ -1,6 +1,6 @@
 /**
  * ThemeProvider — Client-side color scheme context.
- * Manages 4 named themes (Deep Navy, Midnight Purple, Carbon, Emerald Forest)
+ * Manages 5 named themes (Deep Navy, Midnight Purple, Carbon, Emerald Forest, Compact Ceramic Light)
  * plus a retro CRT mode. Persists selection in localStorage and applies
  * data-theme / data-retro attributes to <html> for CSS variable switching.
  */
@@ -64,6 +64,7 @@ export function ThemeProvider({ children, initialRetro = false }: { children: Re
                 setActiveTemplate("compact-ceramic");
                 document.documentElement.setAttribute("data-template", "compact-ceramic");
                 document.body?.setAttribute("data-template", "compact-ceramic");
+                document.documentElement.classList.remove("dark");
             } else {
                 let tempInitial = initial;
                 if (tempInitial === "compact-ceramic") {
@@ -72,6 +73,7 @@ export function ThemeProvider({ children, initialRetro = false }: { children: Re
                 setActiveTemplate(tempInitial);
                 document.documentElement.setAttribute("data-template", tempInitial);
                 document.body?.setAttribute("data-template", tempInitial);
+                document.documentElement.classList.add("dark");
             }
         } else {
             // First time visitor with empty localStorage:
@@ -84,8 +86,10 @@ export function ThemeProvider({ children, initialRetro = false }: { children: Re
                 if (document.body) {
                     document.body.setAttribute("data-template", "compact-ceramic");
                 }
+                document.documentElement.classList.remove("dark");
             } else {
                 setActiveTemplate(initial);
+                document.documentElement.classList.add("dark");
             }
         }
         // Retro mode: DB setting (initialRetro) is authoritative; localStorage is ignored
@@ -106,6 +110,7 @@ export function ThemeProvider({ children, initialRetro = false }: { children: Re
             setActiveTemplate("compact-ceramic");
             document.documentElement.setAttribute("data-template", "compact-ceramic");
             document.body?.setAttribute("data-template", "compact-ceramic");
+            document.documentElement.classList.remove("dark");
         } else {
             let initial = document.documentElement.getAttribute("data-initial-template") || "classic";
             if (initial === "compact-ceramic") {
@@ -114,6 +119,7 @@ export function ThemeProvider({ children, initialRetro = false }: { children: Re
             setActiveTemplate(initial);
             document.documentElement.setAttribute("data-template", initial);
             document.body?.setAttribute("data-template", initial);
+            document.documentElement.classList.add("dark");
         }
     }
 
@@ -137,6 +143,7 @@ export function ThemeProvider({ children, initialRetro = false }: { children: Re
                 setActiveTemplate("compact-ceramic");
                 document.documentElement.setAttribute("data-template", "compact-ceramic");
                 document.body?.setAttribute("data-template", "compact-ceramic");
+                document.documentElement.classList.remove("dark");
             } else {
                 let initial = document.documentElement.getAttribute("data-initial-template") || "classic";
                 if (initial === "compact-ceramic") {
@@ -145,6 +152,7 @@ export function ThemeProvider({ children, initialRetro = false }: { children: Re
                 setActiveTemplate(initial);
                 document.documentElement.setAttribute("data-template", initial);
                 document.body?.setAttribute("data-template", initial);
+                document.documentElement.classList.add("dark");
             }
             if (isRetro) {
                 document.documentElement.setAttribute("data-retro", "true");

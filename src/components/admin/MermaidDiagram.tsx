@@ -109,13 +109,19 @@ export default function MermaidDiagram({ chart, id = "mermaid-diagram" }: Mermai
                 }
                 .mermaid-light .node .label, 
                 .mermaid-light .node text, 
-                .mermaid-light .node tspan {
+                .mermaid-light .node tspan,
+                .mermaid-light .node div,
+                .mermaid-light .node span,
+                .mermaid-light .nodeLabel {
                     fill: #1A1A1A !important;
                     color: #1A1A1A !important;
                 }
                 .mermaid-light .node.hotspot .label, 
                 .mermaid-light .node.hotspot text, 
-                .mermaid-light .node.hotspot tspan {
+                .mermaid-light .node.hotspot tspan,
+                .mermaid-light .node.hotspot div,
+                .mermaid-light .node.hotspot span,
+                .mermaid-light .node.hotspot .nodeLabel {
                     fill: #FFFFFF !important;
                     color: #FFFFFF !important;
                 }
@@ -157,13 +163,19 @@ export default function MermaidDiagram({ chart, id = "mermaid-diagram" }: Mermai
                 }
                 .mermaid-dark .node .label, 
                 .mermaid-dark .node text, 
-                .mermaid-dark .node tspan {
+                .mermaid-dark .node tspan,
+                .mermaid-dark .node div,
+                .mermaid-dark .node span,
+                .mermaid-dark .nodeLabel {
                     fill: #F8FAFC !important;
                     color: #F8FAFC !important;
                 }
                 .mermaid-dark .node.hotspot .label, 
                 .mermaid-dark .node.hotspot text, 
-                .mermaid-dark .node.hotspot tspan {
+                .mermaid-dark .node.hotspot tspan,
+                .mermaid-dark .node.hotspot div,
+                .mermaid-dark .node.hotspot span,
+                .mermaid-dark .node.hotspot .nodeLabel {
                     fill: #FFFFFF !important;
                     color: #FFFFFF !important;
                 }
