@@ -5,6 +5,7 @@
  */
 import type { Metadata } from "next";
 import { Inter, JetBrains_Mono } from "next/font/google";
+import serialize from "serialize-javascript";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import { ThemeProvider } from "@/components/ThemeProvider";
@@ -112,14 +113,14 @@ export default async function RootLayout({
           <script
             type="application/ld+json"
             dangerouslySetInnerHTML={{
-              __html: JSON.stringify({
+              __html: serialize({
                 "@context": "https://schema.org",
                 "@type": "Person",
                 name: "Jyotirmoy Bhowmik",
                 jobTitle: "IT Infrastructure & Project Manager",
                 url: "https://jyotirmoyb.com",
                 sameAs: ["https://linkedin.com/in/jyotirmoyb"],
-              }).replace(/</g, '\\u003c'),
+              }, { isJSON: true }),
             }}
           />
         )}
