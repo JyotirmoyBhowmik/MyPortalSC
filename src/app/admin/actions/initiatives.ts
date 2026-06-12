@@ -164,11 +164,14 @@ export async function reorderInitiatives(
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) throw new Error("Unauthorized");
 
-    const updates = orderedIds.map((item) =>
-        supabase.from("initiatives").update({ order_index: item.sort_order }).eq("id", item.id)
+    const { error } = await supabase.from("initiatives").upsert(
+        orderedIds.map((item) => ({
+            id: item.id,
+            order_index: item.sort_order,
+        })),
+        { onConflict: "id", ignoreDuplicates: false }
     );
-
-    await Promise.all(updates);
+    if (error) throw new Error(error.message);
 
     revalidatePath("/admin/initiatives");
     revalidatePath("/initiatives");
@@ -183,11 +186,14 @@ export async function reorderPrograms(
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) throw new Error("Unauthorized");
 
-    const updates = orderedIds.map((item) =>
-        supabase.from("programs").update({ order_index: item.sort_order }).eq("id", item.id)
+    const { error } = await supabase.from("programs").upsert(
+        orderedIds.map((item) => ({
+            id: item.id,
+            order_index: item.sort_order,
+        })),
+        { onConflict: "id", ignoreDuplicates: false }
     );
-
-    await Promise.all(updates);
+    if (error) throw new Error(error.message);
 
     revalidatePath("/admin/initiatives");
     revalidatePath("/initiatives");
