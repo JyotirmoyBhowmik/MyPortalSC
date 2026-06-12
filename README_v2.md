@@ -757,6 +757,19 @@ src/
     └── 𝑓 config
 ```
 
+## Key Files & Directories
+
+- **`src/app/`**: Next.js App Router root containing all frontend and backend API endpoints.
+- **`src/app/admin/`**: Protected directory for the RBAC-secured admin portal.
+- **`src/proxy.ts`**: Edge middleware responsible for RBAC validation, session refresh, and applying strict HTTP security headers.
+- **`src/lib/database.types.ts`**: TypeScript definitions automatically synced from the Supabase schema to ensure type-safe database calls.
+- **`src/lib/supabase/`**: Core configurations for Supabase SSR integrations, creating distinct clients for browser, server components, and middleware.
+- **`src/components/admin/`**: Reusable React components designed exclusively for the admin CMS interface (editors, lists, uploaders).
+- **`src/components/ui/`**: General, highly-reusable TailwindCSS UI components (buttons, modals, tooltips) used across both the public site and admin portal.
+- **`src/lib/data/`**: Abstraction layer for backend queries. Wraps database interactions and enforces logic (like feature flag checks) before sending data to the UI.
+- **`src/app/api/`**: Next.js Route Handlers exposing backend services for AI (Gemini), email (Resend), dynamic Open Graph images, and media streaming.
+
+
 ## Data Flow Diagram
 
 This diagram shows how data moves from user interaction to database persistence:
@@ -954,6 +967,33 @@ const nextConfig: NextConfig = {
 
 ---
 
+## Detailed Features
+
+The MyPortalSC v2 platform includes a wide range of specialized modules, heavily controlled by an overarching server-side feature flag system.
+
+### 1. Advanced Content Management System (CMS)
+- **Rich Text & Media Integration:** Full WYSIWYG editing via Tiptap, with integrated Supabase Storage for drag-and-drop media uploads.
+- **Dynamic Content Modules:** Portfolios, Blogs, Case Studies, Certifications, Timelines, and Speaking engagements, all modeled via PostgreSQL tables.
+- **Drag-and-Drop Reordering:** Granular control of rendering order for skills, projects, and achievements utilizing `dnd-kit`.
+- **Status Workflows:** Built-in draft, publish, and archive workflows per content type.
+
+### 2. Enterprise-Grade Security & Authentication
+- **Role-Based Access Control (RBAC):** Distinct `admin` and `super_admin` tiers controlled via Edge Middleware.
+- **Secure Sessions:** Automated server-side session refreshes connected to Supabase Auth.
+- **Edge Security Headers:** Strict CSP, HSTS with preloading, clickjacking, and XSS protection enabled on all routes natively.
+- **Bot Protection:** Cloudflare Turnstile CAPTCHA protects form submissions and API endpoints.
+
+### 3. AI & Interactive Modalities
+- **AI Chatbot Assistant:** Streaming contextual conversations powered by Google Gemini and Vercel AI SDK.
+- **Voice Capabilities:** Web Audio API and server-side processors drive an interactive AI voice widget.
+- **Dynamic 3D Visuals:** React Three Fiber integrations offer high-performance WebGL animations such as spinning 3D globes and interactive particle backgrounds.
+
+### 4. Developer Experience & Analytics
+- **Toggleable Feature Flags:** 41+ flags govern sections, effects, and modules without requiring redeployments.
+- **Multi-Theme Support:** 4 layout templates (Classic, Premium, Minimal, Executive) combined with 4 user-selectable color themes, and a specialized Retro CRT mode.
+- **Integrated CRM & Telemetry:** Built in contact ingestion hooked to Resend for notification emails, complemented by custom on-platform pageview and visitor event tracking.
+
+
 ## Feature Flags
 
 The platform includes **41+ toggleable feature flags** managed from **Admin → Settings**. Each flag is stored in the `site_settings` Supabase table and checked server-side via `getFeatureFlag()`.
@@ -1049,29 +1089,131 @@ Every request passes through edge middleware that applies:
 
 ---
 
-## Database Schema
+## Database Entities & Attributes
 
-Core tables in Supabase PostgreSQL:
+### `admin_users`
 
-| Table | Purpose |
+| Attribute | Type |
 |:---|:---|
-| `projects` | Portfolio projects with slug routing |
-| `skills` | Technology skills with proficiency levels |
-| `certifications` | Professional certifications |
-| `achievements` | Career achievements |
-| `initiatives` | IT infrastructure initiatives |
-| `programs` | Initiative program groupings |
-| `content_pages` | CMS JSONB content for editable pages |
-| `site_settings` | Feature flags & configuration (key-value) |
-| `admin_users` | RBAC user records (links to Supabase Auth) |
-| `audit_log` | Mutation audit trail |
-| `page_analytics` | Page view aggregates |
-| `visitor_events` | Individual visit records |
-| `blog_posts` | Blog articles |
-| `case_studies` | Detailed case study write-ups |
-| `testimonials` | Client testimonials |
+| `id` | `string` |
+| `user_id` | `string` |
+| `full_name` | `string` |
+| `role` | `"admin" \| "super_admin"` |
+| `created_at` | `string` |
+| `updated_at` | `string` |
 
----
+### `projects`
+
+| Attribute | Type |
+|:---|:---|
+| `id` | `string` |
+| `title` | `string` |
+| `slug` | `string` |
+| `short_description` | `string \| null` |
+| `detailed_description` | `string \| null` |
+| `status` | `"draft" \| "published" \| "archived"` |
+| `domain` | `string[] \| null` |
+| `technologies` | `string[] \| null` |
+| `start_date` | `string \| null` |
+| `end_date` | `string \| null` |
+| `featured_image_url` | `string \| null` |
+| `github_url` | `string \| null` |
+| `duration` | `string \| null` |
+| `is_published` | `boolean` |
+| `published_at` | `string \| null` |
+| `sort_order` | `number` |
+| `live_url` | `string \| null` |
+| `order_index` | `number` |
+| `created_at` | `string` |
+| `updated_at` | `string` |
+| `created_by` | `string \| null` |
+| `challenge` | `string \| null` |
+| `approach` | `string \| null` |
+| `architecture_notes` | `string \| null` |
+| `outcome` | `string \| null` |
+| `key_metrics` | `Json \| null` |
+
+### `skills`
+
+| Attribute | Type |
+|:---|:---|
+| `id` | `string` |
+| `name` | `string` |
+| `category` | `string` |
+| `proficiency_level` | `number \| null` |
+| `years_of_experience` | `number \| null` |
+| `icon_url` | `string \| null` |
+| `order_index` | `number` |
+| `created_at` | `string` |
+| `updated_at` | `string` |
+
+### `certifications`
+
+| Attribute | Type |
+|:---|:---|
+| `id` | `string` |
+| `title` | `string` |
+| `issuing_organization` | `string` |
+| `issue_date` | `string` |
+| `expiry_date` | `string \| null` |
+| `credential_id` | `string \| null` |
+| `credential_url` | `string \| null` |
+| `badge_image_url` | `string \| null` |
+| `status` | `"active" \| "expired" \| "archived"` |
+| `created_at` | `string` |
+| `updated_at` | `string` |
+
+### `achievements`
+
+| Attribute | Type |
+|:---|:---|
+| `id` | `string` |
+| `title` | `string` |
+| `description` | `string \| null` |
+| `achievement_date` | `string` |
+| `category` | `string \| null` |
+| `icon_url` | `string \| null` |
+| `order_index` | `number` |
+| `created_at` | `string` |
+| `updated_at` | `string` |
+
+### `content_pages`
+
+| Attribute | Type |
+|:---|:---|
+| `id` | `string` |
+| `page_key` | `string` |
+| `title` | `string` |
+| `content` | `Json \| null` |
+| `meta_description` | `string \| null` |
+| `updated_at` | `string` |
+| `updated_by` | `string \| null` |
+
+### `page_analytics`
+
+| Attribute | Type |
+|:---|:---|
+| `id` | `string` |
+| `page_path` | `string` |
+| `view_count` | `number` |
+| `unique_visitors` | `number` |
+| `last_viewed` | `string` |
+| `created_at` | `string` |
+
+### `audit_log`
+
+| Attribute | Type |
+|:---|:---|
+| `id` | `string` |
+| `table_name` | `string` |
+| `operation` | `"INSERT" \| "UPDATE" \| "DELETE"` |
+| `record_id` | `string` |
+| `old_data` | `Json \| null` |
+| `new_data` | `Json \| null` |
+| `user_id` | `string \| null` |
+| `timestamp` | `string` |
+
+
 
 ## Internationalization (i18n)
 
