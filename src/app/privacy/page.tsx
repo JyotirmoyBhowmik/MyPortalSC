@@ -68,6 +68,39 @@ export default function PrivacyPage() {
                             </p>
                         </div>
                     </section>
+
+                    {/* Sample Information Collected */}
+                    <section className="bg-surface border border-border rounded-xl p-6 md:p-8">
+                        <h2 className="text-2xl font-semibold mb-4 pb-2 border-b border-border/50">
+                            Sample Information Collected
+                        </h2>
+                        <div className="space-y-6 text-muted-foreground">
+                            <div>
+                                <h3 className="text-lg font-medium text-foreground mb-2">Our Apps</h3>
+                                <ul className="list-disc pl-6 space-y-1">
+                                    <li><strong>Device Data:</strong> OS version, device model, and unique identifiers to ensure app compatibility and security.</li>
+                                    <li><strong>Usage Metrics:</strong> Feature interaction and crash reports to improve application stability.</li>
+                                    <li><strong>Location:</strong> Coarse location data (if permitted) for regional customization.</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h3 className="text-lg font-medium text-foreground mb-2">Our Sites</h3>
+                                <ul className="list-disc pl-6 space-y-1">
+                                    <li><strong>Browsing Data:</strong> IP address, browser type, and access times logged for security monitoring.</li>
+                                    <li><strong>Cookies & Analytics:</strong> Session cookies and aggregate interaction data to measure content engagement.</li>
+                                    <li><strong>Contact Information:</strong> Names and email addresses provided voluntarily via contact forms.</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h3 className="text-lg font-medium text-foreground mb-2">Admin Page</h3>
+                                <ul className="list-disc pl-6 space-y-1">
+                                    <li><strong>Authentication Data:</strong> Secure credential hashes and Multi-Factor Authentication (MFA) tokens.</li>
+                                    <li><strong>Audit Logs:</strong> Detailed logs of actions taken, including IP address, timestamps, and data modifications, for strict access control and compliance.</li>
+                                    <li><strong>Administrative Details:</strong> Role assignments and internal contact information.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </section>
                 </div>
             </div>
         </div>

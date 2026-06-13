@@ -66,6 +66,37 @@ export default function DeceptionAndDeviceAbusePage() {
                             </ul>
                         </div>
                     </section>
+
+                    {/* Platform Specifics */}
+                    <section className="bg-surface border border-border rounded-xl p-6 md:p-8">
+                        <h2 className="text-2xl font-semibold mb-4 pb-2 border-b border-border/50">
+                            Platform Specific Guidelines
+                        </h2>
+                        <div className="space-y-6 text-muted-foreground">
+                            <div>
+                                <h3 className="text-lg font-medium text-foreground mb-2">For Our Apps</h3>
+                                <ul className="list-disc pl-6 space-y-1">
+                                    <li><strong>Integrity:</strong> Apps must not be reverse-engineered, decompiled, or modified to bypass intended functionality or licensing.</li>
+                                    <li><strong>Automation:</strong> Use of emulators, automation scripts, or third-party clients to interact with app APIs maliciously is strictly forbidden.</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h3 className="text-lg font-medium text-foreground mb-2">For Our Sites</h3>
+                                <ul className="list-disc pl-6 space-y-1">
+                                    <li><strong>Scraping & Crawling:</strong> Automated data extraction must respect `robots.txt` and rate limits to prevent denial of service.</li>
+                                    <li><strong>Injection:</strong> Attempting SQL injection, Cross-Site Scripting (XSS), or exploiting input fields will lead to immediate IP blocking and reporting.</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h3 className="text-lg font-medium text-foreground mb-2">For Admin Pages</h3>
+                                <ul className="list-disc pl-6 space-y-1">
+                                    <li><strong>Access Control:</strong> Sharing administrative credentials or attempting privilege escalation is a severe security violation.</li>
+                                    <li><strong>Audit Avoidance:</strong> Attempting to tamper with, bypass, or delete administrative audit logs will result in immediate termination of access and legal review.</li>
+                                    <li><strong>Session Management:</strong> Administrators must ensure sessions are terminated appropriately on shared or public devices.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </section>
                 </div>
             </div>
         </div>
