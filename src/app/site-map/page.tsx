@@ -31,6 +31,13 @@ const sitemapStructure = [
             { href: "/publications", label: "Publications", description: "Published tech articles and guides." },
             { href: "/downloads", label: "Downloads", description: "Downloadable resources and architectures." },
         ]
+    },
+    {
+        title: "Compliance & Policies",
+        links: [
+            { href: "/privacy", label: "Privacy Policy", description: "Global and India standard data protection." },
+            { href: "/deception-and-device-abuse", label: "Deception & Device Abuse", description: "Global and India standard policies." },
+        ]
     }
 ];
 

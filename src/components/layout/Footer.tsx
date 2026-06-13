@@ -62,6 +62,9 @@ export default function Footer({ flags = {} }: { flags?: Record<string, boolean>
         // Contact & Misc
         { href: "/contact", label: "Contact", visible: true },
         { href: "/site-map", label: "Site Map", visible: true },
+        // Compliance
+        { href: "/privacy", label: "Privacy", visible: true },
+        { href: "/deception-and-device-abuse", label: "Deception & Device Abuse", visible: true },
     ].filter(link => link.visible);
 
     return (
