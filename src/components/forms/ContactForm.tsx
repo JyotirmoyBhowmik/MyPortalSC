@@ -25,7 +25,6 @@ export default function ContactForm() {
 
         try {
             const result = await submitContactForm(formData);
-            console.log("Contact form result:", result);
 
             // Map the response — server returns { error } on failure, { message } on success
             setStatus({
