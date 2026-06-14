@@ -28,7 +28,9 @@ export async function GET(req: NextRequest) {
     const storageUrl = `${SUPABASE_URL}/storage/v1/object/public/${BUCKET_NAME}/${sanitized}`;
 
     try {
-        const upstream = await fetch(storageUrl);
+        const upstream = await fetch(storageUrl, {
+            cache: 'force-cache'
+        });
 
         if (!upstream.ok) {
             return NextResponse.json({ error: 'Asset not found' }, { status: 404 });
