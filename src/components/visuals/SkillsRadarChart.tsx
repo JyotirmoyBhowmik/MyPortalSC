@@ -24,6 +24,7 @@ interface SkillsRadarChartProps {
 }
 
 export default function SkillsRadarChart({ data }: SkillsRadarChartProps) {
+    const { isRetro } = useRetroTheme();
     const [isMounted, setIsMounted] = useState(false);
     const { template } = useAppearance();
 
