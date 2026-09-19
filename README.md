@@ -1,6 +1,6 @@
 # MyPortalSC — Enterprise Portfolio & Admin Platform
 
-> A production-grade, full-stack portfolio and CMS platform built with **Next.js 16**, **React 19**, **Supabase** (PostgreSQL), and **TailwindCSS 4**. Features 41+ server-side feature flags, 4 switchable theme templates, AI-powered chatbot & voice assistant, real-time CRM, RBAC admin panel, i18n (3 languages), and enterprise security headers.
+> A production-grade, full-stack portfolio and CMS platform built with **Next.js 16**, **React 19**, **Supabase** (PostgreSQL), and **TailwindCSS 4**. Features 41+ server-side feature flags, 5 switchable theme templates, AI-powered chatbot & voice assistant, real-time CRM, RBAC admin panel, i18n (3 languages), and enterprise security headers.
 
 ---
 
@@ -528,14 +528,17 @@ const isEnabled = await getFeatureFlag("feature_blog");
 
 ### Site Templates (Admin-controlled)
 
-Switch between templates from **Admin → Settings → `site_template`**:
+Switch between templates from the **Admin Appearance Panel** (`/admin/appearance`) or **Admin Settings** dropdown:
 
-| Template | Description |
-|:---|:---|
-| `classic` | Default dark theme with electric green accents |
-| `premium` / `glass` | Glassmorphism dark theme with translucent surfaces |
-| `minimal` | Clean, light-mode UI with subtle blue accents |
-| `executive` | Corporate navy & gold palette |
+| Template | Name | Description |
+|:---|:---|:---|
+| `ceramic` | Ceramic Dark | Unglazed dark ceramic texture, high-contrast neon accents, tactile layouts, and generous padding. |
+| `ceramic-light` | Ceramic Light | Clean unglazed white porcelain aesthetic, top-centered Lookbook navigation, soft shadows, and slate blue accents. |
+| `glass-dark` | Glass Exec Dark | Premium glassmorphism backdrop-blur, dark translucent surfaces, and vibrant neon-cyan accent highlights. |
+| `light-modern` | Light Exec Modern | Bright minimalist white canvas, thin clean line borders, spacious responsive layouts, and slate accents. |
+| `classic` | Classic Slate | Standard left-sidebar navigation, traditional layouts, solid surfaces, and structured enterprise routing. |
+
+> **🎨 Cohesive Visual Adaptive System:** Key charts and diagrams (such as the **Skills Radar Chart** and the **Interactive Architecture Map**) feature dynamic theme sensing via a custom DOM `MutationObserver`. When an administrator updates the preset template, the charts and diagram elements instantly adapt their outlines, borders, text colors, and backgrounds to coordinate with the new theme in real-time.
 
 ### Color Themes (User-controlled)
 

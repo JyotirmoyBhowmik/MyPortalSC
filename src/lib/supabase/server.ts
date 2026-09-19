@@ -41,7 +41,7 @@ export async function createClient() {
         // If cookies() fails (e.g. during Next.js static generation pass),
         // we return an anonymous client that can safely fetch public data
         // without triggering connection refused or warnings.
-        return createFallbackClient(supabaseUrl, supabaseAnonKey);
+        return createFallbackClient(supabaseUrl || "https://placeholder.supabase.co", supabaseAnonKey || "dummy-key");
     }
 }
 

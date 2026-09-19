@@ -6,6 +6,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { cache } from "react";
 import { logDbError } from "@/lib/supabase/error";
+import { unstable_cache, revalidateTag } from "next/cache";
 
 export interface SiteSetting {
     id: string;
@@ -20,25 +21,33 @@ export interface SiteSetting {
 
 /* ─── Read ─── */
 
-export const getAllSettings = cache(async function getAllSettings(): Promise<SiteSetting[]> {
-    try {
-        const supabase = await createClient();
-        const { data, error } = await supabase
-            .from("site_settings")
-            .select("*")
-            .order("category", { ascending: true })
-            .order("key", { ascending: true });
-        if (error) {
-            logDbError("Error fetching settings", error);
-            return [];
+export const getAllSettings = cache(
+    unstable_cache(
+        async function (): Promise<SiteSetting[]> {
+            try {
+                const supabase = await createClient();
+                const { data, error } = await supabase
+                    .from("site_settings")
+                    .select("*")
+                    .order("category", { ascending: true })
+                    .order("key", { ascending: true });
+                if (error) {
+                    logDbError("Error fetching settings", error);
+                    return [];
+                }
+                return (data ?? []) as SiteSetting[];
+            } catch (e) {
+                console.error("Critical error in getAllSettings:", e);
+                return [];
+            }
+        },
+        ["all-site-settings"],
+        {
+            tags: ["settings"],
+            revalidate: 3600
         }
-
-        return (data ?? []) as SiteSetting[];
-    } catch (e) {
-        console.error("Critical error in getAllSettings:", e);
-        return [];
-    }
-});
+    )
+);
 
 export async function getSettingsByCategory(category: string): Promise<SiteSetting[]> {
     try {
@@ -78,6 +87,7 @@ export async function updateSetting(key: string, value: unknown) {
     if (error) {
         return { success: false, error: error.message };
     }
+    (revalidateTag as any)("settings");
     return { success: true };
 }
 

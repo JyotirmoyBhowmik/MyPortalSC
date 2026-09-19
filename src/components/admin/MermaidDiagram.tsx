@@ -5,6 +5,7 @@ import mermaid from 'mermaid';
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 import DOMPurify from "isomorphic-dompurify";
 import { useTheme } from "@/components/ThemeProvider";
+import { useAppearance } from '@/components/AppearanceProvider';
 
 interface MermaidDiagramProps {
     chart: string;
@@ -14,53 +15,88 @@ interface MermaidDiagramProps {
 export default function MermaidDiagram({ chart, id = "mermaid-diagram" }: MermaidDiagramProps) {
     const containerRef = useRef<HTMLDivElement>(null);
     const { theme, activeTemplate } = useTheme();
+    const { template } = useAppearance();
     const [svgCode, setSvgCode] = useState<string>('');
     const [error, setError] = useState<string | null>(null);
+    const [loading, setLoading] = useState<boolean>(true);
 
-    const isLight = theme === "compact-ceramic" || activeTemplate === "ceramic-light" || activeTemplate === "light-modern";
+    const isLight = 
+        theme === "compact-ceramic" || 
+        activeTemplate === "ceramic-light" || 
+        activeTemplate === "light-modern" ||
+        ["ceramic-light", "light-modern", "minimal", "ceramic"].includes(template);
 
     useEffect(() => {
-        mermaid.initialize({
-            startOnLoad: false,
-            theme: isLight ? 'default' : 'dark',
-            securityLevel: 'strict',
-            fontFamily: 'monospace',
-            themeVariables: isLight ? {
-                primaryColor: '#ffffff',
-                primaryTextColor: '#1a1a1a',
-                primaryBorderColor: '#e5e5e1',
-                lineColor: '#94a3b8',
-                secondaryColor: '#f1f1ef',
-                tertiaryColor: '#f9f9f7'
-            } : {
-                primaryColor: '#7c3aed',
-                primaryTextColor: '#fff',
-                primaryBorderColor: '#a78bfa',
-                lineColor: '#6b7280',
-                secondaryColor: '#3b82f6',
-                tertiaryColor: '#10b981'
+        if (typeof window !== 'undefined') {
+            let primaryColor = '#7c3aed';
+            let primaryTextColor = '#ffffff';
+            let primaryBorderColor = '#a78bfa';
+            let lineColor = '#6b7280';
+            let secondaryColor = '#3b82f6';
+            let tertiaryColor = '#10b981';
+
+            if (isLight) {
+                if (template === 'ceramic-light' || theme === 'compact-ceramic') {
+                    primaryColor = '#f4f4f2';
+                    primaryTextColor = '#1a1c1b';
+                    primaryBorderColor = '#c4c7c7';
+                    lineColor = '#747878';
+                    secondaryColor = '#505f76';
+                    tertiaryColor = '#ffffff';
+                } else if (template === 'light-modern' || template === 'ceramic') {
+                    primaryColor = '#f1f5f9';
+                    primaryTextColor = '#1e293b';
+                    primaryBorderColor = '#cbd5e1';
+                    lineColor = '#94a3b8';
+                    secondaryColor = '#3b82f6';
+                    tertiaryColor = '#ffffff';
+                } else {
+                    primaryColor = '#f3f4f6';
+                    primaryTextColor = '#111827';
+                    primaryBorderColor = '#d1d5db';
+                    lineColor = '#94a3b8';
+                    secondaryColor = '#2563eb';
+                    tertiaryColor = '#ffffff';
+                }
             }
-        });
+
+            mermaid.initialize({
+                startOnLoad: false,
+                theme: isLight ? 'neutral' : 'dark',
+                securityLevel: 'strict',
+                fontFamily: 'monospace',
+                themeVariables: {
+                    primaryColor,
+                    primaryTextColor,
+                    primaryBorderColor,
+                    lineColor,
+                    secondaryColor,
+                    tertiaryColor,
+                }
+            });
+        }
 
         const renderDiagram = async () => {
+            setLoading(true);
             try {
-                // Generate a unique render ID to prevent collisions on redrawing
                 const renderId = `${id}-${Math.random().toString(36).substring(2, 9)}`;
                 const { svg } = await mermaid.render(renderId, chart);
                 const sanitizedSvg = DOMPurify.sanitize(svg, {
                     USE_PROFILES: { svg: true },
-                    ADD_ATTR: ['style'] // Allow style attribute for mermaid styling
+                    ADD_ATTR: ['style']
                 });
                 setSvgCode(sanitizedSvg);
                 setError(null);
             } catch (err: any) {
                 console.error("Mermaid parsing error:", err);
                 setError(err.message || "Failed to render diagram.");
+            } finally {
+                setLoading(false);
             }
         };
 
         renderDiagram();
-    }, [chart, id, isLight]);
+    }, [chart, id, isLight, template, theme]);
 
     if (error) {
         return (
@@ -75,7 +111,7 @@ export default function MermaidDiagram({ chart, id = "mermaid-diagram" }: Mermai
         );
     }
 
-    if (!svgCode) {
+    if (loading || !svgCode) {
         return (
             <div className="h-64 flex items-center justify-center border-2 border-dashed border-border rounded-lg">
                 <div className="animate-pulse text-muted-foreground flex items-center gap-2">

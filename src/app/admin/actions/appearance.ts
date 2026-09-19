@@ -1,7 +1,7 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 
 export async function uploadSiteIcon(formData: FormData) {
     const supabase = await createClient();
@@ -60,6 +60,7 @@ export async function uploadSiteIcon(formData: FormData) {
         return { success: false, error: "Failed to save icon setting." };
     }
 
+    (revalidateTag as any)("settings");
     revalidatePath("/admin/appearance");
     revalidatePath("/");
     return { success: true, url: publicUrl };
@@ -75,6 +76,7 @@ export async function resetSiteIcon() {
             { onConflict: "key" }
         );
 
+    (revalidateTag as any)("settings");
     revalidatePath("/admin/appearance");
     revalidatePath("/");
     return { success: true };
