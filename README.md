@@ -2,6 +2,10 @@
 
 > A production-grade, full-stack portfolio and CMS platform built with **Next.js 16**, **React 19**, **Supabase** (PostgreSQL), and **TailwindCSS 4**. Features 41+ server-side feature flags, 5 switchable theme templates, AI-powered chatbot & voice assistant, real-time CRM, RBAC admin panel, i18n (3 languages), and enterprise security headers.
 
+[![Live Demo](https://img.shields.io/badge/Live-Demo-0070f3?style=flat&logo=vercel)](https://my-portal-sc.vercel.app)
+[![Sponsor](https://img.shields.io/badge/Sponsor-Jyotirmoy-ea4aaa?style=flat&logo=github-sponsors)](https://github.com/sponsors/JyotirmoyBhowmik)
+[![Architecture Graph](https://img.shields.io/badge/Architecture-Visual_Graph-64ffda?style=flat)](https://my-portal-sc.vercel.app/visual-graph)
+
 ---
 
 ## Table of Contents
