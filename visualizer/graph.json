@@ -1,15 +1,15 @@
 {
   "metadata": {
-    "generated_at": "2026-09-19T21:42:55.367281+00:00",
-    "total_files": 280,
-    "total_nodes": 350,
-    "total_edges": 714,
+    "generated_at": "2026-09-19T22:10:29.781357+00:00",
+    "total_files": 290,
+    "total_nodes": 362,
+    "total_edges": 744,
     "languages": {
       ".ts": 58,
       ".mjs": 2,
       ".py": 12,
       ".js": 1,
-      ".tsx": 167,
+      ".tsx": 177,
       ".sql": 39,
       ".css": 1
     }
@@ -19,13 +19,13 @@
       "id": "src/components",
       "name": "src/components",
       "color": "#3b82f6",
-      "count": 101
+      "count": 106
     },
     {
       "id": "external",
       "name": "external",
       "color": "#64748b",
-      "count": 70
+      "count": 72
     },
     {
       "id": "src/app/admin",
@@ -34,16 +34,16 @@
       "count": 50
     },
     {
+      "id": "src/app",
+      "name": "src/app",
+      "color": "#8b5cf6",
+      "count": 41
+    },
+    {
       "id": "supabase",
       "name": "supabase",
       "color": "#f59e0b",
       "count": 39
-    },
-    {
-      "id": "src/app",
-      "name": "src/app",
-      "color": "#8b5cf6",
-      "count": 36
     },
     {
       "id": "src/lib",
@@ -323,7 +323,7 @@
       "color": "#10b981",
       "extension": ".py",
       "loc": 5,
-      "size_bytes": 69,
+      "size_bytes": 74,
       "symbols": [],
       "symbol_details": [],
       "exports": [],
@@ -341,7 +341,7 @@
       "color": "#10b981",
       "extension": ".py",
       "loc": 88,
-      "size_bytes": 2610,
+      "size_bytes": 2698,
       "symbols": [
         "MapperConfig",
         "__post_init__"
@@ -383,7 +383,7 @@
       "color": "#10b981",
       "extension": ".py",
       "loc": 101,
-      "size_bytes": 3478,
+      "size_bytes": 3579,
       "symbols": [
         "FileEntry",
         "RepoCrawler",
@@ -467,7 +467,7 @@
       "color": "#10b981",
       "extension": ".py",
       "loc": 213,
-      "size_bytes": 8461,
+      "size_bytes": 8674,
       "symbols": [
         "classify_group",
         "GraphBuilder",
@@ -524,7 +524,7 @@
       "color": "#10b981",
       "extension": ".py",
       "loc": 119,
-      "size_bytes": 4154,
+      "size_bytes": 4273,
       "symbols": [
         "main"
       ],
@@ -560,7 +560,7 @@
       "color": "#10b981",
       "extension": ".py",
       "loc": 699,
-      "size_bytes": 28243,
+      "size_bytes": 28942,
       "symbols": [
         "CodeSymbol",
         "ImportRef",
@@ -709,8 +709,8 @@
       "group": "scripts",
       "color": "#10b981",
       "extension": ".py",
-      "loc": 123,
-      "size_bytes": 5140,
+      "loc": 130,
+      "size_bytes": 5492,
       "symbols": [
         "RepoMapGenerator",
         "__init__",
@@ -758,7 +758,7 @@
       "color": "#10b981",
       "extension": ".py",
       "loc": 107,
-      "size_bytes": 4454,
+      "size_bytes": 4561,
       "symbols": [
         "ResolvedTarget",
         "PathResolver",
@@ -833,7 +833,7 @@
       "color": "#10b981",
       "extension": ".py",
       "loc": 56,
-      "size_bytes": 1984,
+      "size_bytes": 2040,
       "symbols": [
         "CORSRequestHandler",
         "end_headers",
@@ -906,8 +906,8 @@
       "group": "scripts",
       "color": "#10b981",
       "extension": ".py",
-      "loc": 832,
-      "size_bytes": 32005,
+      "loc": 839,
+      "size_bytes": 33105,
       "symbols": [
         "VisualizerGenerator",
         "__init__",
@@ -955,7 +955,7 @@
       "color": "#94a3b8",
       "extension": ".ts",
       "loc": 120,
-      "size_bytes": 5524,
+      "size_bytes": 5809,
       "symbols": [
         "proxy"
       ],
@@ -1037,6 +1037,29 @@
       "is_external": false
     },
     {
+      "id": "src/app/layout.test.tsx",
+      "label": "layout.test.tsx",
+      "path": "src/app/layout.test.tsx",
+      "directory": "src/app",
+      "group": "src/app",
+      "color": "#8b5cf6",
+      "extension": ".tsx",
+      "loc": 21,
+      "size_bytes": 795,
+      "symbols": [],
+      "symbol_details": [],
+      "exports": [],
+      "calls": [
+        "describe",
+        "expect",
+        "it",
+        "toContain"
+      ],
+      "in_degree": 0,
+      "out_degree": 2,
+      "is_external": false
+    },
+    {
       "id": "src/app/layout.tsx",
       "label": "layout.tsx",
       "path": "src/app/layout.tsx",
@@ -1044,8 +1067,8 @@
       "group": "src/app",
       "color": "#8b5cf6",
       "extension": ".tsx",
-      "loc": 163,
-      "size_bytes": 6913,
+      "loc": 166,
+      "size_bytes": 7166,
       "symbols": [
         "generateMetadata",
         "RootLayout"
@@ -1055,14 +1078,14 @@
           "name": "generateMetadata",
           "kind": "function",
           "signature": "export async function generateMetadata(): Promise<Metadata>",
-          "line": 40,
+          "line": 42,
           "exported": true
         },
         {
           "name": "RootLayout",
           "kind": "function",
           "signature": "export async function RootLayout({ children, }: Readonly<{ children: React.ReactNode; }>)",
-          "line": 94,
+          "line": 96,
           "exported": true
         }
       ],
@@ -1072,7 +1095,7 @@
       ],
       "calls": [],
       "in_degree": 0,
-      "out_degree": 14,
+      "out_degree": 16,
       "is_external": false
     },
     {
@@ -1173,8 +1196,8 @@
       "group": "src/app",
       "color": "#8b5cf6",
       "extension": ".tsx",
-      "loc": 76,
-      "size_bytes": 3002,
+      "loc": 80,
+      "size_bytes": 3262,
       "symbols": [
         "HomePage"
       ],
@@ -1183,7 +1206,7 @@
           "name": "HomePage",
           "kind": "function",
           "signature": "export async function HomePage()",
-          "line": 20,
+          "line": 14,
           "exported": true
         }
       ],
@@ -1192,7 +1215,7 @@
       ],
       "calls": [],
       "in_degree": 0,
-      "out_degree": 8,
+      "out_degree": 9,
       "is_external": false
     },
     {
@@ -1233,8 +1256,8 @@
       "group": "src/app",
       "color": "#8b5cf6",
       "extension": ".ts",
-      "loc": 92,
-      "size_bytes": 4908,
+      "loc": 93,
+      "size_bytes": 5021,
       "symbols": [
         "sitemap"
       ],
@@ -1264,7 +1287,7 @@
       "color": "#8b5cf6",
       "extension": ".tsx",
       "loc": 540,
-      "size_bytes": 34930,
+      "size_bytes": 34911,
       "symbols": [
         "AboutPage"
       ],
@@ -1431,8 +1454,8 @@
       "group": "src/app/admin",
       "color": "#ec4899",
       "extension": ".ts",
-      "loc": 81,
-      "size_bytes": 2622,
+      "loc": 83,
+      "size_bytes": 2719,
       "symbols": [
         "uploadSiteIcon",
         "resetSiteIcon"
@@ -1449,7 +1472,7 @@
           "name": "resetSiteIcon",
           "kind": "function",
           "signature": "export async function resetSiteIcon()",
-          "line": 68,
+          "line": 69,
           "exported": true
         }
       ],
@@ -1801,8 +1824,8 @@
       "group": "src/app/admin",
       "color": "#ec4899",
       "extension": ".ts",
-      "loc": 194,
-      "size_bytes": 5884,
+      "loc": 200,
+      "size_bytes": 6106,
       "symbols": [
         "createInitiative",
         "updateInitiative",
@@ -1867,7 +1890,7 @@
           "name": "reorderPrograms",
           "kind": "function",
           "signature": "export async function reorderPrograms( orderedIds: { id: string; sort_order: number }[] )",
-          "line": 177,
+          "line": 180,
           "exported": true
         }
       ],
@@ -2095,8 +2118,8 @@
       "group": "src/app/admin",
       "color": "#ec4899",
       "extension": ".ts",
-      "loc": 55,
-      "size_bytes": 1980,
+      "loc": 58,
+      "size_bytes": 2110,
       "symbols": [
         "toggleFeature",
         "updateSettingValue"
@@ -2113,7 +2136,7 @@
           "name": "updateSettingValue",
           "kind": "function",
           "signature": "export async function updateSettingValue(key: string, value: unknown)",
-          "line": 32,
+          "line": 33,
           "exported": true
         }
       ],
@@ -3288,8 +3311,8 @@
       "group": "src/app/api",
       "color": "#f43f5e",
       "extension": ".ts",
-      "loc": 52,
-      "size_bytes": 1823,
+      "loc": 54,
+      "size_bytes": 1871,
       "symbols": [
         "GET"
       ],
@@ -3994,6 +4017,36 @@
       "is_external": false
     },
     {
+      "id": "src/app/deception-and-device-abuse/page.tsx",
+      "label": "page.tsx",
+      "path": "src/app/deception-and-device-abuse/page.tsx",
+      "directory": "src/app/deception-and-device-abuse",
+      "group": "src/app",
+      "color": "#8b5cf6",
+      "extension": ".tsx",
+      "loc": 104,
+      "size_bytes": 7637,
+      "symbols": [
+        "DeceptionAndDeviceAbusePage"
+      ],
+      "symbol_details": [
+        {
+          "name": "DeceptionAndDeviceAbusePage",
+          "kind": "function",
+          "signature": "export function DeceptionAndDeviceAbusePage()",
+          "line": 8,
+          "exported": true
+        }
+      ],
+      "exports": [
+        "DeceptionAndDeviceAbusePage"
+      ],
+      "calls": [],
+      "in_degree": 0,
+      "out_degree": 1,
+      "is_external": false
+    },
+    {
       "id": "src/app/downloads/page.tsx",
       "label": "page.tsx",
       "path": "src/app/downloads/page.tsx",
@@ -4207,6 +4260,36 @@
       "is_external": false
     },
     {
+      "id": "src/app/privacy/page.tsx",
+      "label": "page.tsx",
+      "path": "src/app/privacy/page.tsx",
+      "directory": "src/app/privacy",
+      "group": "src/app",
+      "color": "#8b5cf6",
+      "extension": ".tsx",
+      "loc": 108,
+      "size_bytes": 7708,
+      "symbols": [
+        "PrivacyPage"
+      ],
+      "symbol_details": [
+        {
+          "name": "PrivacyPage",
+          "kind": "function",
+          "signature": "export function PrivacyPage()",
+          "line": 8,
+          "exported": true
+        }
+      ],
+      "exports": [
+        "PrivacyPage"
+      ],
+      "calls": [],
+      "in_degree": 0,
+      "out_degree": 1,
+      "is_external": false
+    },
+    {
       "id": "src/app/projects/page.tsx",
       "label": "page.tsx",
       "path": "src/app/projects/page.tsx",
@@ -4244,8 +4327,8 @@
       "group": "src/app",
       "color": "#8b5cf6",
       "extension": ".tsx",
-      "loc": 292,
-      "size_bytes": 16325,
+      "loc": 294,
+      "size_bytes": 16526,
       "symbols": [
         "KeyMetric",
         "Props",
@@ -4359,8 +4442,8 @@
       "group": "src/app",
       "color": "#8b5cf6",
       "extension": ".tsx",
-      "loc": 97,
-      "size_bytes": 5823,
+      "loc": 105,
+      "size_bytes": 6317,
       "symbols": [
         "SitemapPage"
       ],
@@ -4369,7 +4452,7 @@
           "name": "SitemapPage",
           "kind": "function",
           "signature": "export function SitemapPage()",
-          "line": 37,
+          "line": 45,
           "exported": true
         }
       ],
@@ -4499,6 +4582,122 @@
       "calls": [],
       "in_degree": 0,
       "out_degree": 4,
+      "is_external": false
+    },
+    {
+      "id": "src/app/visual-graph/layout.tsx",
+      "label": "layout.tsx",
+      "path": "src/app/visual-graph/layout.tsx",
+      "directory": "src/app/visual-graph",
+      "group": "src/app",
+      "color": "#8b5cf6",
+      "extension": ".tsx",
+      "loc": 14,
+      "size_bytes": 409,
+      "symbols": [
+        "VisualGraphLayout"
+      ],
+      "symbol_details": [
+        {
+          "name": "VisualGraphLayout",
+          "kind": "function",
+          "signature": "export function VisualGraphLayout({ children, }: { children: React.ReactNode; })",
+          "line": 8,
+          "exported": true
+        }
+      ],
+      "exports": [
+        "VisualGraphLayout"
+      ],
+      "calls": [],
+      "in_degree": 0,
+      "out_degree": 1,
+      "is_external": false
+    },
+    {
+      "id": "src/app/visual-graph/page.tsx",
+      "label": "page.tsx",
+      "path": "src/app/visual-graph/page.tsx",
+      "directory": "src/app/visual-graph",
+      "group": "src/app",
+      "color": "#8b5cf6",
+      "extension": ".tsx",
+      "loc": 96,
+      "size_bytes": 5072,
+      "symbols": [
+        "VisualGraphPage"
+      ],
+      "symbol_details": [
+        {
+          "name": "VisualGraphPage",
+          "kind": "function",
+          "signature": "export function VisualGraphPage()",
+          "line": 8,
+          "exported": true
+        }
+      ],
+      "exports": [
+        "VisualGraphPage"
+      ],
+      "calls": [],
+      "in_degree": 0,
+      "out_degree": 4,
+      "is_external": false
+    },
+    {
+      "id": "src/components/AppearanceProvider.tsx",
+      "label": "AppearanceProvider.tsx",
+      "path": "src/components/AppearanceProvider.tsx",
+      "directory": "src/components",
+      "group": "src/components",
+      "color": "#3b82f6",
+      "extension": ".tsx",
+      "loc": 69,
+      "size_bytes": 2009,
+      "symbols": [
+        "TemplateName",
+        "AppearanceContextValue",
+        "useAppearance",
+        "AppearanceProvider"
+      ],
+      "symbol_details": [
+        {
+          "name": "TemplateName",
+          "kind": "type",
+          "signature": "export type TemplateName = ...",
+          "line": 11,
+          "exported": true
+        },
+        {
+          "name": "AppearanceContextValue",
+          "kind": "interface",
+          "signature": "interface AppearanceContextValue",
+          "line": 20,
+          "exported": false
+        },
+        {
+          "name": "useAppearance",
+          "kind": "function",
+          "signature": "export function useAppearance()",
+          "line": 30,
+          "exported": true
+        },
+        {
+          "name": "AppearanceProvider",
+          "kind": "function",
+          "signature": "export function AppearanceProvider({ children, initialTemplate = \"classic\", }: { children: ReactNode; initialTemplate?: TemplateName; })",
+          "line": 34,
+          "exported": true
+        }
+      ],
+      "exports": [
+        "AppearanceProvider",
+        "TemplateName",
+        "useAppearance"
+      ],
+      "calls": [],
+      "in_degree": 4,
+      "out_degree": 1,
       "is_external": false
     },
     {
@@ -4646,8 +4845,8 @@
       "group": "src/components",
       "color": "#3b82f6",
       "extension": ".tsx",
-      "loc": 97,
-      "size_bytes": 3396,
+      "loc": 170,
+      "size_bytes": 7579,
       "symbols": [
         "ThemeName",
         "ThemeContextValue",
@@ -4673,14 +4872,14 @@
           "name": "useTheme",
           "kind": "function",
           "signature": "export function useTheme()",
-          "line": 36,
+          "line": 39,
           "exported": true
         },
         {
           "name": "ThemeProvider",
           "kind": "function",
           "signature": "export function ThemeProvider({ children, initialRetro = false }: { children: ReactNode; initialRetro?: boolean })",
-          "line": 40,
+          "line": 43,
           "exported": true
         }
       ],
@@ -4690,7 +4889,7 @@
         "useTheme"
       ],
       "calls": [],
-      "in_degree": 4,
+      "in_degree": 8,
       "out_degree": 1,
       "is_external": false
     },
@@ -5008,8 +5207,8 @@
       "group": "src/components",
       "color": "#3b82f6",
       "extension": ".tsx",
-      "loc": 370,
-      "size_bytes": 21981,
+      "loc": 383,
+      "size_bytes": 22525,
       "symbols": [
         "AppearanceManager"
       ],
@@ -5018,7 +5217,7 @@
           "name": "AppearanceManager",
           "kind": "function",
           "signature": "export function AppearanceManager({ currentIcon, currentTemplate }: { currentIcon: string; currentTemplate: string; })",
-          "line": 65,
+          "line": 77,
           "exported": true
         }
       ],
@@ -5027,7 +5226,7 @@
       ],
       "calls": [],
       "in_degree": 1,
-      "out_degree": 4,
+      "out_degree": 5,
       "is_external": false
     },
     {
@@ -5634,8 +5833,8 @@
       "group": "src/components",
       "color": "#3b82f6",
       "extension": ".tsx",
-      "loc": 101,
-      "size_bytes": 4573,
+      "loc": 261,
+      "size_bytes": 11565,
       "symbols": [
         "MermaidDiagramProps",
         "MermaidDiagram"
@@ -5645,14 +5844,14 @@
           "name": "MermaidDiagramProps",
           "kind": "interface",
           "signature": "interface MermaidDiagramProps",
-          "line": 8,
+          "line": 10,
           "exported": false
         },
         {
           "name": "MermaidDiagram",
           "kind": "function",
           "signature": "export function MermaidDiagram({ chart, id = \"mermaid-diagram\" }: MermaidDiagramProps)",
-          "line": 13,
+          "line": 15,
           "exported": true
         }
       ],
@@ -5661,7 +5860,7 @@
       ],
       "calls": [],
       "in_degree": 2,
-      "out_degree": 4,
+      "out_degree": 6,
       "is_external": false
     },
     {
@@ -5703,7 +5902,7 @@
       "color": "#3b82f6",
       "extension": ".tsx",
       "loc": 229,
-      "size_bytes": 11530,
+      "size_bytes": 11738,
       "symbols": [
         "Props",
         "AdminProfilePhotoManager"
@@ -5930,8 +6129,8 @@
       "group": "src/components",
       "color": "#3b82f6",
       "extension": ".tsx",
-      "loc": 316,
-      "size_bytes": 16270,
+      "loc": 317,
+      "size_bytes": 16396,
       "symbols": [
         "Props",
         "SettingsManager"
@@ -6959,8 +7158,8 @@
       "group": "src/components",
       "color": "#3b82f6",
       "extension": ".tsx",
-      "loc": 144,
-      "size_bytes": 5273,
+      "loc": 143,
+      "size_bytes": 5215,
       "symbols": [
         "ContactForm"
       ],
@@ -6975,6 +7174,82 @@
       ],
       "exports": [
         "ContactForm"
+      ],
+      "calls": [],
+      "in_degree": 1,
+      "out_degree": 4,
+      "is_external": false
+    },
+    {
+      "id": "src/components/home/HomeClientRouter.tsx",
+      "label": "HomeClientRouter.tsx",
+      "path": "src/components/home/HomeClientRouter.tsx",
+      "directory": "src/components/home",
+      "group": "src/components",
+      "color": "#3b82f6",
+      "extension": ".tsx",
+      "loc": 35,
+      "size_bytes": 1132,
+      "symbols": [
+        "HomeClientRouterProps",
+        "HomeClientRouter"
+      ],
+      "symbol_details": [
+        {
+          "name": "HomeClientRouterProps",
+          "kind": "interface",
+          "signature": "interface HomeClientRouterProps",
+          "line": 7,
+          "exported": false
+        },
+        {
+          "name": "HomeClientRouter",
+          "kind": "function",
+          "signature": "export function HomeClientRouter(props: HomeClientRouterProps)",
+          "line": 24,
+          "exported": true
+        }
+      ],
+      "exports": [
+        "HomeClientRouter"
+      ],
+      "calls": [],
+      "in_degree": 1,
+      "out_degree": 3,
+      "is_external": false
+    },
+    {
+      "id": "src/components/home/HomeCompactCeramic.tsx",
+      "label": "HomeCompactCeramic.tsx",
+      "path": "src/components/home/HomeCompactCeramic.tsx",
+      "directory": "src/components/home",
+      "group": "src/components",
+      "color": "#3b82f6",
+      "extension": ".tsx",
+      "loc": 433,
+      "size_bytes": 29880,
+      "symbols": [
+        "HomeCompactCeramicProps",
+        "HomeCompactCeramic"
+      ],
+      "symbol_details": [
+        {
+          "name": "HomeCompactCeramicProps",
+          "kind": "interface",
+          "signature": "interface HomeCompactCeramicProps",
+          "line": 12,
+          "exported": false
+        },
+        {
+          "name": "HomeCompactCeramic",
+          "kind": "function",
+          "signature": "export function HomeCompactCeramic(props: HomeCompactCeramicProps)",
+          "line": 28,
+          "exported": true
+        }
+      ],
+      "exports": [
+        "HomeCompactCeramic"
       ],
       "calls": [],
       "in_degree": 1,
@@ -7219,8 +7494,8 @@
       "group": "src/components",
       "color": "#3b82f6",
       "extension": ".tsx",
-      "loc": 147,
-      "size_bytes": 8116,
+      "loc": 150,
+      "size_bytes": 8303,
       "symbols": [
         "Footer"
       ],
@@ -7484,8 +7759,8 @@
       "group": "src/components",
       "color": "#3b82f6",
       "extension": ".tsx",
-      "loc": 286,
-      "size_bytes": 14205,
+      "loc": 332,
+      "size_bytes": 17028,
       "symbols": [
         "NavLink",
         "NavGroup",
@@ -7497,28 +7772,28 @@
           "name": "NavLink",
           "kind": "interface",
           "signature": "interface NavLink",
-          "line": 27,
+          "line": 28,
           "exported": false
         },
         {
           "name": "NavGroup",
           "kind": "interface",
           "signature": "interface NavGroup",
-          "line": 33,
+          "line": 34,
           "exported": false
         },
         {
           "name": "ScreenSize",
           "kind": "type",
           "signature": "type ScreenSize = ...",
-          "line": 38,
+          "line": 39,
           "exported": false
         },
         {
           "name": "NavbarSidebar",
           "kind": "function",
           "signature": "export function NavbarSidebar({ flags = {} }: { flags?: Record<string, boolean> })",
-          "line": 40,
+          "line": 41,
           "exported": true
         }
       ],
@@ -7527,7 +7802,7 @@
       ],
       "calls": [],
       "in_degree": 0,
-      "out_degree": 4,
+      "out_degree": 5,
       "is_external": false
     },
     {
@@ -7606,8 +7881,8 @@
       "group": "src/components",
       "color": "#3b82f6",
       "extension": ".tsx",
-      "loc": 126,
-      "size_bytes": 7150,
+      "loc": 128,
+      "size_bytes": 7375,
       "symbols": [
         "FeaturedProjectsFilter"
       ],
@@ -7674,8 +7949,8 @@
       "group": "src/components",
       "color": "#3b82f6",
       "extension": ".tsx",
-      "loc": 233,
-      "size_bytes": 11152,
+      "loc": 235,
+      "size_bytes": 11353,
       "symbols": [
         "ProjectsGridProps",
         "ProjectsGrid"
@@ -8209,6 +8484,102 @@
       "is_external": false
     },
     {
+      "id": "src/components/visual-graph/ArchitectureGraph.tsx",
+      "label": "ArchitectureGraph.tsx",
+      "path": "src/components/visual-graph/ArchitectureGraph.tsx",
+      "directory": "src/components/visual-graph",
+      "group": "src/components",
+      "color": "#3b82f6",
+      "extension": ".tsx",
+      "loc": 707,
+      "size_bytes": 33855,
+      "symbols": [
+        "GraphNode",
+        "GraphEdge",
+        "GraphGroup",
+        "GraphData",
+        "ArchitectureGraph"
+      ],
+      "symbol_details": [
+        {
+          "name": "GraphNode",
+          "kind": "interface",
+          "signature": "export interface GraphNode extends d3.SimulationNodeDatum",
+          "line": 6,
+          "exported": true
+        },
+        {
+          "name": "GraphEdge",
+          "kind": "interface",
+          "signature": "export interface GraphEdge extends d3.SimulationLinkDatum<GraphNode>",
+          "line": 35,
+          "exported": true
+        },
+        {
+          "name": "GraphGroup",
+          "kind": "interface",
+          "signature": "export interface GraphGroup",
+          "line": 43,
+          "exported": true
+        },
+        {
+          "name": "GraphData",
+          "kind": "interface",
+          "signature": "export interface GraphData",
+          "line": 50,
+          "exported": true
+        },
+        {
+          "name": "ArchitectureGraph",
+          "kind": "function",
+          "signature": "export function ArchitectureGraph()",
+          "line": 63,
+          "exported": true
+        }
+      ],
+      "exports": [
+        "ArchitectureGraph",
+        "GraphData",
+        "GraphEdge",
+        "GraphGroup",
+        "GraphNode"
+      ],
+      "calls": [],
+      "in_degree": 1,
+      "out_degree": 2,
+      "is_external": false
+    },
+    {
+      "id": "src/components/visual-graph/RepoMapViewer.tsx",
+      "label": "RepoMapViewer.tsx",
+      "path": "src/components/visual-graph/RepoMapViewer.tsx",
+      "directory": "src/components/visual-graph",
+      "group": "src/components",
+      "color": "#3b82f6",
+      "extension": ".tsx",
+      "loc": 198,
+      "size_bytes": 9142,
+      "symbols": [
+        "RepoMapViewer"
+      ],
+      "symbol_details": [
+        {
+          "name": "RepoMapViewer",
+          "kind": "function",
+          "signature": "export function RepoMapViewer({ initialContent = \"\" }: { initialContent?: string })",
+          "line": 5,
+          "exported": true
+        }
+      ],
+      "exports": [
+        "RepoMapViewer"
+      ],
+      "calls": [],
+      "in_degree": 1,
+      "out_degree": 1,
+      "is_external": false
+    },
+    {
       "id": "src/components/visuals/CostComparison.tsx",
       "label": "CostComparison.tsx",
       "path": "src/components/visuals/CostComparison.tsx",
@@ -8514,8 +8885,8 @@
       "group": "src/components",
       "color": "#3b82f6",
       "extension": ".tsx",
-      "loc": 90,
-      "size_bytes": 3391,
+      "loc": 154,
+      "size_bytes": 6062,
       "symbols": [
         "SkillCategory",
         "SkillsRadarChartProps",
@@ -8526,21 +8897,21 @@
           "name": "SkillCategory",
           "kind": "interface",
           "signature": "interface SkillCategory",
-          "line": 14,
+          "line": 16,
           "exported": false
         },
         {
           "name": "SkillsRadarChartProps",
           "kind": "interface",
           "signature": "interface SkillsRadarChartProps",
-          "line": 20,
+          "line": 22,
           "exported": false
         },
         {
           "name": "SkillsRadarChart",
           "kind": "function",
           "signature": "export function SkillsRadarChart({ data }: SkillsRadarChartProps)",
-          "line": 24,
+          "line": 26,
           "exported": true
         }
       ],
@@ -8549,7 +8920,7 @@
       ],
       "calls": [],
       "in_degree": 0,
-      "out_degree": 2,
+      "out_degree": 4,
       "is_external": false
     },
     {
@@ -8781,7 +9152,7 @@
         "UpdateTables"
       ],
       "calls": [],
-      "in_degree": 22,
+      "in_degree": 23,
       "out_degree": 0,
       "is_external": false
     },
@@ -9093,7 +9464,7 @@
         "getProgramByCode"
       ],
       "calls": [],
-      "in_degree": 6,
+      "in_degree": 7,
       "out_degree": 3,
       "is_external": false
     },
@@ -9162,8 +9533,8 @@
       "group": "src/lib",
       "color": "#06b6d4",
       "extension": ".ts",
-      "loc": 115,
-      "size_bytes": 3421,
+      "loc": 125,
+      "size_bytes": 3801,
       "symbols": [
         "SiteSetting",
         "getSettingsByCategory",
@@ -9178,49 +9549,49 @@
           "name": "SiteSetting",
           "kind": "interface",
           "signature": "export interface SiteSetting",
-          "line": 10,
+          "line": 11,
           "exported": true
         },
         {
           "name": "getSettingsByCategory",
           "kind": "function",
           "signature": "export async function getSettingsByCategory(category: string): Promise<SiteSetting[]>",
-          "line": 43,
+          "line": 52,
           "exported": true
         },
         {
           "name": "getFeatureFlag",
           "kind": "function",
           "signature": "export async function getFeatureFlag(key: string): Promise<boolean>",
-          "line": 52,
+          "line": 61,
           "exported": true
         },
         {
           "name": "getSetting",
           "kind": "function",
           "signature": "export async function getSetting(key: string): Promise<unknown>",
-          "line": 61,
+          "line": 70,
           "exported": true
         },
         {
           "name": "updateSetting",
           "kind": "function",
           "signature": "export async function updateSetting(key: string, value: unknown)",
-          "line": 72,
+          "line": 81,
           "exported": true
         },
         {
           "name": "getFeatureFlags",
           "kind": "function",
           "signature": "export async function getFeatureFlags(): Promise<Record<string, boolean>>",
-          "line": 84,
+          "line": 94,
           "exported": true
         },
         {
           "name": "getSiteSettingsMap",
           "kind": "function",
           "signature": "export async function getSiteSettingsMap(): Promise<Record<string, unknown>>",
-          "line": 101,
+          "line": 111,
           "exported": true
         }
       ],
@@ -9235,7 +9606,7 @@
       ],
       "calls": [],
       "in_degree": 32,
-      "out_degree": 3,
+      "out_degree": 4,
       "is_external": false
     },
     {
@@ -9498,7 +9869,7 @@
       "color": "#06b6d4",
       "extension": ".ts",
       "loc": 65,
-      "size_bytes": 2673,
+      "size_bytes": 2725,
       "symbols": [
         "createClient",
         "createFallbackClient"
@@ -10836,7 +11207,7 @@
       "color": "#94a3b8",
       "extension": ".py",
       "loc": 262,
-      "size_bytes": 9339,
+      "size_bytes": 9601,
       "symbols": [
         "test_crawler_excludes_standard_directories",
         "test_parser_typescript_function_signatures",
@@ -11128,7 +11499,7 @@
       "symbol_details": [],
       "exports": [],
       "calls": [],
-      "in_degree": 108,
+      "in_degree": 114,
       "out_degree": 0,
       "is_external": true
     },
@@ -11146,7 +11517,7 @@
       "symbol_details": [],
       "exports": [],
       "calls": [],
-      "in_degree": 3,
+      "in_degree": 4,
       "out_degree": 0,
       "is_external": true
     },
@@ -11673,6 +12044,24 @@
       "is_external": true
     },
     {
+      "id": "npm:serialize-javascript",
+      "label": "serialize-javascript",
+      "path": "npm:serialize-javascript",
+      "directory": "external",
+      "group": "external",
+      "color": "#64748b",
+      "extension": ".npm",
+      "loc": 0,
+      "size_bytes": 0,
+      "symbols": [],
+      "symbol_details": [],
+      "exports": [],
+      "calls": [],
+      "in_degree": 2,
+      "out_degree": 0,
+      "is_external": true
+    },
+    {
       "id": "npm:resend",
       "label": "resend",
       "path": "npm:resend",
@@ -11704,7 +12093,7 @@
       "symbol_details": [],
       "exports": [],
       "calls": [],
-      "in_degree": 89,
+      "in_degree": 95,
       "out_degree": 0,
       "is_external": true
     },
@@ -12036,6 +12425,24 @@
       "id": "npm:react-to-print",
       "label": "react-to-print",
       "path": "npm:react-to-print",
+      "directory": "external",
+      "group": "external",
+      "color": "#64748b",
+      "extension": ".npm",
+      "loc": 0,
+      "size_bytes": 0,
+      "symbols": [],
+      "symbol_details": [],
+      "exports": [],
+      "calls": [],
+      "in_degree": 1,
+      "out_degree": 0,
+      "is_external": true
+    },
+    {
+      "id": "npm:d3",
+      "label": "d3",
+      "path": "npm:d3",
       "directory": "external",
       "group": "external",
       "color": "#64748b",
@@ -12928,6 +13335,26 @@
       ]
     },
     {
+      "source": "src/app/layout.test.tsx",
+      "target": "npm:vitest",
+      "type": "import",
+      "count": 1,
+      "specifiers": [
+        "describe",
+        "expect",
+        "it"
+      ]
+    },
+    {
+      "source": "src/app/layout.test.tsx",
+      "target": "npm:serialize-javascript",
+      "type": "import",
+      "count": 1,
+      "specifiers": [
+        "serialize"
+      ]
+    },
+    {
       "source": "src/app/layout.tsx",
       "target": "npm:next",
       "type": "import",
@@ -12936,6 +13363,15 @@
         "Inter",
         "JetBrains_Mono",
         "Metadata"
+      ]
+    },
+    {
+      "source": "src/app/layout.tsx",
+      "target": "npm:serialize-javascript",
+      "type": "import",
+      "count": 1,
+      "specifiers": [
+        "serialize"
       ]
     },
     {
@@ -12963,6 +13399,16 @@
       "count": 1,
       "specifiers": [
         "ThemeProvider"
+      ]
+    },
+    {
+      "source": "src/app/layout.tsx",
+      "target": "src/components/AppearanceProvider.tsx",
+      "type": "import",
+      "count": 1,
+      "specifiers": [
+        "AppearanceProvider",
+        "TemplateName"
       ]
     },
     {
@@ -13138,11 +13584,20 @@
     },
     {
       "source": "src/app/page.tsx",
-      "target": "src/components/home/HomeLegacy.tsx",
+      "target": "src/lib/data/initiatives.ts",
       "type": "import",
       "count": 1,
       "specifiers": [
-        "HomeLegacy"
+        "getInitiativeStats"
+      ]
+    },
+    {
+      "source": "src/app/page.tsx",
+      "target": "src/components/home/HomeClientRouter.tsx",
+      "type": "import",
+      "count": 1,
+      "specifiers": [
+        "HomeClientRouter"
       ]
     },
     {
@@ -13367,7 +13822,8 @@
       "type": "import",
       "count": 1,
       "specifiers": [
-        "revalidatePath"
+        "revalidatePath",
+        "revalidateTag"
       ]
     },
     {
@@ -13631,7 +14087,8 @@
       "type": "import",
       "count": 1,
       "specifiers": [
-        "revalidatePath"
+        "revalidatePath",
+        "revalidateTag"
       ]
     },
     {
@@ -14923,6 +15380,15 @@
       ]
     },
     {
+      "source": "src/app/deception-and-device-abuse/page.tsx",
+      "target": "npm:next",
+      "type": "import",
+      "count": 1,
+      "specifiers": [
+        "Metadata"
+      ]
+    },
+    {
       "source": "src/app/downloads/page.tsx",
       "target": "src/lib/supabase/server.ts",
       "type": "import",
@@ -15113,6 +15579,15 @@
       "specifiers": [
         "convertToINR",
         "formatINR"
+      ]
+    },
+    {
+      "source": "src/app/privacy/page.tsx",
+      "target": "npm:next",
+      "type": "import",
+      "count": 1,
+      "specifiers": [
+        "Metadata"
       ]
     },
     {
@@ -15370,6 +15845,66 @@
       "count": 1,
       "specifiers": [
         "notFound"
+      ]
+    },
+    {
+      "source": "src/app/visual-graph/layout.tsx",
+      "target": "npm:next",
+      "type": "import",
+      "count": 1,
+      "specifiers": [
+        "Metadata"
+      ]
+    },
+    {
+      "source": "src/app/visual-graph/page.tsx",
+      "target": "npm:react",
+      "type": "import",
+      "count": 1,
+      "specifiers": [
+        "React",
+        "useEffect",
+        "useState"
+      ]
+    },
+    {
+      "source": "src/app/visual-graph/page.tsx",
+      "target": "npm:next",
+      "type": "import",
+      "count": 1,
+      "specifiers": [
+        "Link"
+      ]
+    },
+    {
+      "source": "src/app/visual-graph/page.tsx",
+      "target": "src/components/visual-graph/ArchitectureGraph.tsx",
+      "type": "import",
+      "count": 1,
+      "specifiers": [
+        "ArchitectureGraph"
+      ]
+    },
+    {
+      "source": "src/app/visual-graph/page.tsx",
+      "target": "src/components/visual-graph/RepoMapViewer.tsx",
+      "type": "import",
+      "count": 1,
+      "specifiers": [
+        "RepoMapViewer"
+      ]
+    },
+    {
+      "source": "src/components/AppearanceProvider.tsx",
+      "target": "npm:react",
+      "type": "import",
+      "count": 1,
+      "specifiers": [
+        "ReactNode",
+        "createContext",
+        "useContext",
+        "useEffect",
+        "useState"
       ]
     },
     {
@@ -15718,6 +16253,16 @@
       "count": 1,
       "specifiers": [
         "updateSettingValue"
+      ]
+    },
+    {
+      "source": "src/components/admin/AppearanceManager.tsx",
+      "target": "src/components/AppearanceProvider.tsx",
+      "type": "import",
+      "count": 1,
+      "specifiers": [
+        "TemplateName",
+        "useAppearance"
       ]
     },
     {
@@ -16475,6 +17020,24 @@
       "count": 1,
       "specifiers": [
         "DOMPurify"
+      ]
+    },
+    {
+      "source": "src/components/admin/MermaidDiagram.tsx",
+      "target": "src/components/ThemeProvider.tsx",
+      "type": "import",
+      "count": 1,
+      "specifiers": [
+        "useTheme"
+      ]
+    },
+    {
+      "source": "src/components/admin/MermaidDiagram.tsx",
+      "target": "src/components/AppearanceProvider.tsx",
+      "type": "import",
+      "count": 1,
+      "specifiers": [
+        "useAppearance"
       ]
     },
     {
@@ -17585,6 +18148,72 @@
       ]
     },
     {
+      "source": "src/components/home/HomeClientRouter.tsx",
+      "target": "src/components/ThemeProvider.tsx",
+      "type": "import",
+      "count": 1,
+      "specifiers": [
+        "useTheme"
+      ]
+    },
+    {
+      "source": "src/components/home/HomeClientRouter.tsx",
+      "target": "src/components/home/HomeLegacy.tsx",
+      "type": "import",
+      "count": 1,
+      "specifiers": [
+        "HomeLegacy"
+      ]
+    },
+    {
+      "source": "src/components/home/HomeClientRouter.tsx",
+      "target": "src/components/home/HomeCompactCeramic.tsx",
+      "type": "import",
+      "count": 1,
+      "specifiers": [
+        "HomeCompactCeramic"
+      ]
+    },
+    {
+      "source": "src/components/home/HomeCompactCeramic.tsx",
+      "target": "npm:react",
+      "type": "import",
+      "count": 1,
+      "specifiers": [
+        "useMemo",
+        "useState"
+      ]
+    },
+    {
+      "source": "src/components/home/HomeCompactCeramic.tsx",
+      "target": "npm:next",
+      "type": "import",
+      "count": 3,
+      "specifiers": [
+        "Image",
+        "Link",
+        "dynamic"
+      ]
+    },
+    {
+      "source": "src/components/home/HomeCompactCeramic.tsx",
+      "target": "src/lib/database.types.ts",
+      "type": "import",
+      "count": 1,
+      "specifiers": [
+        "Project"
+      ]
+    },
+    {
+      "source": "src/components/home/HomeCompactCeramic.tsx",
+      "target": "src/components/ThemeProvider.tsx",
+      "type": "import",
+      "count": 1,
+      "specifiers": [
+        "useTheme"
+      ]
+    },
+    {
       "source": "src/components/home/HomeLegacy.tsx",
       "target": "npm:next",
       "type": "import",
@@ -17965,6 +18594,15 @@
     },
     {
       "source": "src/components/layout/NavbarSidebar.tsx",
+      "target": "src/components/ThemeProvider.tsx",
+      "type": "import",
+      "count": 1,
+      "specifiers": [
+        "useTheme"
+      ]
+    },
+    {
+      "source": "src/components/layout/NavbarSidebar.tsx",
       "target": "src/components/ThemeSwitcher.tsx",
       "type": "import",
       "count": 1,
@@ -18302,6 +18940,40 @@
       ]
     },
     {
+      "source": "src/components/visual-graph/ArchitectureGraph.tsx",
+      "target": "npm:react",
+      "type": "import",
+      "count": 1,
+      "specifiers": [
+        "React",
+        "useEffect",
+        "useMemo",
+        "useRef",
+        "useState"
+      ]
+    },
+    {
+      "source": "src/components/visual-graph/ArchitectureGraph.tsx",
+      "target": "npm:d3",
+      "type": "import",
+      "count": 1,
+      "specifiers": [
+        "d3"
+      ]
+    },
+    {
+      "source": "src/components/visual-graph/RepoMapViewer.tsx",
+      "target": "npm:react",
+      "type": "import",
+      "count": 1,
+      "specifiers": [
+        "React",
+        "useEffect",
+        "useMemo",
+        "useState"
+      ]
+    },
+    {
       "source": "src/components/visuals/CostComparison.tsx",
       "target": "npm:react",
       "type": "import",
@@ -18458,6 +19130,16 @@
     },
     {
       "source": "src/components/visuals/SkillsRadarChart.tsx",
+      "target": "npm:react",
+      "type": "import",
+      "count": 1,
+      "specifiers": [
+        "useEffect",
+        "useState"
+      ]
+    },
+    {
+      "source": "src/components/visuals/SkillsRadarChart.tsx",
       "target": "npm:recharts",
       "type": "import",
       "count": 1,
@@ -18479,6 +19161,15 @@
       "specifiers": [
         "useRetroTheme",
         "useTheme"
+      ]
+    },
+    {
+      "source": "src/components/visuals/SkillsRadarChart.tsx",
+      "target": "src/components/AppearanceProvider.tsx",
+      "type": "import",
+      "count": 1,
+      "specifiers": [
+        "useAppearance"
       ]
     },
     {
@@ -18725,6 +19416,16 @@
       "count": 1,
       "specifiers": [
         "logDbError"
+      ]
+    },
+    {
+      "source": "src/lib/data/settings.ts",
+      "target": "npm:next",
+      "type": "import",
+      "count": 1,
+      "specifiers": [
+        "revalidateTag",
+        "unstable_cache"
       ]
     },
     {

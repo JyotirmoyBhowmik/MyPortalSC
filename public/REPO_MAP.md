@@ -1,7 +1,7 @@
 # Codebase Repository Map
 
 > **Aider-Style Structural Outline**: Generated with Tree-Sitter syntax analysis.
-> **Summary**: 279 source files | 31,229 lines of code | 586 symbols extracted.
+> **Summary**: 289 source files | 33,432 lines of code | 604 symbols extracted.
 > **Token Economy**: Function bodies and internal statements are elided to maximize AI reasoning context.
 
 ---
@@ -71,14 +71,14 @@
 │    41: export async function getProjectBySlug( slug: string ): Promise<Project | null>
 │    58: export async function getAllProjects(): Promise<Project[]>
 
-### `src/lib/data/settings.ts` (115 loc)
-│    10: export interface SiteSetting
-│    43: export async function getSettingsByCategory(category: string): Promise<SiteSetting[]>
-│    52: export async function getFeatureFlag(key: string): Promise<boolean>
-│    61: export async function getSetting(key: string): Promise<unknown>
-│    72: export async function updateSetting(key: string, value: unknown)
-│    84: export async function getFeatureFlags(): Promise<Record<string, boolean>>
-│   101: export async function getSiteSettingsMap(): Promise<Record<string, unknown>>
+### `src/lib/data/settings.ts` (125 loc)
+│    11: export interface SiteSetting
+│    52: export async function getSettingsByCategory(category: string): Promise<SiteSetting[]>
+│    61: export async function getFeatureFlag(key: string): Promise<boolean>
+│    70: export async function getSetting(key: string): Promise<unknown>
+│    81: export async function updateSetting(key: string, value: unknown)
+│    94: export async function getFeatureFlags(): Promise<Record<string, boolean>>
+│   111: export async function getSiteSettingsMap(): Promise<Record<string, unknown>>
 
 ### `src/lib/data/skills.ts` (39 loc)
 │    10: export async function getAllSkills(): Promise<Skill[]>
@@ -142,7 +142,7 @@
 ### `src/app/api/admin/quick-edit-hero/route.ts` (64 loc)
 │     9: export async function POST(req: NextRequest)
 
-### `src/app/api/assets/route.ts` (52 loc)
+### `src/app/api/assets/route.ts` (54 loc)
 │    19: export async function GET(req: NextRequest)
 
 ### `src/app/api/audio/route.ts` (33 loc)
@@ -177,6 +177,12 @@
 
 ## UI & Visual Components (src/components)
 
+### `src/components/AppearanceProvider.tsx` (69 loc)
+│    11: export type TemplateName = ...
+│    20: interface AppearanceContextValue
+│    30: export function useAppearance()
+│    34: export function AppearanceProvider({ children, initialTemplate = "classic", }: { children: ReactNode; initialTemplate?: TemplateName; })
+
 ### `src/components/FeatureGate.tsx` (23 loc)
 │    13: interface Props
 │    19: export async function FeatureGate({ feature, children, fallback }: Props)
@@ -191,11 +197,11 @@
 │    12: export function SettingsProvider({ settings, children }: { settings: Record<string, boolean>; children: ReactNode })
 │    16: export function useSettings()
 
-### `src/components/ThemeProvider.tsx` (97 loc)
+### `src/components/ThemeProvider.tsx` (170 loc)
 │    11: export type ThemeName = ...
 │    13: interface ThemeContextValue
-│    36: export function useTheme()
-│    40: export function ThemeProvider({ children, initialRetro = false }: { children: ReactNode; initialRetro?: boolean })
+│    39: export function useTheme()
+│    43: export function ThemeProvider({ children, initialRetro = false }: { children: ReactNode; initialRetro?: boolean })
 
 ### `src/components/ThemeSwitcher.tsx` (70 loc)
 │     6: export function ThemeSwitcher()
@@ -230,8 +236,8 @@
 │    20: interface AnalyticsDashboardProps
 │    26: export function AnalyticsDashboard({ clickEvents, pageAnalytics, recentContacts }: AnalyticsDashboardProps)
 
-### `src/components/admin/AppearanceManager.tsx` (370 loc)
-│    65: export function AppearanceManager({ currentIcon, currentTemplate }: { currentIcon: string; currentTemplate: string; })
+### `src/components/admin/AppearanceManager.tsx` (383 loc)
+│    77: export function AppearanceManager({ currentIcon, currentTemplate }: { currentIcon: string; currentTemplate: string; })
 
 ### `src/components/admin/BlogManager.tsx` (202 loc)
 │    11: interface Post
@@ -296,9 +302,9 @@
 │     7: interface MediaPickerModalProps
 │    12: export function MediaPickerModal({ onSelect, onClose }: MediaPickerModalProps)
 
-### `src/components/admin/MermaidDiagram.tsx` (101 loc)
-│     8: interface MermaidDiagramProps
-│    13: export function MermaidDiagram({ chart, id = "mermaid-diagram" }: MermaidDiagramProps)
+### `src/components/admin/MermaidDiagram.tsx` (261 loc)
+│    10: interface MermaidDiagramProps
+│    15: export function MermaidDiagram({ chart, id = "mermaid-diagram" }: MermaidDiagramProps)
 
 ### `src/components/admin/PagesManager.tsx` (204 loc)
 │    15: export function PagesManager({ initialAbout, initialContact, allowVersioning = false, allowScheduledPublish = false, }: { initialAbout: Record<string, any>; initialContact: Record<string, any>; allowVersioning?: boolean; allowScheduledPublish?: boolean; })
@@ -327,7 +333,7 @@
 │    16: export function RichTextEditor({ content, onChange, minHeight = "min-h-[300px]" }: RichTextEditorProps)
 │   147: function MenuButton({ onClick, isActive, label, title }: { onClick: () => void; isActive: boolean; label: string; title: string })
 
-### `src/components/admin/SettingsManager.tsx` (316 loc)
+### `src/components/admin/SettingsManager.tsx` (317 loc)
 │   101: interface Props
 │   105: export function SettingsManager({ grouped }: Props)
 
@@ -437,8 +443,16 @@
 │     7: interface Props
 │    11: export function FinanceCharts({ budgets }: Props)
 
-### `src/components/forms/ContactForm.tsx` (144 loc)
+### `src/components/forms/ContactForm.tsx` (143 loc)
 │     8: export function ContactForm()
+
+### `src/components/home/HomeClientRouter.tsx` (35 loc)
+│     7: interface HomeClientRouterProps
+│    24: export function HomeClientRouter(props: HomeClientRouterProps)
+
+### `src/components/home/HomeCompactCeramic.tsx` (433 loc)
+│    12: interface HomeCompactCeramicProps
+│    28: export function HomeCompactCeramic(props: HomeCompactCeramicProps)
 
 ### `src/components/home/HomeLegacy.tsx` (432 loc)
 │    14: interface HomeLegacyProps
@@ -465,7 +479,7 @@
 │    14: interface ProgramWithInitiatives
 │    24: export function ProgramCard({ program }: { program: ProgramWithInitiatives })
 
-### `src/components/layout/Footer.tsx` (147 loc)
+### `src/components/layout/Footer.tsx` (150 loc)
 │    44: export function Footer({ flags = {} }: { flags?: Record<string, boolean> })
 
 ### `src/components/layout/LanguageProvider.tsx` (53 loc)
@@ -492,11 +506,11 @@
 ### `src/components/layout/NavbarPremium.tsx` (104 loc)
 │     9: export function NavbarPremium({ flags = {} }: { flags?: Record<string, boolean> })
 
-### `src/components/layout/NavbarSidebar.tsx` (286 loc)
-│    27: interface NavLink
-│    33: interface NavGroup
-│    38: type ScreenSize = ...
-│    40: export function NavbarSidebar({ flags = {} }: { flags?: Record<string, boolean> })
+### `src/components/layout/NavbarSidebar.tsx` (332 loc)
+│    28: interface NavLink
+│    34: interface NavGroup
+│    39: type ScreenSize = ...
+│    41: export function NavbarSidebar({ flags = {} }: { flags?: Record<string, boolean> })
 
 ### `src/components/layout/ProgressBar.tsx` (19 loc)
 │     5: export function ProgressBar()
@@ -505,14 +519,14 @@
 │     6: interface DownloadPdfButtonProps
 │    11: export function DownloadPdfButton({ contentRef, fileName = "executive-summary.pdf" }: DownloadPdfButtonProps)
 
-### `src/components/projects/FeaturedProjectsFilter.tsx` (126 loc)
+### `src/components/projects/FeaturedProjectsFilter.tsx` (128 loc)
 │    11: export function FeaturedProjectsFilter({ projects }: { projects: Project[] })
 
 ### `src/components/projects/ProjectImageWithLightbox.tsx` (35 loc)
 │     7: interface ProjectImageWithLightboxProps
 │    13: export function ProjectImageWithLightbox({ src, alt, className = "" }: ProjectImageWithLightboxProps)
 
-### `src/components/projects/ProjectsGrid.tsx` (233 loc)
+### `src/components/projects/ProjectsGrid.tsx` (235 loc)
 │     9: interface ProjectsGridProps
 │    13: export function ProjectsGrid({ projects }: ProjectsGridProps)
 
@@ -570,6 +584,16 @@
 │    20: export function ToastProvider({ children }: { children: ReactNode })
 │    71: export function useToast()
 
+### `src/components/visual-graph/ArchitectureGraph.tsx` (707 loc)
+│     6: export interface GraphNode extends d3.SimulationNodeDatum
+│    35: export interface GraphEdge extends d3.SimulationLinkDatum<GraphNode>
+│    43: export interface GraphGroup
+│    50: export interface GraphData
+│    63: export function ArchitectureGraph()
+
+### `src/components/visual-graph/RepoMapViewer.tsx` (198 loc)
+│     5: export function RepoMapViewer({ initialContent = "" }: { initialContent?: string })
+
 ### `src/components/visuals/CostComparison.tsx` (133 loc)
 │     6: interface CostCategory
 │    32: export function CostComparison({ initialCategories }: { initialCategories?: CostCategory[] })
@@ -602,10 +626,10 @@
 ### `src/components/visuals/ServerStatusWidget.tsx` (93 loc)
 │     6: export function ServerStatusWidget()
 
-### `src/components/visuals/SkillsRadarChart.tsx` (90 loc)
-│    14: interface SkillCategory
-│    20: interface SkillsRadarChartProps
-│    24: export function SkillsRadarChart({ data }: SkillsRadarChartProps)
+### `src/components/visuals/SkillsRadarChart.tsx` (154 loc)
+│    16: interface SkillCategory
+│    22: interface SkillsRadarChartProps
+│    26: export function SkillsRadarChart({ data }: SkillsRadarChartProps)
 
 ### `src/components/visuals/VideoPlayer.tsx` (54 loc)
 │     5: interface VideoPlayerProps
@@ -659,6 +683,9 @@
 ### `src/app/debug/page.tsx` (40 loc)
 │     5: export async function DebugPage()
 
+### `src/app/deception-and-device-abuse/page.tsx` (104 loc)
+│     8: export function DeceptionAndDeviceAbusePage()
+
 ### `src/app/downloads/page.tsx` (80 loc)
 │    12: export async function DownloadsPage()
 
@@ -687,9 +714,12 @@
 ### `src/app/initiatives/programs/page.tsx` (77 loc)
 │    18: export async function ProgramsPage()
 
-### `src/app/layout.tsx` (163 loc)
-│    40: export async function generateMetadata(): Promise<Metadata>
-│    94: export async function RootLayout({ children, }: Readonly<{ children: React.ReactNode; }>)
+### `src/app/layout.test.tsx` (21 loc)
+│    (Declaration/data file with no top-level symbol definitions)
+
+### `src/app/layout.tsx` (166 loc)
+│    42: export async function generateMetadata(): Promise<Metadata>
+│    96: export async function RootLayout({ children, }: Readonly<{ children: React.ReactNode; }>)
 
 ### `src/app/loading.tsx` (24 loc)
 │     1: export function Loading()
@@ -700,10 +730,13 @@
 ### `src/app/not-found.tsx` (70 loc)
 │     5: export function NotFound()
 
-### `src/app/page.tsx` (76 loc)
-│    20: export async function HomePage()
+### `src/app/page.tsx` (80 loc)
+│    14: export async function HomePage()
 
-### `src/app/projects/[slug]/page.tsx` (292 loc)
+### `src/app/privacy/page.tsx` (108 loc)
+│     8: export function PrivacyPage()
+
+### `src/app/projects/[slug]/page.tsx` (294 loc)
 │    10: interface KeyMetric
 │    16: interface Props
 │    20: export async function generateMetadata({ params }: Props): Promise<Metadata>
@@ -721,10 +754,10 @@
 ### `src/app/security/page.tsx` (56 loc)
 │    21: export async function SecurityPage()
 
-### `src/app/site-map/page.tsx` (97 loc)
-│    37: export function SitemapPage()
+### `src/app/site-map/page.tsx` (105 loc)
+│    45: export function SitemapPage()
 
-### `src/app/sitemap.ts` (92 loc)
+### `src/app/sitemap.ts` (93 loc)
 │    13: export async function sitemap(): Promise<MetadataRoute.Sitemap>
 
 ### `src/app/skills/page.tsx` (80 loc)
@@ -739,6 +772,12 @@
 ### `src/app/timeline/page.tsx` (31 loc)
 │    13: export async function TimelinePage()
 
+### `src/app/visual-graph/layout.tsx` (14 loc)
+│     8: export function VisualGraphLayout({ children, }: { children: React.ReactNode; })
+
+### `src/app/visual-graph/page.tsx` (96 loc)
+│     8: export function VisualGraphPage()
+
 ## Admin Portal (src/app/admin)
 
 ### `src/app/admin/achievements/page.tsx` (7 loc)
@@ -749,9 +788,9 @@
 │    17: export async function updateAchievement( id: string, data: UpdateTables<"achievements"> )
 │    28: export async function deleteAchievement(id: string)
 
-### `src/app/admin/actions/appearance.ts` (81 loc)
+### `src/app/admin/actions/appearance.ts` (83 loc)
 │     6: export async function uploadSiteIcon(formData: FormData)
-│    68: export async function resetSiteIcon()
+│    69: export async function resetSiteIcon()
 
 ### `src/app/admin/actions/calendar.ts` (44 loc)
 │     6: export async function createFiscalYear(formData: FormData)
@@ -788,7 +827,7 @@
 │    62: export async function updateBudget(id: string, formData: FormData)
 │   117: export async function deleteBudget(id: string)
 
-### `src/app/admin/actions/initiatives.ts` (194 loc)
+### `src/app/admin/actions/initiatives.ts` (200 loc)
 │     8: export async function createInitiative(formData: FormData)
 │    43: export async function updateInitiative(id: string, formData: FormData)
 │    79: export async function deleteInitiative(id: string)
@@ -796,7 +835,7 @@
 │   118: export async function updateProgram(id: string, formData: FormData)
 │   141: export async function deleteProgram(id: string)
 │   158: export async function reorderInitiatives( orderedIds: { id: string; sort_order: number }[] )
-│   177: export async function reorderPrograms( orderedIds: { id: string; sort_order: number }[] )
+│   180: export async function reorderPrograms( orderedIds: { id: string; sort_order: number }[] )
 
 ### `src/app/admin/actions/media.ts` (148 loc)
 │     7: export async function uploadMedia(formData: FormData)
@@ -819,9 +858,9 @@
 │    22: export async function updatePublication(id: string, formData: FormData)
 │    38: export async function deletePublication(id: string)
 
-### `src/app/admin/actions/settings.ts` (55 loc)
+### `src/app/admin/actions/settings.ts` (58 loc)
 │     6: export async function toggleFeature(key: string, enabled: boolean)
-│    32: export async function updateSettingValue(key: string, value: unknown)
+│    33: export async function updateSettingValue(key: string, value: unknown)
 
 ### `src/app/admin/actions/skills.ts` (57 loc)
 │     7: export async function createSkill( data: Omit<InsertTables<"skills">, "id" | "created_at" | "updated_at"> )
@@ -1153,7 +1192,7 @@
 │     517: def _parse_sql(self, rel_path: str, content: str) -> ParsedFile: ...
 │     568: def _parse_fallback(self, rel_path: str, content: str, language: str) -> ParsedFile: ...
 
-### `scripts/codebase_mapper/repo_map_generator.py` (123 loc)
+### `scripts/codebase_mapper/repo_map_generator.py` (130 loc)
 │  class RepoMapGenerator [L15]
 │      16: def __init__(self, config: MapperConfig): ...
 │      21: def generate(self) -> str: ...
@@ -1173,7 +1212,7 @@
 │      23: def log_message(self, format, *args): ...
 │    29: def run_server(directory: Path, port: int = 3333, max_tries: int = 10) -> tuple[int, http.server.HTTPServer]: ...
 
-### `scripts/codebase_mapper/visualizer_generator.py` (832 loc)
+### `scripts/codebase_mapper/visualizer_generator.py` (839 loc)
 │  class VisualizerGenerator [L807]
 │     808: def __init__(self, config: MapperConfig): ...
 │     811: def generate(self, graph_data: Dict[str, Any]) -> Path: ...
