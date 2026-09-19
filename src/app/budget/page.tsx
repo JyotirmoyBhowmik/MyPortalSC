@@ -3,6 +3,7 @@ import { getAllBudgets, type DashboardBudget } from "@/lib/data/finances";
 import { formatINR, convertToINR } from "@/lib/utils/currency";
 import AnimatedSection from "@/components/animations/AnimatedSection";
 import { BudgetVarianceChart, BudgetTrendChart, PrintExportButton } from "@/components/budget/BudgetCharts";
+import BudgetInteractiveControls from "@/components/budget/BudgetInteractiveControls";
 import Link from "next/link";
 import { getFeatureFlag } from "@/lib/data/settings";
 
@@ -164,6 +165,17 @@ export default async function BudgetPage({ searchParams }: { searchParams: Promi
                             </div>
                         </div>
                     </div>
+                </AnimatedSection>
+
+                {/* Interactive Controls: Currency Switcher, What-If Simulator, CSV Export */}
+                <AnimatedSection delay={0.05}>
+                    <BudgetInteractiveControls
+                        budgets={budgets}
+                        grandPlanINR={grandPlan}
+                        grandExpenseINR={grandExpense}
+                        capexTotalINR={capexTotal}
+                        opexTotalINR={opexTotal}
+                    />
                 </AnimatedSection>
 
                 {/* KPI Summary Bar — 6 items */}

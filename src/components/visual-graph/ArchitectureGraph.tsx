@@ -60,6 +60,53 @@ export interface GraphData {
     edges: GraphEdge[];
 }
 
+export function findShortestPath(
+    nodes: GraphNode[],
+    edges: GraphEdge[],
+    startId: string,
+    targetId: string
+): { path: string[]; directed: boolean } {
+    if (!startId || !targetId || startId === targetId) return { path: [], directed: false };
+
+    const directedAdj = new Map<string, string[]>();
+    const undirectedAdj = new Map<string, string[]>();
+
+    edges.forEach((e) => {
+        const s = typeof e.source === "object" ? (e.source as GraphNode).id : e.source;
+        const t = typeof e.target === "object" ? (e.target as GraphNode).id : e.target;
+        if (!directedAdj.has(s)) directedAdj.set(s, []);
+        directedAdj.get(s)!.push(t);
+
+        if (!undirectedAdj.has(s)) undirectedAdj.set(s, []);
+        if (!undirectedAdj.has(t)) undirectedAdj.set(t, []);
+        undirectedAdj.get(s)!.push(t);
+        undirectedAdj.get(t)!.push(s);
+    });
+
+    const bfs = (adj: Map<string, string[]>) => {
+        const queue: string[][] = [[startId]];
+        const visited = new Set<string>([startId]);
+        while (queue.length > 0) {
+            const p = queue.shift()!;
+            const curr = p[p.length - 1];
+            if (curr === targetId) return p;
+            for (const nxt of adj.get(curr) || []) {
+                if (!visited.has(nxt)) {
+                    visited.add(nxt);
+                    queue.push([...p, nxt]);
+                }
+            }
+        }
+        return [];
+    };
+
+    const dirPath = bfs(directedAdj);
+    if (dirPath.length > 0) return { path: dirPath, directed: true };
+
+    const undirPath = bfs(undirectedAdj);
+    return { path: undirPath, directed: false };
+}
+
 export default function ArchitectureGraph() {
     const svgRef = useRef<SVGSVGElement | null>(null);
     const containerRef = useRef<HTMLDivElement | null>(null);
@@ -77,8 +124,16 @@ export default function ArchitectureGraph() {
     const [sizeMode, setSizeMode] = useState<"degree" | "loc" | "uniform">("degree");
     const [isPhysicsRunning, setIsPhysicsRunning] = useState(true);
 
+    // Path tracing states
+    const [isPathFinderOpen, setIsPathFinderOpen] = useState(false);
+    const [pathSourceId, setPathSourceId] = useState<string>("");
+    const [pathTargetId, setPathTargetId] = useState<string>("");
+    const [activePath, setActivePath] = useState<{ path: string[]; directed: boolean } | null>(null);
+
     const simulationRef = useRef<d3.Simulation<GraphNode, GraphEdge> | null>(null);
     const zoomRef = useRef<d3.ZoomBehavior<SVGSVGElement, unknown> | null>(null);
+    const highlightPathRef = useRef<((path: string[]) => void) | null>(null);
+    const resetHighlightRef = useRef<(() => void) | null>(null);
 
     // Fetch data
     useEffect(() => {
@@ -314,6 +369,44 @@ export default function ArchitectureGraph() {
             labelElements.attr("opacity", 1);
         }
 
+        function highlightPathElements(pathIds: string[]) {
+            if (!pathIds || pathIds.length === 0) return;
+            const pathSet = new Set(pathIds);
+            const pathEdgePairs = new Set<string>();
+            for (let i = 0; i < pathIds.length - 1; i++) {
+                pathEdgePairs.add(`${pathIds[i]}->${pathIds[i + 1]}`);
+                pathEdgePairs.add(`${pathIds[i + 1]}->${pathIds[i]}`);
+            }
+
+            linkElements.each(function (l) {
+                const s = typeof l.source === "object" ? (l.source as GraphNode).id : l.source;
+                const t = typeof l.target === "object" ? (l.target as GraphNode).id : l.target;
+                const isPathEdge = pathEdgePairs.has(`${s}->${t}`) || pathEdgePairs.has(`${t}->${s}`);
+
+                if (isPathEdge) {
+                    d3.select(this)
+                        .attr("stroke", "#06b6d4")
+                        .attr("stroke-opacity", 1)
+                        .attr("stroke-width", 3.5);
+                } else {
+                    d3.select(this).attr("stroke-opacity", 0.05);
+                }
+            });
+
+            nodeElements
+                .attr("opacity", (n) => (pathSet.has(n.id) ? 1 : 0.1))
+                .attr("stroke", (n) => (pathSet.has(n.id) ? "#38bdf8" : getDarkerStroke(n.color)))
+                .attr("stroke-width", (n) => (pathSet.has(n.id) ? 4 : 1.5));
+
+            labelElements
+                .attr("opacity", (n) => (pathSet.has(n.id) ? 1 : 0.1))
+                .style("display", (n) => (pathSet.has(n.id) ? "block" : showLabels ? "block" : "none"));
+        }
+
+        highlightPathRef.current = highlightPathElements;
+        resetHighlightRef.current = resetHighlight;
+
+
         // Force simulation
         const sim = d3
             .forceSimulation(simNodes)
@@ -345,6 +438,27 @@ export default function ArchitectureGraph() {
             sim.stop();
         };
     }, [filteredGraph, sizeMode, showLabels]);
+
+    // Reactively update highlight when activePath changes
+    useEffect(() => {
+        if (activePath && activePath.path.length > 0) {
+            highlightPathRef.current?.(activePath.path);
+        } else {
+            resetHighlightRef.current?.();
+        }
+    }, [activePath]);
+
+    const handleTracePath = () => {
+        if (!data || !pathSourceId || !pathTargetId) return;
+        const result = findShortestPath(data.nodes, data.edges, pathSourceId, pathTargetId);
+        setActivePath(result);
+    };
+
+    const handleClearPath = () => {
+        setActivePath(null);
+        setPathSourceId("");
+        setPathTargetId("");
+    };
 
     // Handle search selection
     const handleSelectSearchedNode = (node: GraphNode) => {
@@ -478,8 +592,99 @@ export default function ArchitectureGraph() {
                         <option value="loc">Size: Lines of Code</option>
                         <option value="uniform">Size: Uniform</option>
                     </select>
+
+                    <button
+                        type="button"
+                        onClick={() => setIsPathFinderOpen(!isPathFinderOpen)}
+                        className={`px-2.5 py-1.5 rounded-lg border text-xs transition flex items-center gap-1.5 font-medium ${
+                            isPathFinderOpen
+                                ? "bg-cyan-500/20 text-cyan-300 border-cyan-500/50 shadow-sm"
+                                : "bg-slate-800 hover:bg-slate-700 border-slate-700 text-slate-300"
+                        }`}
+                    >
+                        <span>🧭</span>
+                        <span>Trace Path</span>
+                    </button>
                 </div>
             </div>
+
+            {/* Path Finder Panel */}
+            {isPathFinderOpen && (
+                <div className="bg-slate-900/95 border-b border-cyan-500/30 p-3 px-4 flex flex-wrap items-center justify-between gap-3 text-xs z-20">
+                    <div className="flex flex-wrap items-center gap-2">
+                        <span className="font-semibold text-cyan-400 flex items-center gap-1">
+                            <span>🧭</span> Dependency Path Finder:
+                        </span>
+                        <select
+                            value={pathSourceId}
+                            onChange={(e) => setPathSourceId(e.target.value)}
+                            className="bg-slate-800 border border-slate-700 text-slate-200 rounded px-2 py-1 max-w-[200px] truncate font-mono text-[11px]"
+                        >
+                            <option value="">Select Source Node...</option>
+                            {data.nodes.map((n) => (
+                                <option key={n.id} value={n.id}>
+                                    {n.label} ({n.path})
+                                </option>
+                            ))}
+                        </select>
+                        <span className="text-muted-foreground">&rarr;</span>
+                        <select
+                            value={pathTargetId}
+                            onChange={(e) => setPathTargetId(e.target.value)}
+                            className="bg-slate-800 border border-slate-700 text-slate-200 rounded px-2 py-1 max-w-[200px] truncate font-mono text-[11px]"
+                        >
+                            <option value="">Select Target Node...</option>
+                            {data.nodes.map((n) => (
+                                <option key={n.id} value={n.id}>
+                                    {n.label} ({n.path})
+                                </option>
+                            ))}
+                        </select>
+                        <button
+                            type="button"
+                            onClick={handleTracePath}
+                            disabled={!pathSourceId || !pathTargetId}
+                            className="px-3 py-1 bg-cyan-600 hover:bg-cyan-500 disabled:opacity-40 text-white font-semibold rounded text-xs transition shadow-sm"
+                        >
+                            Find Path
+                        </button>
+                        {(activePath || pathSourceId || pathTargetId) && (
+                            <button
+                                type="button"
+                                onClick={handleClearPath}
+                                className="px-2 py-1 text-slate-400 hover:text-slate-200 underline text-[11px]"
+                            >
+                                Clear
+                            </button>
+                        )}
+                    </div>
+
+                    {activePath && (
+                        <div className="flex items-center gap-2 text-[11px] font-mono">
+                            {activePath.path.length > 0 ? (
+                                <div className="flex items-center gap-1 overflow-x-auto max-w-xl py-1">
+                                    <span className="text-cyan-400 font-bold">
+                                        Path ({activePath.path.length} hops, {activePath.directed ? "Directed" : "Connected"}):
+                                    </span>
+                                    {activePath.path.map((nodeId, idx) => {
+                                        const n = data.nodes.find((item) => item.id === nodeId);
+                                        return (
+                                            <span key={nodeId} className="flex items-center gap-1">
+                                                <span className="px-1.5 py-0.5 rounded bg-cyan-950 border border-cyan-800 text-cyan-200">
+                                                    {n ? n.label : nodeId}
+                                                </span>
+                                                {idx < activePath.path.length - 1 && <span className="text-cyan-400">&rarr;</span>}
+                                            </span>
+                                        );
+                                    })}
+                                </div>
+                            ) : (
+                                <span className="text-amber-400 font-semibold">No dependency path found between selected nodes.</span>
+                            )}
+                        </div>
+                    )}
+                </div>
+            )}
 
             {/* Main Workspace */}
             <div className="relative h-[680px] w-full flex overflow-hidden">

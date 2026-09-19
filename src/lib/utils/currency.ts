@@ -24,3 +24,31 @@ export function formatINR(amount: number): string {
         maximumFractionDigits: 0
     }).format(amount);
 }
+
+export function convertFromINR(amountINR: number, targetCurrency: string): number {
+    const rate = EXCHANGE_RATES_TO_INR[targetCurrency.toUpperCase()] || 1;
+    return amountINR / rate;
+}
+
+export function formatCurrency(amountINR: number, currency: string = "INR"): string {
+    const curr = currency.toUpperCase();
+    const rate = EXCHANGE_RATES_TO_INR[curr] || 1;
+    const converted = amountINR / rate;
+
+    const localeMap: Record<string, string> = {
+        INR: "en-IN",
+        USD: "en-US",
+        EUR: "de-DE",
+        GBP: "en-GB",
+        JPY: "ja-JP",
+        AUD: "en-AU",
+        CAD: "en-CA",
+    };
+
+    return new Intl.NumberFormat(localeMap[curr] || "en-US", {
+        style: "currency",
+        currency: curr,
+        maximumFractionDigits: 0,
+    }).format(converted);
+}
+

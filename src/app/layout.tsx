@@ -44,6 +44,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const useOg = settings.feature_og_images;
 
   return {
+    metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://jyotirmoyb.com"),
     title: {
       default: "Jyotirmoy Bhowmik — IT Infrastructure & Project Management",
       template: "%s | Jyotirmoy Bhowmik",

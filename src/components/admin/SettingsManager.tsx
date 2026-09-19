@@ -168,6 +168,57 @@ export default function SettingsManager({ grouped }: Props) {
         });
     }
 
+    function handleExportBackup() {
+        const backupData = {
+            version: "1.0",
+            exported_at: new Date().toISOString(),
+            settings: localState,
+        };
+        const blob = new Blob([JSON.stringify(backupData, null, 2)], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `site_settings_backup_${new Date().toISOString().slice(0, 10)}.json`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        setMessage({ type: "success", text: "Configuration backup exported!" });
+        setTimeout(() => setMessage(null), 2500);
+    }
+
+    function handleImportBackup(e: React.ChangeEvent<HTMLInputElement>) {
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = async (event) => {
+            try {
+                const parsed = JSON.parse(event.target?.result as string);
+                const settingsToImport = parsed.settings || parsed;
+                if (typeof settingsToImport !== "object" || !settingsToImport) {
+                    throw new Error("Invalid backup file structure");
+                }
+
+                startTransition(async () => {
+                    let updatedCount = 0;
+                    for (const [k, v] of Object.entries(settingsToImport)) {
+                        await updateSettingValue(k, v);
+                        updatedCount++;
+                    }
+                    setLocalState(settingsToImport as Record<string, unknown>);
+                    setMessage({ type: "success", text: `Restored ${updatedCount} settings successfully!` });
+                    setTimeout(() => setMessage(null), 3000);
+                });
+            } catch (err) {
+                setMessage({ type: "error", text: "Failed to parse configuration backup file" });
+                setTimeout(() => setMessage(null), 3000);
+            }
+        };
+        reader.readAsText(file);
+        e.target.value = "";
+    }
+
     return (
         <div className="space-y-6">
             {/* Toast */}
@@ -177,20 +228,45 @@ export default function SettingsManager({ grouped }: Props) {
                 </div>
             )}
 
-            {/* Tabs */}
-            <div className="flex items-center gap-2 border-b border-border mb-6 pb-2">
-                <button
-                    onClick={() => setActiveTab("toggles")}
-                    className={`px-4 py-2 text-sm font-medium transition-all border-b-2 -mb-[9px] ${activeTab === "toggles" ? "border-primary text-primary" : "border-transparent text-muted-foreground hover:text-foreground"}`}
-                >
-                    Feature Flags
-                </button>
-                <button
-                    onClick={() => setActiveTab("configs")}
-                    className={`px-4 py-2 text-sm font-medium transition-all border-b-2 -mb-[9px] ${activeTab === "configs" ? "border-primary text-primary" : "border-transparent text-muted-foreground hover:text-foreground"}`}
-                >
-                    Component Configurations
-                </button>
+            {/* Header: Tabs & Backup Controls */}
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-border mb-6 pb-2 gap-4">
+                <div className="flex items-center gap-2">
+                    <button
+                        onClick={() => setActiveTab("toggles")}
+                        className={`px-4 py-2 text-sm font-medium transition-all border-b-2 -mb-[9px] ${activeTab === "toggles" ? "border-primary text-primary" : "border-transparent text-muted-foreground hover:text-foreground"}`}
+                    >
+                        Feature Flags
+                    </button>
+                    <button
+                        onClick={() => setActiveTab("configs")}
+                        className={`px-4 py-2 text-sm font-medium transition-all border-b-2 -mb-[9px] ${activeTab === "configs" ? "border-primary text-primary" : "border-transparent text-muted-foreground hover:text-foreground"}`}
+                    >
+                        Component Configurations
+                    </button>
+                </div>
+
+                {/* Backup & Restore Controls */}
+                <div className="flex items-center gap-2">
+                    <button
+                        type="button"
+                        onClick={handleExportBackup}
+                        className="px-3 py-1.5 rounded-lg border border-border bg-surface text-muted-foreground hover:text-foreground hover:bg-surface/80 text-xs font-semibold transition-all flex items-center gap-1.5 shadow-xs"
+                        title="Download current settings configuration as JSON"
+                    >
+                        <span>💾</span>
+                        <span>Export Backup</span>
+                    </button>
+                    <label className="px-3 py-1.5 rounded-lg border border-border bg-surface text-muted-foreground hover:text-foreground hover:bg-surface/80 text-xs font-semibold transition-all flex items-center gap-1.5 shadow-xs cursor-pointer">
+                        <span>📤</span>
+                        <span>Import Backup</span>
+                        <input
+                            type="file"
+                            accept=".json"
+                            onChange={handleImportBackup}
+                            className="hidden"
+                        />
+                    </label>
+                </div>
             </div>
 
             {activeTab === "toggles" ? (

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { formatINR, convertToINR, EXCHANGE_RATES_TO_INR } from './currency';
+import { formatINR, convertToINR, EXCHANGE_RATES_TO_INR, convertFromINR, formatCurrency } from './currency';
 
 describe('formatINR', () => {
     it('formats zero correctly', () => {
@@ -52,3 +52,22 @@ describe('convertToINR', () => {
         expect(convertToINR(100, 'INR')).toBe(100);
     });
 });
+
+describe('convertFromINR and formatCurrency', () => {
+    it('converts INR to target currencies correctly', () => {
+        const inr = 8350;
+        expect(convertFromINR(inr, 'USD')).toBeCloseTo(100, 1);
+        expect(convertFromINR(inr, 'INR')).toBe(8350);
+    });
+
+    it('formats target currencies with valid currency symbols', () => {
+        const inr = 83500;
+        const usdFormatted = formatCurrency(inr, 'USD');
+        expect(usdFormatted).toContain('$');
+        const eurFormatted = formatCurrency(inr, 'EUR');
+        expect(eurFormatted).toContain('€');
+        const inrFormatted = formatCurrency(inr, 'INR');
+        expect(inrFormatted).toContain('₹');
+    });
+});
+

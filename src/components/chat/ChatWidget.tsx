@@ -23,11 +23,10 @@ export default function ChatWidget() {
         }
     }, [messages]);
 
-    const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        if (!input.trim() || isLoading) return;
+    const sendMessage = async (text: string) => {
+        if (!text.trim() || isLoading) return;
 
-        const userMsg: Message = { id: Date.now().toString(), role: "user", content: input };
+        const userMsg: Message = { id: Date.now().toString(), role: "user", content: text };
         const newMessages = [...messages, userMsg];
         setMessages(newMessages);
         setInput("");
@@ -65,6 +64,12 @@ export default function ChatWidget() {
         }
     };
 
+    const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        await sendMessage(input);
+    };
+
+
     return (
         <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end print:hidden">
             {/* Chat Box */}
@@ -101,12 +106,31 @@ export default function ChatWidget() {
                 {/* Messages Area */}
                 <div className="flex-1 overflow-y-auto p-5 pb-2 space-y-4 no-scrollbar">
                     {messages.length === 0 ? (
-                        <div className="h-full flex flex-col items-center justify-center text-center space-y-3 opacity-70">
-                            <div className="w-12 h-12 rounded-full gradient-bg flex items-center justify-center text-white mb-2 rotate-12">
+                        <div className="h-full flex flex-col items-center justify-center text-center space-y-3">
+                            <div className="w-12 h-12 rounded-full gradient-bg flex items-center justify-center text-white mb-1 rotate-12 shadow-md">
                                 🤖
                             </div>
-                            <p className="text-sm font-medium">Hi! I&apos;m Jyotirmoy&apos;s Digital Twin.</p>
-                            <p className="text-xs text-muted-foreground max-w-[200px]">Ask me about his experience, projects, skills, or anything else!</p>
+                            <div>
+                                <p className="text-sm font-semibold text-foreground">Hi! I&apos;m Jyotirmoy&apos;s Digital Twin.</p>
+                                <p className="text-xs text-muted-foreground mt-0.5">Ask me about IT projects, architecture, or budgets!</p>
+                            </div>
+                            <div className="flex flex-col gap-1.5 w-full pt-2">
+                                {[
+                                    "Summarize 10-year IT roadmap & budget spend",
+                                    "Explain OT & SCADA cybersecurity strategy",
+                                    "How does the site's AST Codebase Graph work?",
+                                    "What cloud and data center migrations did you lead?"
+                                ].map((chip) => (
+                                    <button
+                                        key={chip}
+                                        type="button"
+                                        onClick={() => sendMessage(chip)}
+                                        className="text-left px-3 py-1.5 rounded-xl border border-border/70 bg-surface/70 hover:bg-primary/10 hover:border-primary/40 text-[11px] text-foreground transition-all hover:scale-[1.01] active:scale-[0.99] shadow-xs cursor-pointer"
+                                    >
+                                        💡 {chip}
+                                    </button>
+                                ))}
+                            </div>
                         </div>
                     ) : (
                         messages.map((m) => (

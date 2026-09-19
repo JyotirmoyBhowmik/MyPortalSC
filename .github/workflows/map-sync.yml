@@ -1,0 +1,47 @@
+name: Codebase Map & Graph Sync
+run-name: Regenerate Codebase Map & Architecture Graph
+
+on:
+  push:
+    branches: [ "master" ]
+    paths:
+      - 'src/**'
+      - 'scripts/codebase_mapper/**'
+      - 'package.json'
+  workflow_dispatch:
+
+jobs:
+  sync-maps:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install Python Dependencies
+        run: |
+          pip install tree-sitter pathspec pytest
+
+      - name: Run Codebase Mapping Engine
+        run: |
+          python scripts/codebase_mapper/main.py --all
+
+      - name: Commit and Push Updated Maps
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add REPO_MAP.md public/REPO_MAP.md graph.json public/graph.json visualizer/index.html
+          if git diff --staged --quiet; then
+            echo "No changes in codebase maps or graph."
+          else
+            git commit -m "chore(maps): automated sync of REPO_MAP.md and graph.json [skip ci]"
+            git push origin master
+          fi
