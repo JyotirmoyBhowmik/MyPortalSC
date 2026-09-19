@@ -45,7 +45,13 @@ export async function createClient() {
     }
 }
 
-function createFallbackClient(url?: string, key?: string) {
+export function createPublicClient() {
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+    return createFallbackClient(supabaseUrl, supabaseAnonKey);
+}
+
+export function createFallbackClient(url?: string, key?: string) {
     // Use placeholders if actual values are missing to prevent createServerClient from throwing.
     // This allows the build to proceed during static generation even if env vars are not set.
     const safeUrl = url && url !== "undefined" && url !== "null" && url.startsWith("http")
@@ -62,4 +68,5 @@ function createFallbackClient(url?: string, key?: string) {
         }
     });
 }
+
 
