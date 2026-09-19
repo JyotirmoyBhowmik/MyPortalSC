@@ -22,7 +22,8 @@ export default async function HomePage() {
     budgets,
     settingsMap,
     availableForOpportunities,
-    initiativeStats
+    initiativeStats,
+    featureBudgetMockDisclaimer,
   ] = await Promise.all([
     getFeaturedProjects(3),
     getSkillsByCategory(),
@@ -33,7 +34,8 @@ export default async function HomePage() {
     getAllBudgets(),
     getSiteSettingsMap(),
     getFeatureFlag("feature_available_for_opportunities"),
-    getInitiativeStats()
+    getInitiativeStats(),
+    getFeatureFlag("feature_budget_mock_disclaimer"),
   ]);
 
   // Calculate generic total spend
@@ -67,6 +69,7 @@ export default async function HomePage() {
       featureParticleBg,
       budgets,
       formattedSpend,
+      showBudgetDisclaimer: featureBudgetMockDisclaimer,
       heroTitle,
       heroSubtitle,
       heroDescription,

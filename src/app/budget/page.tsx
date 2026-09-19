@@ -4,6 +4,7 @@ import { formatINR, convertToINR } from "@/lib/utils/currency";
 import AnimatedSection from "@/components/animations/AnimatedSection";
 import { BudgetVarianceChart, BudgetTrendChart, PrintExportButton } from "@/components/budget/BudgetCharts";
 import Link from "next/link";
+import { getFeatureFlag } from "@/lib/data/settings";
 
 export const metadata: Metadata = {
     title: "Enterprise IT Financial Ledger — SOW/Budget Tracker",
@@ -55,7 +56,10 @@ const renderStatusDot = (status: string | undefined) => {
 };
 
 export default async function BudgetPage({ searchParams }: { searchParams: Promise<{ role?: string; forecast?: string }> }) {
-    const rawBudgets = await getAllBudgets();
+    const [rawBudgets, showBudgetDisclaimer] = await Promise.all([
+        getAllBudgets(),
+        getFeatureFlag("feature_budget_mock_disclaimer")
+    ]);
     const params = await searchParams;
 
     // Point 15: Budget Forecasting
@@ -139,6 +143,12 @@ export default async function BudgetPage({ searchParams }: { searchParams: Promi
                                 10-Year IT Roadmap SOW — Statement of Work & Budget Tracker.<br/>
                                 <span className="text-xs opacity-70">Showing {budgets.length} budget line items across {sortedFYs.length} fiscal years</span>
                             </p>
+                            {showBudgetDisclaimer && (
+                                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-amber-500/10 border border-amber-500/20 text-[11px] text-amber-400/90 mt-3 font-medium">
+                                    <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse shrink-0"></span>
+                                    <span><strong>Disclaimer:</strong> Financial figures shown are mock data for portfolio demonstration; actual enterprise budget values are withheld.</span>
+                                </div>
+                            )}
                         </div>
                         <div className="flex flex-col gap-3 items-end">
                             <div className="flex bg-surface border border-border rounded-lg p-1 print:hidden">
@@ -188,6 +198,11 @@ export default async function BudgetPage({ searchParams }: { searchParams: Promi
                             </div>
                         </div>
                     </div>
+                    {showBudgetDisclaimer && (
+                        <p className="text-[10px] text-muted-foreground/60 text-center -mt-6 mb-8 italic">
+                            *Notice: Values shown across fiscal years, planning baselines, and variance models represent simulated mock data for demonstration purposes.
+                        </p>
+                    )}
                 </AnimatedSection>
 
                 {/* Charts Row */}

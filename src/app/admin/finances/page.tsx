@@ -4,14 +4,16 @@ import { getAllProjects } from "@/lib/data/projects";
 import { getAllInitiativesAdmin } from "@/lib/data/initiatives";
 import { getAllSkills } from "@/lib/data/skills";
 import { AVAILABLE_CURRENCIES } from "@/lib/utils/currency";
+import { getFeatureFlag } from "@/lib/data/settings";
 
 export default async function AdminFinancesPage() {
-    const [budgets, projects, initiatives, skills, fiscalYears] = await Promise.all([
+    const [budgets, projects, initiatives, skills, fiscalYears, isDisclaimerEnabled] = await Promise.all([
         getAllBudgets(),
         getAllProjects(),
         getAllInitiativesAdmin(),
         getAllSkills(),
-        getFiscalYears()
+        getFiscalYears(),
+        getFeatureFlag("feature_budget_mock_disclaimer")
     ]);
 
     const projectOptions = projects.map(p => ({ id: p.id, label: p.title }));
@@ -36,6 +38,7 @@ export default async function AdminFinancesPage() {
                 skills={skillOptions}
                 fiscalYears={fiscalYearOptions}
                 currencies={AVAILABLE_CURRENCIES}
+                isDisclaimerEnabled={isDisclaimerEnabled}
             />
         </div>
     );

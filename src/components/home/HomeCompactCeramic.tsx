@@ -16,6 +16,7 @@ interface HomeCompactCeramicProps {
     featureParticleBg: boolean;
     budgets: any[];
     formattedSpend: string;
+    showBudgetDisclaimer?: boolean;
     heroTitle: string;
     heroSubtitle: string;
     heroDescription: string;
@@ -32,6 +33,7 @@ export default function HomeCompactCeramic(props: HomeCompactCeramicProps) {
         certifications,
         budgets,
         formattedSpend,
+        showBudgetDisclaimer = true,
         heroTitle,
         heroSubtitle,
         heroDescription,
@@ -246,6 +248,11 @@ export default function HomeCompactCeramic(props: HomeCompactCeramicProps) {
                                 <div>
                                     <strong className="block text-3xl font-extrabold tracking-tight text-white">{formattedSpend || "₹18.9Cr+"}</strong>
                                     <span className="font-mono text-[9px] uppercase tracking-wider text-[#A3A3A3] mt-1 block">BUDGET MANAGED</span>
+                                    {showBudgetDisclaimer && (
+                                        <span className="text-[9px] text-[#A3A3A3]/70 block mt-0.5 leading-tight italic">
+                                            *Mock demonstration data
+                                        </span>
+                                    )}
                                 </div>
                                 <div>
                                     <strong className="block text-3xl font-extrabold tracking-tight text-white">88+</strong>

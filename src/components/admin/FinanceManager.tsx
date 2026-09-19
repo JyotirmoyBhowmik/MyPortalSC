@@ -6,6 +6,7 @@ import Input from "@/components/ui/Input";
 import { useConfirmDialog } from "@/components/ui/ConfirmDialog";
 import { useToast } from "@/components/ui/ToastProvider";
 import { createBudget, updateBudget, deleteBudget } from "@/app/admin/actions/finance";
+import { toggleFeature } from "@/app/admin/actions/settings";
 import type { DashboardBudget } from "@/lib/data/finances";
 import { convertToINR, formatINR, EXCHANGE_RATES_TO_INR } from "@/lib/utils/currency";
 
@@ -21,11 +22,14 @@ interface Props {
     skills: SelectOption[];
     fiscalYears: SelectOption[];
     currencies: string[];
+    isDisclaimerEnabled?: boolean;
 }
 
-export default function FinanceManager({ budgets, projects, initiatives, skills, fiscalYears, currencies }: Props) {
+export default function FinanceManager({ budgets, projects, initiatives, skills, fiscalYears, currencies, isDisclaimerEnabled = true }: Props) {
     const [isEditing, setIsEditing] = useState<string | null>(null);
     const [submitting, setSubmitting] = useState(false);
+    const [disclaimerActive, setDisclaimerActive] = useState(isDisclaimerEnabled);
+    const [togglingDisclaimer, setTogglingDisclaimer] = useState(false);
     const { dialog, confirm: confirmDelete } = useConfirmDialog();
     const { showToast } = useToast();
 
@@ -286,9 +290,47 @@ export default function FinanceManager({ budgets, projects, initiatives, skills,
     return (
         <>
             {dialog}
-            <div className="mb-6 flex justify-between items-center">
-                <div></div>
-                <Button onClick={() => setIsEditing("new")}>Add Budget Entry</Button>
+            <div className="mb-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-surface/40 p-4 rounded-xl border border-border">
+                <div className="flex items-center gap-3">
+                    <span className="text-xl">⚠️</span>
+                    <div>
+                        <div className="text-sm font-semibold flex items-center gap-2">
+                            Public Mock Data Disclaimer
+                            <span className={`px-2 py-0.5 text-[10px] font-bold rounded-full uppercase tracking-wider ${disclaimerActive ? "bg-amber-500/20 text-amber-400 border border-amber-500/30" : "bg-muted text-muted-foreground"}`}>
+                                {disclaimerActive ? "Active" : "Hidden"}
+                            </span>
+                        </div>
+                        <p className="text-xs text-muted-foreground">
+                            Displays a subtle disclaimer under budget metrics on the Home and Budget pages stating values are mock data.
+                        </p>
+                    </div>
+                </div>
+                <div className="flex items-center gap-3 self-end sm:self-auto">
+                    <button
+                        type="button"
+                        disabled={togglingDisclaimer}
+                        onClick={async () => {
+                            const nextState = !disclaimerActive;
+                            setTogglingDisclaimer(true);
+                            const res = await toggleFeature("feature_budget_mock_disclaimer", nextState);
+                            if (res.success) {
+                                setDisclaimerActive(nextState);
+                                showToast(`Public disclaimer ${nextState ? "enabled" : "disabled"}`, "success");
+                            } else {
+                                showToast(res.error || "Failed to update disclaimer setting", "error");
+                            }
+                            setTogglingDisclaimer(false);
+                        }}
+                        className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors border ${
+                            disclaimerActive 
+                                ? "bg-amber-500/15 border-amber-500/40 text-amber-300 hover:bg-amber-500/25" 
+                                : "bg-surface border-border text-muted-foreground hover:bg-surface/80"
+                        }`}
+                    >
+                        {togglingDisclaimer ? "Updating..." : disclaimerActive ? "Disable Disclaimer" : "Enable Disclaimer"}
+                    </button>
+                    <Button onClick={() => setIsEditing("new")}>Add Budget Entry</Button>
+                </div>
             </div>
 
             <div className="glass rounded-xl overflow-hidden mb-6">

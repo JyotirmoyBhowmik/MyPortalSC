@@ -11,6 +11,7 @@ interface HomeClientRouterProps {
     featureParticleBg: boolean;
     budgets: any[];
     formattedSpend: string;
+    showBudgetDisclaimer?: boolean;
     heroTitle: string;
     heroSubtitle: string;
     heroDescription: string;

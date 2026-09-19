@@ -107,6 +107,7 @@ export const DEFAULT_FEATURE_FLAGS: Record<string, boolean> = {
     feature_og_images: true,
     feature_jsonld: true,
     feature_newsletter: true,
+    feature_budget_mock_disclaimer: true,
     feature_cost_comparison: true,
     feature_ping_dashboard: true,
     feature_security_scorecard: true,

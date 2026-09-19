@@ -80,8 +80,17 @@ const settingGroups = [
             "feature_og_images",
             "feature_pwa",
             "feature_network_topology",
-            "feature_cost_comparison",
             "feature_security_scorecard",
+        ]
+    },
+    {
+        id: "finance",
+        title: "Finance & Budgets",
+        icon: "💰",
+        color: "from-emerald-500/10 to-teal-500/10",
+        keys: [
+            "feature_budget_mock_disclaimer",
+            "feature_cost_comparison",
         ]
     },
     {
@@ -109,7 +118,9 @@ export default function SettingsManager({ grouped }: Props) {
 
     // Flatten settings to map by key efficiently
     const [localState, setLocalState] = useState<Record<string, unknown>>(() => {
-        const state: Record<string, unknown> = {};
+        const state: Record<string, unknown> = {
+            feature_budget_mock_disclaimer: true,
+        };
         for (const categorySettings of Object.values(grouped)) {
             for (const s of categorySettings) {
                 let val: unknown = s.value;
@@ -126,6 +137,19 @@ export default function SettingsManager({ grouped }: Props) {
         for (const s of categorySettings) {
             flatSettingsMap[s.key] = s;
         }
+    }
+
+    if (!flatSettingsMap["feature_budget_mock_disclaimer"]) {
+        flatSettingsMap["feature_budget_mock_disclaimer"] = {
+            id: "fallback_feature_budget_mock_disclaimer",
+            key: "feature_budget_mock_disclaimer",
+            label: "Budget Mock Data Disclaimer",
+            description: "Display disclaimer under home screen and budget page metrics noting that values are mock data",
+            category: "finance",
+            value: localState["feature_budget_mock_disclaimer"] ?? true,
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString(),
+        };
     }
 
     function handleChange(key: string, newValue: unknown) {

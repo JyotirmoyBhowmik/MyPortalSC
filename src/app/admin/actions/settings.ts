@@ -15,10 +15,30 @@ export async function toggleFeature(key: string, enabled: boolean) {
         return { success: false, error: "Insufficient permissions to toggle features." };
     }
 
-    const { error } = await supabase
+    const { data: existing } = await supabase
         .from("site_settings")
-        .update({ value: enabled })
-        .eq("key", key);
+        .select("id")
+        .eq("key", key)
+        .maybeSingle();
+
+    let error;
+    if (existing) {
+        const res = await supabase
+            .from("site_settings")
+            .update({ value: enabled })
+            .eq("key", key);
+        error = res.error;
+    } else {
+        const res = await supabase
+            .from("site_settings")
+            .insert({
+                key,
+                value: enabled,
+                label: key.replace(/^feature_/, "").replace(/_/g, " ").replace(/\b\w/g, (l) => l.toUpperCase()),
+                category: "content",
+            });
+        error = res.error;
+    }
 
     if (error) {
         return { success: false, error: error.message };
@@ -42,10 +62,30 @@ export async function updateSettingValue(key: string, value: unknown) {
         return { success: false, error: "Insufficient permissions to update settings." };
     }
 
-    const { error } = await supabase
+    const { data: existing } = await supabase
         .from("site_settings")
-        .update({ value: JSON.parse(JSON.stringify(value)) })
-        .eq("key", key);
+        .select("id")
+        .eq("key", key)
+        .maybeSingle();
+
+    let error;
+    if (existing) {
+        const res = await supabase
+            .from("site_settings")
+            .update({ value: JSON.parse(JSON.stringify(value)) })
+            .eq("key", key);
+        error = res.error;
+    } else {
+        const res = await supabase
+            .from("site_settings")
+            .insert({
+                key,
+                value: JSON.parse(JSON.stringify(value)),
+                label: key.replace(/^feature_/, "").replace(/_/g, " ").replace(/\b\w/g, (l) => l.toUpperCase()),
+                category: "content",
+            });
+        error = res.error;
+    }
 
     if (error) {
         return { success: false, error: error.message };

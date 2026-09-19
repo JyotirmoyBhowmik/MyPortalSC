@@ -18,6 +18,7 @@ interface HomeLegacyProps {
     featureParticleBg: boolean;
     budgets: any[];
     formattedSpend: string;
+    showBudgetDisclaimer?: boolean;
     heroTitle: string;
     heroSubtitle: string;
     heroDescription: string;
@@ -33,6 +34,7 @@ export default function HomeLegacy(props: HomeLegacyProps) {
         featureParticleBg,
         budgets,
         formattedSpend,
+        showBudgetDisclaimer = true,
         heroTitle,
         heroDescription,
         template,
@@ -149,6 +151,11 @@ export default function HomeLegacy(props: HomeLegacyProps) {
                                         {formattedSpend}
                                     </div>
                                     <div className="text-xs text-muted-foreground mt-1">IT Budget Spend</div>
+                                    {showBudgetDisclaimer && (
+                                        <div className="text-[9px] text-muted-foreground/60 mt-1 max-w-[130px] mx-auto leading-tight italic">
+                                            *Values reflect mock data for demonstration
+                                        </div>
+                                    )}
                                 </div>
                                 <div className="hidden md:block w-px h-10 bg-border" />
                             </>
