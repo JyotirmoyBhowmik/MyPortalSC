@@ -23,6 +23,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         { url: `${baseUrl}/skills`, lastModified: new Date(), changeFrequency: "monthly", priority: 0.7 },
         { url: `${baseUrl}/initiatives`, lastModified: new Date(), changeFrequency: "weekly", priority: 0.8 },
         { url: `${baseUrl}/initiatives/programs`, lastModified: new Date(), changeFrequency: "weekly", priority: 0.7 },
+        { url: `${baseUrl}/visual-graph`, lastModified: new Date(), changeFrequency: "weekly", priority: 0.8 },
     ];
 
     // Dynamic project slugs

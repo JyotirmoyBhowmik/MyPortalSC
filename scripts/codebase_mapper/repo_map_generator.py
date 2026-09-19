@@ -120,4 +120,11 @@ class RepoMapGenerator:
         with open(out_file, "w", encoding="utf-8") as f:
             f.write(content)
 
+        public_map = self.config.root_dir / "public" / "REPO_MAP.md"
+        try:
+            with open(public_map, "w", encoding="utf-8") as f:
+                f.write(content)
+        except Exception:
+            pass
+
         return content

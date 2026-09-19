@@ -30,6 +30,7 @@ const sitemapStructure = [
             { href: "/speaking", label: "Speaking", description: "Public speaking and workshop engagements." },
             { href: "/publications", label: "Publications", description: "Published tech articles and guides." },
             { href: "/downloads", label: "Downloads", description: "Downloadable resources and architectures." },
+            { href: "/visual-graph", label: "Visual Graph", description: "Interactive codebase architecture graph & Aider-style repository map." },
         ]
     }
 ];

@@ -812,7 +812,7 @@ class VisualizerGenerator:
         out_dir = self.config.visualizer_dir
         out_dir.mkdir(parents=True, exist_ok=True)
 
-        # 1. Save graph.json to visualizer/graph.json AND root graph.json
+        # 1. Save graph.json to visualizer/graph.json, root graph.json, and public/graph.json
         viz_json = out_dir / "graph.json"
         with open(viz_json, "w", encoding="utf-8") as f:
             json.dump(graph_data, f, indent=2)
@@ -820,6 +820,13 @@ class VisualizerGenerator:
         root_json = self.config.graph_output
         with open(root_json, "w", encoding="utf-8") as f:
             json.dump(graph_data, f, indent=2)
+
+        public_json = self.config.root_dir / "public" / "graph.json"
+        try:
+            with open(public_json, "w", encoding="utf-8") as f:
+                json.dump(graph_data, f, indent=2)
+        except Exception:
+            pass
 
         # 2. Build index.html with embedded fallback data
         raw_json_str = json.dumps(graph_data)
