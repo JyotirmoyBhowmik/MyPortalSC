@@ -352,6 +352,7 @@ export type Initiative = {
     strategic_area: string;
     criticality: "Critical" | "High" | "Medium" | "Low";
     delivery_focus: string | null;
+    image_url?: string | null;
     status: "draft" | "published" | "archived";
     order_index: number;
     created_at: string;

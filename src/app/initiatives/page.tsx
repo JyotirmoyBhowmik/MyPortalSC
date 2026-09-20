@@ -144,6 +144,7 @@ export default async function InitiativesPage() {
                             ...i,
                             programCode: i.programs?.code ?? "",
                             programName: i.programs?.name ?? "Other",
+                            imageUrl: i.image_url || undefined,
                         }))}
                         programs={programs}
                         fiscalYears={fiscalYears}

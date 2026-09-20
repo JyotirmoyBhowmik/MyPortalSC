@@ -7,6 +7,7 @@ import {
 } from "@/lib/data/initiatives";
 import { getAllBudgets } from "@/lib/data/finances";
 import { formatINR, convertToINR } from "@/lib/utils/currency";
+import ProjectImageWithLightbox from "@/components/projects/ProjectImageWithLightbox";
 
 export const revalidate = 60;
 
@@ -77,6 +78,19 @@ export default async function InitiativeDetailPage({ params }: Props) {
             {/* Initiative Detail */}
             <section className="px-4 pb-16">
                 <div className="max-w-4xl mx-auto">
+                    {/* Featured cover image */}
+                    {initiative.image_url && (
+                        <div className="glass rounded-2xl overflow-hidden mb-8 shadow-2xl shadow-primary/5">
+                            <div className="relative h-64 sm:h-96 w-full bg-slate-900/40 flex items-center justify-center overflow-hidden">
+                                <ProjectImageWithLightbox
+                                    src={initiative.image_url}
+                                    alt={initiative.title}
+                                    className="w-full h-full object-cover"
+                                />
+                            </div>
+                        </div>
+                    )}
+
                     {/* Header card */}
                     <div className="glass rounded-2xl p-8 sm:p-10 mb-8">
                         {/* Top badges */}

@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import type { Program } from "@/lib/database.types";
 
 interface InitiativeItem {
@@ -13,6 +14,7 @@ interface InitiativeItem {
     criticality: "Critical" | "High" | "Medium" | "Low";
     programCode: string;
     programName: string;
+    imageUrl?: string;
 }
 
 interface InitiativesGridProps {
@@ -164,37 +166,52 @@ export default function InitiativesGrid({
                     <Link
                         key={init.id}
                         href={`/initiatives/${init.slug}`}
-                        className="group glass rounded-xl p-5 hover-lift flex flex-col h-full"
+                        className="group glass rounded-xl overflow-hidden hover-lift flex flex-col h-full"
                     >
-                        {/* Top row: FY and Criticality */}
-                        <div className="flex items-center justify-between mb-3">
-                            <span className="text-xs font-medium text-muted-foreground">
-                                FY {init.fiscal_year}
-                            </span>
-                            <span className={`inline-flex items-center gap-1.5 text-xs font-medium px-2 py-0.5 rounded-full border ${criticalityColors[init.criticality]}`}>
-                                <span className={`w-1.5 h-1.5 rounded-full ${criticalityDots[init.criticality]}`} />
-                                {init.criticality}
-                            </span>
-                        </div>
+                        {init.imageUrl && (
+                            <div className="relative h-44 w-full overflow-hidden bg-slate-900/50">
+                                <Image
+                                    src={init.imageUrl}
+                                    alt={init.title}
+                                    fill
+                                    unoptimized={true}
+                                    className="object-cover group-hover:scale-105 transition-transform duration-500"
+                                />
+                                <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-transparent to-transparent opacity-60 group-hover:opacity-30 transition-opacity" />
+                            </div>
+                        )}
+                        <div className="p-5 flex-1 flex flex-col">
+                            {/* Top row: FY and Criticality */}
+                            <div className="flex items-center justify-between mb-3">
+                                <span className="text-xs font-medium text-muted-foreground">
+                                    FY {init.fiscal_year}
+                                </span>
+                                <span className={`inline-flex items-center gap-1.5 text-xs font-medium px-2 py-0.5 rounded-full border ${criticalityColors[init.criticality]}`}>
+                                    <span className={`w-1.5 h-1.5 rounded-full ${criticalityDots[init.criticality]}`} />
+                                    {init.criticality}
+                                </span>
+                            </div>
 
-                        {/* Title */}
-                        <h3 className="text-base font-semibold text-foreground group-hover:text-primary transition-colors mb-2 flex-1">
-                            {init.title}
-                        </h3>
+                            {/* Title */}
+                            <h3 className="text-base font-semibold text-foreground group-hover:text-primary transition-colors mb-2 flex-1">
+                                {init.title}
+                            </h3>
 
-                        {/* Strategic Area */}
-                        <p className="text-xs text-muted-foreground mb-3">{init.strategic_area}</p>
+                            {/* Strategic Area */}
+                            <p className="text-xs text-muted-foreground mb-3">{init.strategic_area}</p>
 
-                        {/* Program Badge */}
-                        <div className="flex items-center gap-2 mt-auto pt-3 border-t border-border/50">
-                            <span className="text-xs px-2 py-0.5 rounded bg-primary/10 text-primary font-medium">
-                                {init.programCode}
-                            </span>
-                            <span className="text-xs text-muted-foreground truncate">
-                                {init.programName}
-                            </span>
+                            {/* Program Badge */}
+                            <div className="flex items-center gap-2 mt-auto pt-3 border-t border-border/50">
+                                <span className="text-xs px-2 py-0.5 rounded bg-primary/10 text-primary font-medium">
+                                    {init.programCode}
+                                </span>
+                                <span className="text-xs text-muted-foreground truncate">
+                                    {init.programName}
+                                </span>
+                            </div>
                         </div>
                     </Link>
+
                 ))}
             </div>
 

@@ -14,6 +14,7 @@ interface InitiativeItem {
     criticality: "Critical" | "High" | "Medium" | "Low";
     programCode: string;
     programName: string;
+    imageUrl?: string;
 }
 
 interface Props {
