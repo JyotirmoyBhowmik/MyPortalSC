@@ -1,0 +1,60 @@
+    'ansible-network-patching-25',
+    'Automated configuration and firmware patching pipeline for manufacturing factory and warehouse network devices.',
+    'Conceived and mentored the delivery of an automated network patching and configuration pipeline using Ansible Semaphore. The pipeline automates routine Change Requests (CR) for Cisco and Juniper switches and routers across factory floors and distribution warehouses, eliminating human error during maintenance windows.',
+    'published',
+    ARRAY['Network Automation','DevOps & NetOps','Infrastructure as Code'],
+    ARRAY['Ansible Semaphore','Cisco IOS-XE','Juniper Junos','YAML Playbooks','CI/CD Pipelines'],
+    '2025-09-01'::date,
+    '2026-02-28'::date,
+    '/api/assets?path=projects%2Fimages%2Fcore-switch-replacement-24.jpg',
+    65,
+    'Manual, time-consuming network switch firmware updates during tight overnight maintenance windows, increasing the risk of configuration discrepancies.',
+    'Mentored direct report engineer to author Ansible playbooks, implement Semaphore UI for scheduled execution, and enforce pre/post check verification.',
+    'Centralized Semaphore orchestrator communicating via SSH and Netconf to distributed factory and warehouse network racks.',
+    'Successfully executed zero-downtime automated firmware patching across all branch network devices, setting a new operational benchmark.',
+    '{"devicesAutomated":"40+ Network Nodes","maintenanceWindowSaved":"75% Time Reduction","humanConfigurationErrors":"0 Errors","auditLogging":"100% Automated Trailing"}'::jsonb
+)
+ON CONFLICT (slug) DO UPDATE SET
+    title = EXCLUDED.title,
+    short_description = EXCLUDED.short_description,
+    detailed_description = EXCLUDED.detailed_description,
+    status = EXCLUDED.status,
+    domain = EXCLUDED.domain,
+    technologies = EXCLUDED.technologies,
+    start_date = EXCLUDED.start_date,
+    end_date = EXCLUDED.end_date,
+    featured_image_url = EXCLUDED.featured_image_url,
+    order_index = EXCLUDED.order_index,
+    challenge = EXCLUDED.challenge,
+    approach = EXCLUDED.approach,
+    architecture_notes = EXCLUDED.architecture_notes,
+    outcome = EXCLUDED.outcome,
+    key_metrics = EXCLUDED.key_metrics;
+
+
+INSERT INTO projects (title, slug, short_description, detailed_description, status, domain, technologies, start_date, end_date, featured_image_url, order_index, challenge, approach, architecture_notes, outcome, key_metrics)
+VALUES (
+    'Enterprise WAN Cost Optimization & IPLC Modernization',
+    'enterprise-wan-cost-optimization-25',
+    'Strategic telecommunications renegotiation cutting international private leased circuit costs while increasing bandwidth.',
+    'Conducted a strategic telecommunications audit and competitive RFP cycle ahead of the Subisu IPLC contract expiration. Successfully transitioned the legacy Subisu TATA 4 Mbps GDE link to Ncell, slashing one-time charges (OTC) from $1,000 to NPR 84K (~$550) and monthly recurring charges (MRC) from $1,300 to NPR 68K (~$440), realizing major recurring OpEx savings with enhanced SLA.',
+    'published',
+    ARRAY['Telecommunications','WAN Architecture','IT Financial Management'],
+    ARRAY['IPLC','MPLS WAN','BGP Routing','SLA Monitoring','Cost Optimization'],
+    '2025-05-01'::date,
+    '2025-08-31'::date,
+    '/api/assets?path=projects%2Fimages%2Fcore-switch-replacement-24.jpg',
+    66,
+    'High recurring telecommunications expenditure on low-bandwidth legacy leased lines nearing contract expiration.',
+    'Ran a competitive commercial renegotiation leveraging alternative domestic and international telecom carriers with stringent uptime SLA requirements.',
+    'Dual-carrier active/standby WAN interconnect with automated BGP failover and continuous jitter/latency telemetry.',
+    'Delivered significant annualized cost reduction while doubling link reliability and bandwidth capacity for corporate headquarters.',
+    '{"mrcCostReduction":"Over 65% Savings","otcCostReduction":"45% Savings","slaGuaranteed":"99.9% Uptime","paybackPeriod":"Immediate"}'::jsonb
+)
+ON CONFLICT (slug) DO UPDATE SET
+    title = EXCLUDED.title,
+    short_description = EXCLUDED.short_description,
+    detailed_description = EXCLUDED.detailed_description,
+    status = EXCLUDED.status,
+    domain = EXCLUDED.domain,
+    technologies = EXCLUDED.technologies,
