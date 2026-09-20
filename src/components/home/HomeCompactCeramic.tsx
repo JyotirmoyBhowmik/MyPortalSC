@@ -165,7 +165,7 @@ export default function HomeCompactCeramic(props: HomeCompactCeramicProps) {
                                 </div>
                                 <div className="text-center md:text-left lg:text-center xl:text-left">
                                     <span className="block text-[#64748B] uppercase tracking-wider mb-1">IMPACT</span>
-                                    <strong className="text-[#1A1A1A] text-xs font-semibold">{initiativesCount ? `${initiativesCount}+ Initiatives` : "88+ Initiatives"}</strong>
+                                    <strong className="text-[#1A1A1A] text-xs font-semibold">{initiativesCount ? `${initiativesCount}+ Initiatives` : "108+ Initiatives"}</strong>
                                 </div>
                             </div>
                         </div>
@@ -255,7 +255,7 @@ export default function HomeCompactCeramic(props: HomeCompactCeramicProps) {
                                     )}
                                 </div>
                                 <div>
-                                    <strong className="block text-3xl font-extrabold tracking-tight text-white">88+</strong>
+                                    <strong className="block text-3xl font-extrabold tracking-tight text-white">{initiativesCount ? `${initiativesCount}+` : "108+"}</strong>
                                     <span className="font-mono text-[9px] uppercase tracking-wider text-[#A3A3A3] mt-1 block">INITIATIVES DONE</span>
                                 </div>
                             </div>

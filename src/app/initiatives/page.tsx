@@ -16,7 +16,7 @@ export const revalidate = 60;
 export const metadata: Metadata = {
     title: "Initiatives",
     description:
-        "88 enterprise initiatives across IT infrastructure, security, cloud, and operational technology delivered by Jyotirmoy Bhowmik.",
+        "108 enterprise initiatives across IT infrastructure, security, cloud, and operational technology delivered by Jyotirmoy Bhowmik.",
 };
 
 function toINR(b: any): number {
@@ -144,7 +144,6 @@ export default async function InitiativesPage() {
                             ...i,
                             programCode: i.programs?.code ?? "",
                             programName: i.programs?.name ?? "Other",
-                            imageUrl: i.image_url || undefined,
                         }))}
                         programs={programs}
                         fiscalYears={fiscalYears}

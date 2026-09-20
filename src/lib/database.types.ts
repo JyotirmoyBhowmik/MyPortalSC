@@ -68,6 +68,7 @@ export interface Database {
                     architecture_notes: string | null;
                     outcome: string | null;
                     key_metrics: Json | null;
+                    delivery_focus: string | null;
                 };
                 Insert: {
                     id?: string;
@@ -84,6 +85,7 @@ export interface Database {
                     github_url?: string | null;
                     live_url?: string | null;
                     order_index?: number;
+                    delivery_focus?: string | null;
                     created_at?: string;
                     updated_at?: string;
                     created_by?: string | null;
@@ -103,6 +105,7 @@ export interface Database {
                     github_url?: string | null;
                     live_url?: string | null;
                     order_index?: number;
+                    delivery_focus?: string | null;
                     created_at?: string;
                     updated_at?: string;
                     created_by?: string | null;
@@ -352,6 +355,8 @@ export type Initiative = {
     strategic_area: string;
     criticality: "Critical" | "High" | "Medium" | "Low";
     delivery_focus: string | null;
+    description?: string | null;
+    business_value?: string | null;
     image_url?: string | null;
     status: "draft" | "published" | "archived";
     order_index: number;

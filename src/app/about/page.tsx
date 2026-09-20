@@ -44,13 +44,13 @@ const visionStatement =
 
 const experience = [
     {
-        role: "Project Manager & IT Infrastructure Team Lead",
+        role: "Manager – IT Infrastructure & Network (Grade IS4)",
         company: "ITC Infotech India Ltd. (Seconded to Surya Nepal Pvt. Ltd.)",
-        location: "Kolkata, India",
+        location: "Kathmandu, Nepal",
         period: "Sep 2016 – Present",
         description:
-            "Lead infrastructure operations and project delivery for enterprise Data Center, Disaster Recovery, ICS/SCADA and SAP ERP environments; manage vendors and coordinate global project teams to align technology outcomes with business objectives.\n\n• Own end-to-end infrastructure delivery and operations across data center, DR, server platforms, and network/security services.\n• Drive cloud modernization—migrated enterprise productivity to Microsoft 365 (E3/E5) with SharePoint/OneDrive.\n• Modernized security posture with Zscaler SASE, replacing legacy proxy/VPN.\n• Led DR migration from traditional to hybrid virtual design with landing-zone approach.\n• Deployed 30+ RPA bots across IT service desk and finance/reporting processes.\n• Built Tableau/Power BI dashboards for sales, inventory, and performance reporting.\n• Delivered IT/OT connectivity improvements for SCADA environments and sustainability initiatives.",
-        techEnv: "AWS; Azure; Microsoft 365; VMware; Hyper-V; RHEL; Windows Server; Cisco; Palo Alto/Fortinet/Check Point; Zscaler SASE; Commvault; HPE StoreOnce; Tableau; Power BI; UiPath; Zabbix",
+            "Lead enterprise infrastructure operations and project delivery across Data Center, Disaster Recovery, Industrial OT/ICS, and SAP ERP environments; manage vendors and coordinate cross-functional teams, delivering 108+ enterprise initiatives across corporate headquarters and multi-plant manufacturing operations.\n\n• Own end-to-end infrastructure delivery and operations across data center, DR, server platforms, and network/security services.\n• Architected SAP Disaster Recovery migration from physical colocation to Microsoft Azure Cloud.\n• Commissioned Simara Factory Secondary OT DC and deployed Claroty CTD industrial cybersecurity sensor architecture.\n• Drive cloud modernization—migrated enterprise productivity to Microsoft 365 (E3/E5) with SharePoint/OneDrive.\n• Automated factory network switch configuration management and firmware patching via Ansible Semaphore.\n• Modernized security posture with Zscaler SASE, replacing legacy proxy/VPN.\n• Deployed 30+ RPA bots and Power BI dashboards for sales, inventory, and energy telemetry.\n• Delivered IT/OT connectivity improvements for SCADA environments and industrial sustainability initiatives.",
+        techEnv: "Azure; AWS; Microsoft 365; VMware; Hyper-V; Claroty CTD; Cisco; Ansible Semaphore; RHEL; Windows Server; Fortinet; Palo Alto; Zscaler SASE; Commvault; HPE StoreOnce; Power BI; UiPath; Zabbix",
     },
     {
         role: "Senior Engineer – IT Infrastructure & System Integration",
@@ -260,7 +260,7 @@ export default async function AboutPage() {
                                 href="/initiatives"
                                 className="inline-flex items-center gap-2 text-primary hover:text-primary-hover font-medium transition-colors"
                             >
-                                View all 88 initiatives
+                                View all 108 initiatives
                                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
                                 </svg>

@@ -24,6 +24,7 @@ interface HomeLegacyProps {
     heroDescription: string;
     template?: string;
     availableForOpportunities?: boolean;
+    initiativesCount?: number;
 }
 
 export default function HomeLegacy(props: HomeLegacyProps) {
@@ -39,6 +40,7 @@ export default function HomeLegacy(props: HomeLegacyProps) {
         heroDescription,
         template,
         availableForOpportunities = true,
+        initiativesCount,
     } = props;
 
     return (
@@ -162,7 +164,7 @@ export default function HomeLegacy(props: HomeLegacyProps) {
                         )}
                         <div className="text-center">
                             <div className="text-3xl sm:text-4xl font-bold gradient-text">
-                                88+
+                                {initiativesCount ? `${initiativesCount}+` : "108+"}
                             </div>
                             <div className="text-xs text-muted-foreground mt-1">Initiatives</div>
                         </div>

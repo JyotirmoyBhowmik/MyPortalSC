@@ -195,9 +195,32 @@ export default async function ProjectDetailPage({ params }: Props) {
                     {/* Detailed description */}
                     {project.detailed_description && (
                         <div className="glass rounded-xl p-8 mb-8">
-                            <h2 className="text-xl font-semibold mb-4">About this project</h2>
+                            <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
+                                <span className="w-2 h-6 bg-primary rounded-full" />
+                                About this project
+                            </h2>
                             <div className="text-muted-foreground leading-relaxed whitespace-pre-line">
                                 {project.detailed_description}
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Delivery Focus */}
+                    {project.delivery_focus && (
+                        <div className="glass rounded-xl p-8 mb-8">
+                            <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
+                                <span className="w-2 h-6 bg-primary rounded-full" />
+                                Delivery Focus & Strategic Scope
+                            </h2>
+                            <div className="space-y-3">
+                                {project.delivery_focus.split(";").map((focus, idx) => (
+                                    <div key={idx} className="flex items-start gap-3">
+                                        <div className="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center text-primary text-xs font-bold flex-shrink-0 mt-0.5">
+                                            {idx + 1}
+                                        </div>
+                                        <p className="text-muted-foreground leading-relaxed">{focus.trim()}</p>
+                                    </div>
+                                ))}
                             </div>
                         </div>
                     )}
@@ -265,6 +288,18 @@ export default async function ProjectDetailPage({ params }: Props) {
                                                         <span className="text-muted-foreground">→</span>
                                                         <span className="text-sm font-bold text-success">{metric.after}</span>
                                                     </div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    )}
+
+                                    {/* Key-Value Object Metric Cards Fallback */}
+                                    {project.key_metrics && !Array.isArray(project.key_metrics) && typeof project.key_metrics === "object" && Object.keys(project.key_metrics).length > 0 && (
+                                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-4 pt-4 border-t border-success/10">
+                                            {Object.entries(project.key_metrics as Record<string, any>).map(([key, val], idx) => (
+                                                <div key={idx} className="glass rounded-lg p-4 text-center">
+                                                    <p className="text-xs text-muted-foreground mb-1 font-medium capitalize">{key.replace(/([A-Z])/g, ' $1')}</p>
+                                                    <p className="text-base font-bold text-success">{String(val)}</p>
                                                 </div>
                                             ))}
                                         </div>

@@ -7,7 +7,6 @@ import {
 } from "@/lib/data/initiatives";
 import { getAllBudgets } from "@/lib/data/finances";
 import { formatINR, convertToINR } from "@/lib/utils/currency";
-import ProjectImageWithLightbox from "@/components/projects/ProjectImageWithLightbox";
 
 export const revalidate = 60;
 
@@ -78,19 +77,6 @@ export default async function InitiativeDetailPage({ params }: Props) {
             {/* Initiative Detail */}
             <section className="px-4 pb-16">
                 <div className="max-w-4xl mx-auto">
-                    {/* Featured cover image */}
-                    {initiative.image_url && (
-                        <div className="glass rounded-2xl overflow-hidden mb-8 shadow-2xl shadow-primary/5">
-                            <div className="relative h-64 sm:h-96 w-full bg-slate-900/40 flex items-center justify-center overflow-hidden">
-                                <ProjectImageWithLightbox
-                                    src={initiative.image_url}
-                                    alt={initiative.title}
-                                    className="w-full h-full object-cover"
-                                />
-                            </div>
-                        </div>
-                    )}
-
                     {/* Header card */}
                     <div className="glass rounded-2xl p-8 sm:p-10 mb-8">
                         {/* Top badges */}
@@ -148,6 +134,19 @@ export default async function InitiativeDetailPage({ params }: Props) {
                         </div>
                     </div>
 
+                    {/* About this Initiative */}
+                    {initiative.description && (
+                        <div className="glass rounded-xl p-8 mb-8">
+                            <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
+                                <span className="w-2 h-6 bg-primary rounded-full" />
+                                About this Initiative
+                            </h2>
+                            <p className="text-muted-foreground leading-relaxed whitespace-pre-line">
+                                {initiative.description}
+                            </p>
+                        </div>
+                    )}
+
                     {/* Delivery Focus */}
                     {initiative.delivery_focus && (
                         <div className="glass rounded-xl p-8 mb-8">
@@ -165,6 +164,19 @@ export default async function InitiativeDetailPage({ params }: Props) {
                                     </div>
                                 ))}
                             </div>
+                        </div>
+                    )}
+
+                    {/* Business Value & Strategic Impact */}
+                    {initiative.business_value && (
+                        <div className="glass rounded-xl p-8 mb-8 border-l-4 border-emerald-500/40">
+                            <h2 className="text-xl font-semibold mb-3 flex items-center gap-2">
+                                <span className="text-2xl">📈</span>
+                                Business Value & Strategic Impact
+                            </h2>
+                            <p className="text-muted-foreground leading-relaxed">
+                                {initiative.business_value}
+                            </p>
                         </div>
                     )}
 

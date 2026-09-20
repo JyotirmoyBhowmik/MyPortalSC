@@ -429,7 +429,7 @@ export default async function BudgetPage({ searchParams }: { searchParams: Promi
                             <div><span className="text-blue-400/70 font-bold">OPEX Regular:</span> Recurring operational — SaaS Subscriptions, AMC, Internet, Hosting, Repair & Maintenance, Managed Services.</div>
                         </div>
                         <div className="mt-3 pt-3 border-t border-border/30 italic">
-                            All amounts converted to INR using row-level exchange rates. FY format: April–March (Indian fiscal year). Showing {budgets.length} of 88+ mapped initiatives.
+                            All amounts converted to INR using row-level exchange rates. FY format: April–March (Indian fiscal year). Showing {budgets.length} of 108+ mapped initiatives.
                         </div>
                     </div>
                 </AnimatedSection>

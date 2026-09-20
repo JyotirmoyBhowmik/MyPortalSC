@@ -60,7 +60,7 @@ export default async function HomePage() {
   const dbLocation = getContentField(aboutContent?.content, "location") || "Kathmandu, Nepal";
   const rawExperience = (settingsMap["years_of_experience"] as string) || "15+";
   const experienceYears = rawExperience.toLowerCase().includes("year") ? rawExperience : `${rawExperience} Years`;
-  const initiativesCount = initiativeStats.total || 88;
+  const initiativesCount = initiativeStats.total || 108;
 
   const props = {
       projects,
