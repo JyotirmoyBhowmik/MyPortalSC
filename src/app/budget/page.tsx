@@ -227,6 +227,46 @@ export default async function BudgetPage({ searchParams }: { searchParams: Promi
                     </AnimatedSection>
                 )}
 
+                {/* IT Financial Governance & EVD Capital Allocation Standards */}
+                <AnimatedSection delay={0.18}>
+                    <div className="glass rounded-2xl p-6 mb-10 border border-primary/20 bg-gradient-to-br from-primary/5 via-surface/60 to-transparent">
+                        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-4">
+                            <div>
+                                <span className="text-[10px] font-bold uppercase tracking-wider text-primary px-2.5 py-0.5 rounded bg-primary/10 border border-primary/20">
+                                    Enterprise Procurement &amp; SOW Standards
+                                </span>
+                                <h3 className="text-lg font-bold text-foreground mt-1">IT Financial Governance &amp; EVD Capital Allocation (FY 83-84)</h3>
+                            </div>
+                            <span className="text-xs px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-semibold">
+                                100% AMC/ATS On-Time Renewals (0 Days Delay)
+                            </span>
+                        </div>
+                        <p className="text-xs text-muted-foreground leading-relaxed mb-4">
+                            IT Budgeting for FY 83-84 (FY 2026-27) was finalized on schedule utilizing the <strong>EVD (Essential, Vital, Desirable)</strong> classification framework. This disciplined approach ensures zero-downtime mission-critical operations while maximizing return on capital expenditure and optimizing multi-vendor licensing.
+                        </p>
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div className="p-3.5 rounded-xl bg-surface/80 border border-border/40">
+                                <div className="text-[11px] font-bold text-purple-400 uppercase tracking-wider mb-1">EVD Budget Categorization</div>
+                                <p className="text-xs text-muted-foreground">
+                                    Draft revenue and capex structured across Essential (core infrastructure, ERP, security), Vital (performance/capacity expansions), and Desirable (discretionary productivity uplifts).
+                                </p>
+                            </div>
+                            <div className="p-3.5 rounded-xl bg-surface/80 border border-border/40">
+                                <div className="text-[11px] font-bold text-blue-400 uppercase tracking-wider mb-1">Telecom Cost Optimization</div>
+                                <p className="text-xs text-muted-foreground">
+                                    Subisu TATA 4 Mbps GDE IPLC migrated to Ncell before August expiry — renegotiated OTC from USD 1,000 to NPR 84,550 and MRC from USD 1,300 to NPR 68,440 (&gt;50% recurring savings).
+                                </p>
+                            </div>
+                            <div className="p-3.5 rounded-xl bg-surface/80 border border-border/40">
+                                <div className="text-[11px] font-bold text-emerald-400 uppercase tracking-wider mb-1">AMC Lifecycle SLA Baseline</div>
+                                <p className="text-xs text-muted-foreground">
+                                    Maintained <code>FINAL IT AMC Tracker 01122025</code> baseline with 0 days delay across HPE Primera, StoreOnce, DL380, Cisco Catalyst, and Microsoft CSP estates, preventing licensing gaps.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </AnimatedSection>
+
                 {/* Main Table */}
                 <AnimatedSection delay={0.2}>
                     <div className="glass rounded-2xl overflow-hidden shadow-xl print:shadow-none print:border">

@@ -47,10 +47,10 @@ const experience = [
         role: "Manager – IT Infrastructure & Network (Grade IS4)",
         company: "ITC Infotech India Ltd. (Seconded to Surya Nepal Pvt. Ltd.)",
         location: "Kathmandu, Nepal",
-        period: "Sep 2016 – Present",
+        period: "Sep 2016 – Present (9+ Years)",
         description:
-            "Lead enterprise infrastructure operations and project delivery across Data Center, Disaster Recovery, Industrial OT/ICS, and SAP ERP environments; manage vendors and coordinate cross-functional teams, delivering 108+ enterprise initiatives across corporate headquarters and multi-plant manufacturing operations.\n\n• Own end-to-end infrastructure delivery and operations across data center, DR, server platforms, and network/security services.\n• Architected SAP Disaster Recovery migration from physical colocation to Microsoft Azure Cloud.\n• Commissioned Simara Factory Secondary OT DC and deployed Claroty CTD industrial cybersecurity sensor architecture.\n• Drive cloud modernization—migrated enterprise productivity to Microsoft 365 (E3/E5) with SharePoint/OneDrive.\n• Automated factory network switch configuration management and firmware patching via Ansible Semaphore.\n• Modernized security posture with Zscaler SASE, replacing legacy proxy/VPN.\n• Deployed 30+ RPA bots and Power BI dashboards for sales, inventory, and energy telemetry.\n• Delivered IT/OT connectivity improvements for SCADA environments and industrial sustainability initiatives.",
-        techEnv: "Azure; AWS; Microsoft 365; VMware; Hyper-V; Claroty CTD; Cisco; Ansible Semaphore; RHEL; Windows Server; Fortinet; Palo Alto; Zscaler SASE; Commvault; HPE StoreOnce; Power BI; UiPath; Zabbix",
+            "Lead enterprise infrastructure operations and project delivery across Data Center, Disaster Recovery, Industrial OT/ICS, and SAP ERP environments; manage vendors and coordinate cross-functional teams, delivering 108+ enterprise initiatives and 66 enterprise projects across corporate headquarters and multi-plant manufacturing operations.\n\n• Achieved 5.00 / Outstanding Annual Performance rating (Doc ID: 351141) evaluated by DMM Vinod Singh across all 7 KRAs.\n• Built and held together a high-performing IT Infra & Network team with 0% core team attrition, mentoring direct reports (Raju, Anant, Kumar, Utkarsh) and authoring the official 'Officer Data Centre' role definition rubric.\n• Coordinated Corporate Internal Audit Defense (74 artifacts submitted, 16-point memo resolved with 10 disputed points substantiated) and anchored enterprise adoption of IT Policy 2.0 & IM Policy 2.0.\n• Maintained 100% on-time AMC/ATS renewals (0 days delay) and 0 P1 capacity incidents across the enterprise IT estate.\n• Architected SAP Disaster Recovery migration from physical colocation to Microsoft Azure Cloud Landing Zones.\n• Commissioned Simara Factory Secondary OT DC and deployed Claroty CTD industrial cybersecurity sensor architecture.\n• Automated factory network switch configuration management and firmware patching via Ansible Semaphore.\n• Modernized security posture with Zscaler SASE, replacing legacy proxy/VPN.\n• Deployed 30+ RPA bots and Power BI dashboards for sales, inventory, and energy telemetry.\n• Delivered IT/OT connectivity improvements for SCADA environments and industrial sustainability initiatives.",
+        techEnv: "Azure Landing Zones; AWS; Microsoft 365; VMware; Hyper-V; Claroty CTD; Cisco; Ansible Semaphore; RHEL; Windows Server; Fortinet; Palo Alto; Zscaler SASE; Commvault; HPE StoreOnce; Power BI; UiPath; Zabbix",
     },
     {
         role: "Senior Engineer – IT Infrastructure & System Integration",
@@ -331,6 +331,29 @@ export default async function AboutPage() {
                         </div>
                     </div>
 
+                    {/* Manager Evaluation Callout */}
+                    <div className="mb-16">
+                        <div className="relative p-8 sm:p-10 rounded-2xl bg-gradient-to-br from-primary/10 via-surface/40 to-transparent border border-primary/20">
+                            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-4">
+                                <div className="flex items-center gap-3">
+                                    <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold text-lg">
+                                        ★
+                                    </div>
+                                    <div>
+                                        <h3 className="font-bold text-foreground">Vinod Singh</h3>
+                                        <p className="text-xs text-muted-foreground">Departmental Manager (DMM), Surya Nepal Pvt. Ltd. (ITC Group)</p>
+                                    </div>
+                                </div>
+                                <span className="text-xs font-bold px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                                    Annual Evaluation Rating: 5.00 / Outstanding
+                                </span>
+                            </div>
+                            <blockquote className="text-base sm:text-lg italic text-foreground leading-relaxed">
+                                &ldquo;Jyotirmoy has been associated with SNPL for 9 Years and have built many systems at SNPL from scratch. Since, I have taken over as DMM at SNPL, I have found Jyotirmoy to be proactive and sincere in the aspects of project and daily operations. He is quite innovative and bring new perspective and ideas to work.&rdquo;
+                            </blockquote>
+                        </div>
+                    </div>
+
                     {/* Core Roles & Responsibilities */}
                     <div className="mb-16">
                         <h2 className="text-3xl font-bold mb-8 flex items-center gap-3">
@@ -349,6 +372,53 @@ export default async function AboutPage() {
                         </div>
                     </div>
 
+                    {/* People Leadership, Mentorship & Attrition Zero */}
+                    <div className="mb-16">
+                        <h2 className="text-3xl font-bold mb-8 flex items-center gap-3">
+                            <span className="w-2 h-8 bg-primary rounded-full" />
+                            People Leadership &amp; <span className="gradient-text">Mentorship</span>
+                        </h2>
+                        <div className="glass rounded-xl p-8 mb-6">
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                                <div className="p-4 rounded-lg bg-surface/60 border border-border/50 text-center">
+                                    <div className="text-3xl font-bold text-primary mb-1">0%</div>
+                                    <div className="text-xs uppercase tracking-wider text-muted-foreground font-semibold">Core Team Attrition</div>
+                                    <p className="text-xs text-muted-foreground mt-2">100% talent retention across FY 2025-26 with continuous capability coaching.</p>
+                                </div>
+                                <div className="p-4 rounded-lg bg-surface/60 border border-border/50 text-center">
+                                    <div className="text-3xl font-bold text-primary mb-1">4</div>
+                                    <div className="text-xs uppercase tracking-wider text-muted-foreground font-semibold">Direct Reports Coached</div>
+                                    <p className="text-xs text-muted-foreground mt-2">Mentoring on OEM support, OT TTX, Ansible automation, and PACE reviews.</p>
+                                </div>
+                                <div className="p-4 rounded-lg bg-surface/60 border border-border/50 text-center">
+                                    <div className="text-3xl font-bold text-primary mb-1">Rubric</div>
+                                    <div className="text-xs uppercase tracking-wider text-muted-foreground font-semibold">Officer Data Centre</div>
+                                    <p className="text-xs text-muted-foreground mt-2">Finalized official job competency matrix and structured hiring rubric for future DC operations.</p>
+                                </div>
+                            </div>
+                            <div className="space-y-4">
+                                <div className="flex items-start gap-3">
+                                    <span className="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center text-primary text-sm flex-shrink-0 mt-0.5">👥</span>
+                                    <div>
+                                        <h4 className="text-sm font-semibold text-foreground">Direct Report Capability Building &amp; Automation</h4>
+                                        <p className="text-sm text-muted-foreground leading-relaxed">
+                                            Mentored direct reports Raju Prasad Sah, Anant Pradhan Shrestha, Kumar Aryal, and Utkarsh Shrestha. Enabled Raju on the OEM Support framework, OT Table-Top Exercise (TTX), and Ansible Semaphore centralized network device patching. Coached Anant on endpoint operations, asset lifecycle management, and PACE review cadence.
+                                        </p>
+                                    </div>
+                                </div>
+                                <div className="flex items-start gap-3">
+                                    <span className="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center text-primary text-sm flex-shrink-0 mt-0.5">🏛️</span>
+                                    <div>
+                                        <h4 className="text-sm font-semibold text-foreground">Standardized Governance &amp; Knowledge Platforms</h4>
+                                        <p className="text-sm text-muted-foreground leading-relaxed">
+                                            Established dedicated IT Team Microsoft Teams workspaces, enforced mandatory shift logs and ticketing discipline, and launched the SNPL Knowledge Bites portal (<code>kb.snpl.com.np</code>) to institutionalize SOPs and operational learnings across teams.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     {/* Business Value Delivered */}
                     <div className="mb-16">
                         <h2 className="text-3xl font-bold mb-8 flex items-center gap-3">
@@ -362,6 +432,48 @@ export default async function AboutPage() {
                                     <p className="text-sm text-muted-foreground leading-relaxed">{bv.desc}</p>
                                 </div>
                             ))}
+                        </div>
+                    </div>
+
+                    {/* Strategic Horizon & Leadership Mandate */}
+                    <div className="mb-16">
+                        <h2 className="text-3xl font-bold mb-8 flex items-center gap-3">
+                            <span className="w-2 h-8 bg-accent rounded-full" />
+                            Strategic Horizon &amp; <span className="gradient-text">Leadership Mandate</span>
+                        </h2>
+                        <div className="relative p-8 rounded-2xl bg-gradient-to-br from-primary/10 via-surface/60 to-transparent border border-primary/20">
+                            <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-6">
+                                <div>
+                                    <span className="text-xs font-bold uppercase tracking-wider text-primary px-3 py-1 rounded-full bg-primary/10 border border-primary/20">
+                                        Next Leadership Track: Sr. Tech Lead / Senior Manager Head-of-IT-Infrastructure
+                                    </span>
+                                    <h3 className="text-xl font-bold text-foreground mt-3">Anchoring Enterprise Cloud, AI &amp; OT Cybersecurity</h3>
+                                </div>
+                                <div className="text-xs px-3 py-1.5 rounded-md bg-surface border border-border text-muted-foreground">
+                                    Horizon: FY 2082-83 &amp; Beyond (2–3 Years)
+                                </div>
+                            </div>
+                            <p className="text-sm text-muted-foreground leading-relaxed mb-6">
+                                Over the next 12–24 months, the mandate focuses on driving SNPL’s cloud migration (closing SAP DR on Azure with Cloud4C), hardening OT cybersecurity across manufacturing plants (Claroty CTD / ISA-IEC 62443 at Simara), and scaling Enterprise AI (Copilot Studio, Enterprise Search for business units).
+                            </p>
+                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                                <div className="p-4 rounded-xl bg-surface/80 border border-border/40">
+                                    <div className="text-xs font-bold text-primary uppercase tracking-wider mb-1">Cloud Migration</div>
+                                    <p className="text-xs text-foreground font-medium">SAP DR on Azure Landing Zones with strict RTO/RPO SLAs.</p>
+                                </div>
+                                <div className="p-4 rounded-xl bg-surface/80 border border-border/40">
+                                    <div className="text-xs font-bold text-primary uppercase tracking-wider mb-1">OT Hardening</div>
+                                    <p className="text-xs text-foreground font-medium">Simara Secondary OT DC, Claroty CTD, and NGTP firewalls.</p>
+                                </div>
+                                <div className="p-4 rounded-xl bg-surface/80 border border-border/40">
+                                    <div className="text-xs font-bold text-primary uppercase tracking-wider mb-1">Enterprise AI</div>
+                                    <p className="text-xs text-foreground font-medium">Copilot Studio, Enterprise Search, and responsible LLM adoption.</p>
+                                </div>
+                                <div className="p-4 rounded-xl bg-surface/80 border border-border/40">
+                                    <div className="text-xs font-bold text-primary uppercase tracking-wider mb-1">Group Alignment</div>
+                                    <p className="text-xs text-foreground font-medium">Contributing to ITC Group technology forums &amp; IT Policy 2.0 standards.</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
 

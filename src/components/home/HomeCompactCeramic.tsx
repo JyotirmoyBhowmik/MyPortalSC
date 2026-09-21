@@ -154,18 +154,22 @@ export default function HomeCompactCeramic(props: HomeCompactCeramicProps) {
                             </div>
 
                             {/* Secondary Telemetry details grid */}
-                            <div className="grid grid-cols-3 border-t border-[#E5E5E1] mt-8 pt-6 gap-4 font-mono text-[9px] leading-tight select-none">
+                            <div className="grid grid-cols-4 border-t border-[#E5E5E1] mt-8 pt-6 gap-2 font-mono text-[9px] leading-tight select-none">
                                 <div className="text-center md:text-left lg:text-center xl:text-left">
                                     <span className="block text-[#64748B] uppercase tracking-wider mb-1">LOCATION</span>
-                                    <strong className="text-[#1A1A1A] text-xs font-semibold">{location || "Kathmandu, Nepal"}</strong>
+                                    <strong className="text-[#1A1A1A] text-xs font-semibold">{location || "Kathmandu"}</strong>
                                 </div>
-                                <div className="text-center md:text-left lg:text-center xl:text-left border-x border-[#E5E5E1] px-2">
-                                    <span className="block text-[#64748B] uppercase tracking-wider mb-1">EXPERIENCE</span>
-                                    <strong className="text-[#1A1A1A] text-xs font-semibold">{experienceYears || "15+ Years"}</strong>
+                                <div className="text-center md:text-left lg:text-center xl:text-left border-l border-[#E5E5E1] pl-2">
+                                    <span className="block text-[#64748B] uppercase tracking-wider mb-1">TENURE</span>
+                                    <strong className="text-[#1A1A1A] text-xs font-semibold">9y SNPL</strong>
                                 </div>
-                                <div className="text-center md:text-left lg:text-center xl:text-left">
-                                    <span className="block text-[#64748B] uppercase tracking-wider mb-1">IMPACT</span>
-                                    <strong className="text-[#1A1A1A] text-xs font-semibold">{initiativesCount ? `${initiativesCount}+ Initiatives` : "108+ Initiatives"}</strong>
+                                <div className="text-center md:text-left lg:text-center xl:text-left border-l border-[#E5E5E1] pl-2">
+                                    <span className="block text-[#64748B] uppercase tracking-wider mb-1">EVALUATION</span>
+                                    <strong className="text-[#1A1A1A] text-xs font-semibold">5.00 Outstanding</strong>
+                                </div>
+                                <div className="text-center md:text-left lg:text-center xl:text-left border-l border-[#E5E5E1] pl-2">
+                                    <span className="block text-[#64748B] uppercase tracking-wider mb-1">DELIVERY</span>
+                                    <strong className="text-[#1A1A1A] text-xs font-semibold">{initiativesCount ? `${initiativesCount}+ Init` : "108+ Init"}</strong>
                                 </div>
                             </div>
                         </div>
