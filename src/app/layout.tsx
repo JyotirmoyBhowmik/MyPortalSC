@@ -121,9 +121,29 @@ export default async function RootLayout({
                 "@context": "https://schema.org",
                 "@type": "Person",
                 name: "Jyotirmoy Bhowmik",
-                jobTitle: "IT Infrastructure & Project Manager",
-                url: "https://jyotirmoyb.com",
-                sameAs: ["https://linkedin.com/in/jyotirmoyb"],
+                jobTitle: "Manager – IT Infrastructure & Network (Grade IS4)",
+                worksFor: {
+                  "@type": "Organization",
+                  name: "Surya Nepal Pvt. Ltd. (ITC Group)",
+                },
+                url: process.env.NEXT_PUBLIC_SITE_URL || "https://jyotirmoyb.com",
+                sameAs: [
+                  "https://linkedin.com/in/jyotirmoyb",
+                  "https://github.com/JyotirmoyBhowmik",
+                  "https://www.credly.com/users/jyotirmoy-bhowmik/badges"
+                ],
+                knowsAbout: [
+                  "Enterprise IT Infrastructure",
+                  "Disaster Recovery & BCP",
+                  "Cloud Architecture (Microsoft Azure, AWS)",
+                  "Operational Technology (OT) Cybersecurity",
+                  "ISA/IEC 62443 Standards",
+                  "SAP ERP Cloud DR Migration",
+                  "Claroty Continuous Threat Detection (CTD)",
+                  "Ansible Infrastructure as Code (IaC)",
+                  "Enterprise IT Policy 2.0 & Governance",
+                  "IT Financial Management (CapEx/OpEx)"
+                ],
               }, { isJSON: true }),
             }}
           />

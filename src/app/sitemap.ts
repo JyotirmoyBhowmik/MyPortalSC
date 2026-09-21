@@ -11,7 +11,7 @@ import { getFeatureFlag } from "@/lib/data/settings";
 export const revalidate = 3600; // Regenerate sitemap every hour
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://jyotirmoy.dev";
+    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://jyotirmoyb.com";
     const supabase = await createClient();
 
     // Static routes — always included
@@ -21,6 +21,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         { url: `${baseUrl}/contact`, lastModified: new Date(), changeFrequency: "yearly", priority: 0.5 },
         { url: `${baseUrl}/projects`, lastModified: new Date(), changeFrequency: "weekly", priority: 0.8 },
         { url: `${baseUrl}/skills`, lastModified: new Date(), changeFrequency: "monthly", priority: 0.7 },
+        { url: `${baseUrl}/certifications`, lastModified: new Date(), changeFrequency: "monthly", priority: 0.8 },
+        { url: `${baseUrl}/budget`, lastModified: new Date(), changeFrequency: "weekly", priority: 0.9 },
         { url: `${baseUrl}/initiatives`, lastModified: new Date(), changeFrequency: "weekly", priority: 0.8 },
         { url: `${baseUrl}/initiatives/programs`, lastModified: new Date(), changeFrequency: "weekly", priority: 0.7 },
         { url: `${baseUrl}/visual-graph`, lastModified: new Date(), changeFrequency: "weekly", priority: 0.8 },
@@ -64,7 +66,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     // Dynamic blog slugs (if enabled)
     if (showBlog) {
         gatedRoutes.push({ url: `${baseUrl}/blog`, lastModified: new Date(), changeFrequency: "weekly", priority: 0.7 });
-        const { data: posts } = await supabase.from("blog_posts").select("slug, updated_at").eq("status", "published");
+        const { data: posts } = await supabase.from("blog_posts").select("slug, updated_at").eq("is_published", true);
         (posts || []).forEach((post) => {
             gatedRoutes.push({
                 url: `${baseUrl}/blog/${post.slug}`,
@@ -78,7 +80,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     // Dynamic case study slugs (if enabled)
     if (showCaseStudies) {
         gatedRoutes.push({ url: `${baseUrl}/case-studies`, lastModified: new Date(), changeFrequency: "monthly", priority: 0.7 });
-        const { data: studies } = await supabase.from("case_studies").select("slug, updated_at").eq("status", "published");
+        const { data: studies } = await supabase.from("case_studies").select("slug, updated_at").eq("is_published", true);
         (studies || []).forEach((cs) => {
             gatedRoutes.push({
                 url: `${baseUrl}/case-studies/${cs.slug}`,
